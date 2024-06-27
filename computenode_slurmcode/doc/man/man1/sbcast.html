@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - sbcast</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/sbcast.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>sbcast</H1>
+Section: Slurm Commands (1)<BR>Updated: Slurm Commands<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+sbcast - transmit a file to the nodes allocated to a Slurm job.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+<B>sbcast</B> [-CfFjpstvV] SOURCE DEST
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>sbcast</B> is used to transmit a file to all nodes allocated
+to the currently active Slurm job.
+This command should only be executed from within a Slurm batch
+job or within the shell spawned after a Slurm job's resource
+allocation.
+<B>SOURCE</B> is the name of a file on the current node.
+<B>DEST</B> should be the fully qualified pathname for the
+file copy to be created on each node.
+If a fully qualified pathname is not provided, the file will be created in
+the directory specified in the <B>BcastParameters</B> parameter in the slurm.conf
+file (if available) otherwise it will be created in the current working
+directory from which the sbcast command is invoked.
+<B>DEST</B> should be on a file system local to that node.
+Note that parallel file systems <I>may</I> provide better performance
+than <B>sbcast</B> can provide, although performance will vary
+by file size, degree of parallelism, and network type.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>OPTIONS<a class="slurm_link" id="SECTION_OPTIONS" href="#SECTION_OPTIONS"></a></h2>
+<DL COMPACT>
+<dt><B>-C</B>, <B>--compress</B>[=<I>library</I>]<a class="slurm_link" id="OPT_compress" href="#OPT_compress"></a></dt><dd>Compress the file being transmitted.
+The optional argument specifies the data compression library to be used.
+Supported values are &quot;lz4&quot; (default) and &quot;none&quot;.
+Some compression libraries may be unavailable on some systems.
+The default compression library (and enabling compression itself) may be
+set in the slurm.conf file using the BcastParameters option.
+<DT><DD>
+<P>
+<dt><B>--exclude</B>=&lt;<I>NONE</I>|<I>path1</I>,<I>...</I>,<I>pathN</I>&gt;<a class="slurm_link" id="OPT_exclude" href="#OPT_exclude"></a></dt><dd>Comma-separated list of absolute directory paths to be excluded when
+autodetecting and broadcasting executable shared object dependencies. If the
+keyword &quot;<I>NONE</I>&quot; is configured, no directory paths will be excluded. The
+default value is that of slurm.conf <B>BcastExclude</B> and this option overrides
+it. See also <B>--send-libs</B>.
+<DT><DD>
+<P>
+<dt><B>-F</B>, <B>--fanout</B>=&lt;<I>number</I>&gt;<a class="slurm_link" id="OPT_fanout" href="#OPT_fanout"></a></dt><dd>Specify the fanout of messages used for file transfer.
+Maximum value is currently eight.
+<DT><DD>
+<P>
+<dt><B>-f</B>, <B>--force</B><a class="slurm_link" id="OPT_force" href="#OPT_force"></a></dt><dd>If the destination file (and the destination library directory when using
+<B>--send-libs</B>) already exists, replace it.
+<DT><DD>
+<P>
+<dt><B>-j</B>, <B>--jobid</B>=&lt;<I>jobID</I>[.<I>stepID</I>]&gt;<a class="slurm_link" id="OPT_jobid" href="#OPT_jobid"></a></dt><dd>Specify the job ID to use with optional step ID.  If run inside an allocation
+this is unneeded as the job ID will read from the environment.
+<DT><DD>
+<P>
+<dt><B>-p</B>, <B>--preserve</B><a class="slurm_link" id="OPT_preserve" href="#OPT_preserve"></a></dt><dd>Preserves modification times, access times, and modes from the
+original file.
+<DT><DD>
+<P>
+<dt><B>--send-libs</B>[=<I>yes</I>|<I>no</I>]<a class="slurm_link" id="OPT_send-libs" href="#OPT_send-libs"></a></dt><dd>If set to <I>yes</I> (or no argument), autodetect and broadcast the executable's
+shared object dependencies to allocated compute nodes. The files are placed in
+a directory alongside the executable. This overrides the default behavior
+configured in slurm.conf <B>SbcastParameters send_libs</B>. See also
+<B>--exclude</B>.
+<DT><DD>
+<P>
+<dt><B>-s</B>, <B>--size</B>=&lt;<I>size</I>&gt;<a class="slurm_link" id="OPT_size" href="#OPT_size"></a></dt><dd>Specify the block size used for file broadcast.
+The size can have a suffix of <I>k</I> or <I>m</I> for kilobytes
+or megabytes respectively (defaults to bytes).
+This size subject to rounding and range limits to maintain
+good performance.
+The default value is the file size or 8MB, whichever is smaller.
+This value may need to be set on systems with very limited memory.
+<DT><DD>
+<P>
+<dt><B>-t</B>, <B>--timeout</B>=&lt;<I>seconds</I>&gt;<a class="slurm_link" id="OPT_timeout" href="#OPT_timeout"></a></dt><dd>Specify the message timeout in seconds.
+The default value is <I>MessageTimeout</I> as reported by
+&quot;scontrol show config&quot;.
+Setting a higher value may be necessitated by relatively slow
+I/O performance on the compute node disks.
+<DT><DD>
+<P>
+<dt><B>-v</B>, <B>--verbose</B><a class="slurm_link" id="OPT_verbose" href="#OPT_verbose"></a></dt><dd>Provide detailed event logging through program execution.
+<DT><DD>
+<P>
+<dt><B>-V</B>, <B>--version</B><a class="slurm_link" id="OPT_version" href="#OPT_version"></a></dt><dd>Print version information and exit.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>PERFORMANCE<a class="slurm_link" id="SECTION_PERFORMANCE" href="#SECTION_PERFORMANCE"></a></h2>
+<P>
+
+Executing <B>sbcast</B> sends a remote procedure call to <B>slurmctld</B>. If
+enough calls from <B>sbcast</B> or other Slurm client commands that send remote
+procedure calls to the <B>slurmctld</B> daemon come in at once, it can result in
+a degradation of performance of the <B>slurmctld</B> daemon, possibly resulting
+in a denial of service.
+<P>
+
+Do not run <B>sbcast</B> or other Slurm client commands that send remote
+procedure calls to <B>slurmctld</B> from loops in shell scripts or other
+programs. Ensure that programs limit calls to <B>sbcast</B> to the minimum
+necessary for the information you are trying to gather.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<h2>ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_ENVIRONMENT-VARIABLES" href="#SECTION_ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+
+Some <B>sbcast</B> options may be set via environment variables.
+These environment variables, along with their corresponding options,
+are listed below. (Note: Command line options will always override
+these settings.)
+<P>
+<DL COMPACT>
+<dt><B>SBCAST_COMPRESS</B><a class="slurm_link" id="OPT_SBCAST_COMPRESS" href="#OPT_SBCAST_COMPRESS"></a></dt><dd><B>-C, --compress</B>
+<DT><DD>
+<P>
+<dt><B>SBCAST_EXCLUDE</B><a class="slurm_link" id="OPT_SBCAST_EXCLUDE" href="#OPT_SBCAST_EXCLUDE"></a></dt><dd><B>--exclude</B>=&lt;<I>NONE</I>|<I>path1</I>,<I>...</I>,<I>pathN</I>&gt;
+<DT><DD>
+<P>
+<dt><B>SBCAST_FANOUT</B><a class="slurm_link" id="OPT_SBCAST_FANOUT" href="#OPT_SBCAST_FANOUT"></a></dt><dd><B>-F </B><I>number</I>, <B>--fanout</B>=<I>number</I>
+<DT><DD>
+<P>
+<dt><B>SBCAST_FORCE</B><a class="slurm_link" id="OPT_SBCAST_FORCE" href="#OPT_SBCAST_FORCE"></a></dt><dd><B>-f, --force</B>
+<DT><DD>
+<P>
+<dt><B>SBCAST_SEND_LIBS</B><a class="slurm_link" id="OPT_SBCAST_SEND_LIBS" href="#OPT_SBCAST_SEND_LIBS"></a></dt><dd><B>--send-libs</B>[=<I>yes|no</I>]
+<DT><DD>
+<P>
+<dt><B>SBCAST_PRESERVE</B><a class="slurm_link" id="OPT_SBCAST_PRESERVE" href="#OPT_SBCAST_PRESERVE"></a></dt><dd><B>-p, --preserve</B>
+<DT><DD>
+<P>
+<dt><B>SBCAST_SIZE</B><a class="slurm_link" id="OPT_SBCAST_SIZE" href="#OPT_SBCAST_SIZE"></a></dt><dd><B>-s</B> <I>size</I>, <B>--size</B>=<I>size</I>
+<DT><DD>
+<P>
+<dt><B>SBCAST_TIMEOUT</B><a class="slurm_link" id="OPT_SBCAST_TIMEOUT" href="#OPT_SBCAST_TIMEOUT"></a></dt><dd><B>-t </B><I>seconds</I>, <B>--timeout</B>=<I>seconds</I>
+<DT><DD>
+<P>
+<dt><B>SLURM_CONF</B><a class="slurm_link" id="OPT_SLURM_CONF" href="#OPT_SLURM_CONF"></a></dt><dd>The location of the Slurm configuration file.
+<DT><DD>
+<P>
+<dt><B>SLURM_DEBUG_FLAGS</B><a class="slurm_link" id="OPT_SLURM_DEBUG_FLAGS" href="#OPT_SLURM_DEBUG_FLAGS"></a></dt><dd>Specify debug flags for sbcast to use. See DebugFlags in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for a full list of flags. The environment
+variable takes precedence over the setting in the slurm.conf.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<h2>AUTHORIZATION<a class="slurm_link" id="SECTION_AUTHORIZATION" href="#SECTION_AUTHORIZATION"></a></h2>
+<P>
+When using SlurmDBD, users who have an AdminLevel defined (Operator
+or Admin) are given the authority to invoke sbcast on other users jobs.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<h2>EXAMPLES<a class="slurm_link" id="SECTION_EXAMPLES" href="#SECTION_EXAMPLES"></a></h2>
+<P>
+Using a batch script, transmit local file <B>my.prog</B> to
+<B>/tmp/my.proc</B> on the local nodes and then execute it.
+<P>
+<PRE>
+$ cat my.job
+#!/bin/bash
+sbcast my.prog /tmp/my.prog
+srun /tmp/my.prog
+
+$ sbatch --nodes=8 my.job
+srun: jobid 12345 submitted
+</PRE>
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2006-2010 The Regents of the University of California.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2010-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<B><A HREF="srun.html">srun</A></B>(1)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">PERFORMANCE</A><DD>
+<DT><A HREF="#lbAG">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAH">AUTHORIZATION</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES</A><DD>
+<DT><A HREF="#lbAJ">COPYING</A><DD>
+<DT><A HREF="#lbAK">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:45 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

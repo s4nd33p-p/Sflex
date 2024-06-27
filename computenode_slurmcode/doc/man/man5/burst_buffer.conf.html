@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - burst_buffer.conf</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/burst_buffer.conf.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>burst_buffer.conf</H1>
+Section: File Formats (5)<BR>Updated: January 2022<BR><A HREF="#index">Index</A>
+
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+burst_buffer.conf - Slurm configuration file for burst buffer management.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>burst_buffer.conf</B> is an ASCII file which describes the configuration
+of burst buffer resource management.
+This file is only required on the head node(s), where the slurmctld daemon
+executes.
+The file will always be located in the same directory as the <B>slurm.conf</B>.
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+Changes to the configuration file take effect upon restart of
+Slurm daemons, daemon receipt of the SIGHUP signal, or execution
+of the command &quot;scontrol reconfigure&quot;.
+<P>
+
+The configuration parameters available include:
+<P>
+<DL COMPACT>
+<dt><B>AllowUsers</B><a class="slurm_link" id="OPT_AllowUsers" href="#OPT_AllowUsers"></a></dt><dd>Comma separated list of user names and/or IDs permitted to use burst buffers.
+The options <B>AllowUsers</B> and <B>DenyUsers</B> can not both be specified.
+By default all users are permitted to use burst buffers.
+<DT><DD>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<P>
+<dt><B>DefaultPool</B><a class="slurm_link" id="OPT_DefaultPool" href="#OPT_DefaultPool"></a></dt><dd>Name of the pool used by default for resource allocations.
+The default value is the first pool reported by the burst buffer infrastructure.
+This option is only used by the burst_buffer/datawarp plugin.
+<DT><DD>
+<P>
+<dt><B>DenyUsers</B><a class="slurm_link" id="OPT_DenyUsers" href="#OPT_DenyUsers"></a></dt><dd>Colon delimited list of user names and/or IDs prevented from using burst buffers.
+The options <B>AllowUsers</B> and <B>DenyUsers</B> can not both be specified.
+By default all users are permitted to use burst buffers.
+<DT><DD>
+
+
+
+
+
+<P>
+<dt><B>Directive</B><a class="slurm_link" id="OPT_Directive" href="#OPT_Directive"></a></dt><dd>The string that must be used by a job to request a burst buffer. This string
+must be immediately preceeded by a single '#' character. This is currently only
+used by the lua plugin. For the lua plugin, the default value is &quot;BB_LUA&quot;.
+See burst_buffer.html for more details.
+<DT><DD>
+<P>
+<dt><B>Flags</B><a class="slurm_link" id="OPT_Flags" href="#OPT_Flags"></a></dt><dd>String used to control various functions.
+Multiple options may be comma separated.
+Supported options include:
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>DisablePersistent</B><a class="slurm_link" id="OPT_DisablePersistent" href="#OPT_DisablePersistent"></a></dt><dd>Prevents regular users from being able to create and destroy persistent burst buffers.
+This is the default behavior, only privileged users (Slurm operators and
+administrators) can create or destroy persistent burst buffers.
+<DT><DD>
+<P>
+<dt><B>EmulateCray</B><a class="slurm_link" id="OPT_EmulateCray" href="#OPT_EmulateCray"></a></dt><dd>Emulating a Cray DataWarp system using the dw_wlm_cli script in the burst_buffer/datawarp plugin.
+This is only used by the datawarp plugin.
+<DT><DD>
+<P>
+<dt><B>EnablePersistent</B><a class="slurm_link" id="OPT_EnablePersistent" href="#OPT_EnablePersistent"></a></dt><dd>Enables regular users to create and destroy persistent burst buffers.
+By default, only privileged users (Slurm operators and administrators) can
+create or destroy persistent burst buffers.
+This is only used by the datawarp plugin.
+<DT><DD>
+<P>
+<dt><B>PrivateData</B><a class="slurm_link" id="OPT_PrivateData" href="#OPT_PrivateData"></a></dt><dd>If set, then only Slurm operators and the burst buffer owner can see burst
+buffer data.
+<DT><DD>
+<P>
+<dt><B>TeardownFailure</B><a class="slurm_link" id="OPT_TeardownFailure" href="#OPT_TeardownFailure"></a></dt><dd>If set, then teardown a burst buffer after file staging error. Otherwise
+preserve the burst buffer for analysis and manual teardown.
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>GetSysState</B><a class="slurm_link" id="OPT_GetSysState" href="#OPT_GetSysState"></a></dt><dd>Fully qualified path name of a program which will return the current burst
+buffer state.
+For the DataWarp plugin, this should be the path of the <I>dw_wlm_cli</I> command
+and its default value is /opt/cray/dw_wlm/default/bin/dw_wlm_cli.
+This is not used by the lua plugin.
+<DT><DD>
+<P>
+<dt><B>GetSysStatus</B><a class="slurm_link" id="OPT_GetSysStatus" href="#OPT_GetSysStatus"></a></dt><dd>Fully qualified path name of a program which will return the current burst
+buffer status.
+For the DataWarp plugin, this should be the path of the <I>dwstat</I> command
+and its default value is /opt/cray/dws/default/bin/dwstat.
+This is not used by the lua plugin.
+<DT><DD>
+
+
+
+
+
+
+
+<P>
+<dt><B>OtherTimeout</B><a class="slurm_link" id="OPT_OtherTimeout" href="#OPT_OtherTimeout"></a></dt><dd>If a burst buffer operation (other than job validation, stage in, or stage out)
+runs for longer than this number of seconds, the job will be placed in a held
+state.
+A Slurm administrator will be required to release the job.
+By default there is a 300 second (5 minute) timeout for these operations.
+Also see <B>StageInTimeout</B>, <B>StageOutTimeout</B>, and <B>ValidateTimeout</B>
+options.
+For the lua plugin, the maximum timeout value is 2073600 seconds (24 days).
+<DT><DD>
+<P>
+<dt><B>PrivateData</B><a class="slurm_link" id="OPT_PrivateData_1" href="#OPT_PrivateData_1"></a></dt><dd>If set to &quot;true&quot; then users will only be able to view burst buffers they can
+use.
+Slurm administrators will still be able to view all burst buffers.
+By default, users can view all burst buffers.
+<DT><DD>
+<P>
+<dt><B>StageInTimeout</B><a class="slurm_link" id="OPT_StageInTimeout" href="#OPT_StageInTimeout"></a></dt><dd>If the stage in of files for a job takes more than this number of seconds,
+the burst buffer will be released and the job will be placed in a held state.
+A Slurm administrator will be required to release the job.
+By default there is a one day timeout for the stage in process.
+For the lua plugin, the maximum timeout value is 2073600 seconds (24 days).
+<DT><DD>
+<P>
+<dt><B>StageOutTimeout</B><a class="slurm_link" id="OPT_StageOutTimeout" href="#OPT_StageOutTimeout"></a></dt><dd>If the stage out of files for a job takes more than this number of seconds,
+the burst buffer will be released and the job will be purged.
+By default there is a one day timeout for the stage out process.
+For the lua plugin, the maximum timeout value is 2073600 seconds (24 days).
+<DT><DD>
+<P>
+<dt><B>ValidateTimeout</B><a class="slurm_link" id="OPT_ValidateTimeout" href="#OPT_ValidateTimeout"></a></dt><dd>If the validation of a job submission request takes more than this number of
+seconds, the submission will be rejected.
+The value of <B>ValidateTimeout</B> must be less than the value of
+<B>MessageTimeout</B> configured in the slurm.conf file or job submission
+requests may fail with a response timeout error.
+By default there is a 5 second timeout for the validation operations.
+In the lua plugin, because the validation operation cannot be killed, this
+option is not used.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2014-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">COPYING</A><DD>
+<DT><A HREF="#lbAE">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:46 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

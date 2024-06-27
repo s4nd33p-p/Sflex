@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - SPANK</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/spank.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>SPANK</H1>
+Section: Slurm Component (8)<BR>Updated: Slurm Component<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+<B>SPANK</B> - Slurm Plug-in Architecture for Node and job (K)control
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+This manual briefly describes the capabilities of the Slurm Plug-in
+Architecture for Node and job Kontrol (<B>SPANK</B>) as well as the <B>SPANK</B>
+configuration file: (By default: <B>plugstack.conf</B>.)
+<P>
+
+<B>SPANK</B> provides a very generic interface for stackable plug-ins
+which may be used to dynamically modify the job launch code in
+Slurm. <B>SPANK</B> plugins may be built without access to Slurm source
+code. They need only be compiled against Slurm's <B>spank.h</B> header file,
+added to the <B>SPANK</B> config file <B>plugstack.conf</B>,
+and they will be loaded at runtime during the next job launch. Thus,
+the <B>SPANK</B> infrastructure provides administrators and other developers
+a low cost, low effort ability to dynamically modify the runtime
+behavior of Slurm job launch.
+<P>
+
+<B>NOTE</B>: All <B>SPANK</B> plugins should be recompiled when upgrading Slurm
+to a new major release. The <B>SPANK</B> API is not guaranteed to be ABI
+compatible between major releases. Any <B>SPANK</B> plugin linking to any of the
+Slurm libraries should be carefully checked as the Slurm APIs and headers
+can change between major releases.
+<P>
+
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<h2>SPANK PLUGINS<a class="slurm_link" id="SECTION_SPANK-PLUGINS" href="#SECTION_SPANK-PLUGINS"></a></h2>
+<B>SPANK</B> plugins are loaded in up to five separate contexts during a
+<B>Slurm</B> job. Briefly, the five contexts are:
+<P>
+<DL COMPACT>
+<dt><B>local</B><a class="slurm_link" id="OPT_local" href="#OPT_local"></a></dt><dd>In <B>local</B> context, the plugin is loaded by <B>srun</B>. (i.e. the &quot;local&quot;
+part of a parallel job).
+<DT><DD>
+<P>
+<dt><B>remote</B><a class="slurm_link" id="OPT_remote" href="#OPT_remote"></a></dt><dd>In <B>remote</B> context, the plugin is loaded by <B>slurmstepd</B>. (i.e. the &quot;remote&quot;
+part of a parallel job).
+<DT><DD>
+<P>
+<dt><B>allocator</B><a class="slurm_link" id="OPT_allocator" href="#OPT_allocator"></a></dt><dd>In <B>allocator</B> context, the plugin is loaded in one of the job allocation
+utilities <B>salloc</B>, <B>sbatch</B> or <B>scrontab</B>.
+<DT><DD>
+<P>
+<dt><B>slurmd</B><a class="slurm_link" id="OPT_slurmd" href="#OPT_slurmd"></a></dt><dd>In <B>slurmd</B> context, the plugin is loaded in the
+<B>slurmd</B> daemon itself. <B>Note</B>: Plugins loaded in slurmd context
+persist for the entire time slurmd is running, so if configuration is
+changed or plugins are updated, slurmd must be restarted for the changes
+to take effect.
+<DT><DD>
+<P>
+<dt><B>job_script</B><a class="slurm_link" id="OPT_job_script" href="#OPT_job_script"></a></dt><dd>In the <B>job_script</B> context, plugins are loaded in the context of the
+job prolog or epilog. <B>Note</B>: Plugins are loaded in <B>job_script</B>
+context on each run on the job prolog or epilog, in a separate address
+space from plugins in <B>slurmd</B> context. This means there is no
+state shared between this context and other contexts, or even between
+one call to <B>slurm_spank_job_prolog</B> or <B>slurm_spank_job_epilog</B>
+and subsequent calls.
+<DT><DD>
+</DL>
+<P>
+
+In local context, only the <B>init</B>, <B>exit</B>, <B>init_post_opt</B>, and
+<B>local_user_init</B> functions are called. In allocator context, only the
+<B>init</B>, <B>exit</B>, and <B>init_post_opt</B> functions are called.
+Similarly, in slurmd context, only the <B>init</B> and <B>slurmd_exit</B>
+callbacks are active, and in the job_script context, only the <B>job_prolog</B>
+and <B>job_epilog</B> callbacks are used.
+Plugins may query the context in which they are running with the
+<B>spank_context</B> and <B>spank_remote</B> functions defined in
+<B>&lt;<A HREF="file:///usr/include/slurm/spank.h">slurm/spank.h</A>&gt;</B>.
+<P>
+
+<B>SPANK</B> plugins may be called from multiple points during the Slurm job
+launch. A plugin may define the following functions:
+<P>
+<DL COMPACT>
+<dt><B>slurm_spank_init</B><a class="slurm_link" id="OPT_slurm_spank_init" href="#OPT_slurm_spank_init"></a></dt><dd>Called just after plugins are loaded. In remote context, this is just
+after job step is initialized. This function is called before any plugin
+option processing.
+<DT><DD>
+<P>
+<dt><B>slurm_spank_job_prolog</B><a class="slurm_link" id="OPT_slurm_spank_job_prolog" href="#OPT_slurm_spank_job_prolog"></a></dt><dd>Called at the same time as the job prolog. If this function returns a
+non-zero value and the <B>SPANK</B> plugin that contains it is required in the
+<B>plugstack.conf</B>, the node that this is run on will be drained.
+<DT><DD>
+<P>
+<dt><B>slurm_spank_init_post_opt</B><a class="slurm_link" id="OPT_slurm_spank_init_post_opt" href="#OPT_slurm_spank_init_post_opt"></a></dt><dd>Called at the same point as <B>slurm_spank_init</B>, but after all
+user options to the plugin have been processed. The reason that the
+<B>init</B> and <B>init_post_opt</B> callbacks are separated is so that
+plugins can process system-wide options specified in plugstack.conf in
+the <B>init</B> callback, then process user options, and finally take some
+action in <B>slurm_spank_init_post_opt</B> if necessary.
+In the case of a heterogeneous job, <B>slurm_spank_init</B> is invoked once
+per job component.
+<DT><DD>
+<P>
+<dt><B>slurm_spank_local_user_init</B><a class="slurm_link" id="OPT_slurm_spank_local_user_init" href="#OPT_slurm_spank_local_user_init"></a></dt><dd>Called in local (<B>srun</B>) context only after all
+options have been processed.
+This is called after the job ID and step IDs are available.
+This happens in <B>srun</B> after the allocation is made, but before
+tasks are launched.
+<DT><DD>
+<P>
+<dt><B>slurm_spank_user_init</B><a class="slurm_link" id="OPT_slurm_spank_user_init" href="#OPT_slurm_spank_user_init"></a></dt><dd>Called after privileges are temporarily dropped. (remote context only)
+<DT><DD>
+<P>
+<dt><B>slurm_spank_task_init_privileged</B><a class="slurm_link" id="OPT_slurm_spank_task_init_privileged" href="#OPT_slurm_spank_task_init_privileged"></a></dt><dd>Called for each task just after fork, but before all elevated privileges
+are dropped. (remote context only)
+<DT><DD>
+<P>
+<dt><B>slurm_spank_task_init</B><a class="slurm_link" id="OPT_slurm_spank_task_init" href="#OPT_slurm_spank_task_init"></a></dt><dd>Called for each task just before execve (2). If you are restricting memory
+with cgroups, memory allocated here will be in the job's cgroup. (remote
+context only)
+<DT><DD>
+<P>
+<dt><B>slurm_spank_task_post_fork</B><a class="slurm_link" id="OPT_slurm_spank_task_post_fork" href="#OPT_slurm_spank_task_post_fork"></a></dt><dd>Called for each task from parent process after fork (2) is complete.
+Due to the fact that <B>slurmd</B> does not exec any tasks until all
+tasks have completed fork (2), this call is guaranteed to run before
+the user task is executed. (remote context only)
+<DT><DD>
+<P>
+<dt><B>slurm_spank_task_exit</B><a class="slurm_link" id="OPT_slurm_spank_task_exit" href="#OPT_slurm_spank_task_exit"></a></dt><dd>Called for each task as its exit status is collected by Slurm.
+(remote context only)
+<DT><DD>
+<P>
+<dt><B>slurm_spank_exit</B><a class="slurm_link" id="OPT_slurm_spank_exit" href="#OPT_slurm_spank_exit"></a></dt><dd>Called once just before <B>slurmstepd</B> exits in remote context.
+In local context, called before <B>srun</B> exits.
+<DT><DD>
+<P>
+<dt><B>slurm_spank_job_epilog</B><a class="slurm_link" id="OPT_slurm_spank_job_epilog" href="#OPT_slurm_spank_job_epilog"></a></dt><dd>Called at the same time as the job epilog. If this function returns a
+non-zero value and the <B>SPANK</B> plugin that contains it is required in the
+<B>plugstack.conf</B>, the node that this is run on will be drained.
+<DT><DD>
+<P>
+<dt><B>slurm_spank_slurmd_exit</B><a class="slurm_link" id="OPT_slurm_spank_slurmd_exit" href="#OPT_slurm_spank_slurmd_exit"></a></dt><dd>Called in slurmd when the daemon is shut down.
+<DT><DD>
+<P>
+</DL>
+<P>
+
+All of these functions have the same prototype, for example:
+<PRE>
+   int <B>slurm_spank_init</B> (spank_t spank, int ac, char *argv[])
+</PRE>
+
+<P>
+<P>
+
+Where <B>spank</B> is the <B>SPANK</B> handle which must be passed back to
+Slurm when the plugin calls functions like <B>spank_get_item</B> and
+<B>spank_getenv</B>. Configured arguments (See <B>CONFIGURATION</B>
+below) are passed in the argument vector <B>argv</B> with argument
+count <B>ac</B>.
+<P>
+
+<B>SPANK</B> plugins can query the current list of supported slurm_spank
+symbols to determine if the current version supports a given plugin hook.
+This may be useful because the list of plugin symbols may grow in the
+future. The query is done using the <B>spank_symbol_supported</B> function,
+which has the following prototype:
+<PRE>
+    int <B>spank_symbol_supported</B> (const char *sym);
+</PRE>
+
+<P>
+<P>
+
+The return value is 1 if the symbol is supported, 0 if not.
+<P>
+
+<B>SPANK</B> plugins do not have direct access to internally defined Slurm
+data structures. Instead, information about the currently executing
+job is obtained via the <B>spank_get_item</B> function call.
+<PRE>
+  spank_err_t <B>spank_get_item</B> (spank_t spank, spank_item_t item, ...);
+</PRE>
+
+<P>
+The <B>spank_get_item</B> call must be passed the current <B>SPANK</B>
+handle as well as the item requested, which is defined by the
+passed <B>spank_item_t</B>. A variable number of pointer arguments are also
+passed, depending on which item was requested by the plugin. A
+list of the valid values for <B>item</B> is kept in the <B>spank.h</B> header
+file. Some examples are:
+<P>
+<DL COMPACT>
+<dt><B>S_JOB_UID</B><a class="slurm_link" id="OPT_S_JOB_UID" href="#OPT_S_JOB_UID"></a></dt><dd>User id for running job. (uid_t *) is third arg of <B>spank_get_item</B>
+<DT><DD>
+<P>
+<dt><B>S_JOB_STEPID</B><a class="slurm_link" id="OPT_S_JOB_STEPID" href="#OPT_S_JOB_STEPID"></a></dt><dd>Job step id for running job. (uint32_t *) is third arg of <B>spank_get_item</B>.
+<DT><DD>
+<P>
+<dt><B>S_TASK_EXIT_STATUS</B><a class="slurm_link" id="OPT_S_TASK_EXIT_STATUS" href="#OPT_S_TASK_EXIT_STATUS"></a></dt><dd>Exit status for exited task. Only valid from <B>slurm_spank_task_exit</B>.
+(int *) is third arg of <B>spank_get_item</B>.
+<DT><DD>
+<P>
+<dt><B>S_JOB_ARGV</B><a class="slurm_link" id="OPT_S_JOB_ARGV" href="#OPT_S_JOB_ARGV"></a></dt><dd>Complete job command line. Third and fourth args to <B>spank_get_item</B>
+are (int *, char ***).
+<DT><DD>
+<P>
+</DL>
+<P>
+
+See <B>spank.h</B> for more details.
+<P>
+
+<B>SPANK</B> functions in the <B>local and allocator</B> environment should
+use the <B>getenv</B>, <B>setenv</B>, and <B>unsetenv</B> functions to view and
+modify the job's environment.
+<B>SPANK</B> functions in the <B>remote</B> environment should use the
+<B>spank_getenv</B>, <B>spank_setenv</B>, and <B>spank_unsetenv</B> functions to
+view and modify the job's environment. <B>spank_getenv</B>
+searches the job's environment for the environment variable
+<I>var</I> and copies the current value into a buffer <I>buf</I>
+of length <I>len</I>.  <B>spank_setenv</B> allows a <B>SPANK</B>
+plugin to set or overwrite a variable in the job's environment,
+and <B>spank_unsetenv</B> unsets an environment variable in
+the job's environment. The prototypes are:
+<PRE>
+ spank_err_t <B>spank_getenv</B> (spank_t spank, const char *var,
+                           char *buf, int len);
+ spank_err_t <B>spank_setenv</B> (spank_t spank, const char *var,
+                           const char *val, int overwrite);
+ spank_err_t <B>spank_unsetenv</B> (spank_t spank, const char *var);
+</PRE>
+
+<P>
+<P>
+
+These are only necessary in remote context since modifications of
+the standard process environment using <B>setenv</B> (3), <B>getenv</B> (3),
+and <B>unsetenv</B> (3) may be used in local context.
+<P>
+
+Functions are also available from within the <B>SPANK</B> plugins to
+establish environment variables to be exported to the Slurm
+<B>PrologSlurmctld</B>, <B>Prolog</B>, <B>Epilog</B> and <B>EpilogSlurmctld</B>
+programs (the so-called <B>job control</B> environment).
+The name of environment variables established by these calls will be prepended
+with the string <I>SPANK_</I> in order to avoid any security implications
+of arbitrary environment variable control. (After all, the job control
+scripts do run as root or the Slurm user.).
+<P>
+
+These functions are available from <B>local</B> context only.
+<PRE>
+  spank_err_t <B>spank_job_control_getenv</B>(spank_t spank, const char *var,
+                             char *buf, int len);
+  spank_err_t <B>spank_job_control_setenv</B>(spank_t spank, const char *var,
+                             const char *val, int overwrite);
+  spank_err_t <B>spank_job_control_unsetenv</B>(spank_t spank, const char *var);
+</PRE>
+
+<P>
+<P>
+
+See <B>spank.h</B> for more information.
+<P>
+
+Many of the described <B>SPANK</B> functions available to plugins return
+errors via the <B>spank_err_t</B> error type. On success, the return value
+will be set to <B>ESPANK_SUCCESS</B>, while on failure, the return value
+will be set to one of many error values defined in slurm/spank.h. The
+<B>SPANK</B> interface provides a simple function
+<PRE>
+  const char * <B>spank_strerror</B>(spank_err_t err);
+</PRE>
+
+which may be used to translate a <B>spank_err_t</B> value into its
+string representation.
+<P>
+<P>
+
+The <B>slurm_spank_log</B> function can be used to print messages back to the
+user at an error level.  This is to keep users from having to rely on the
+<B>slurm_error</B> function, which can be confusing because it prepends
+&quot;<B>error:</B>&quot; to every message.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>SPANK OPTIONS<a class="slurm_link" id="SECTION_SPANK-OPTIONS" href="#SECTION_SPANK-OPTIONS"></a></h2>
+<P>
+
+SPANK plugins also have an interface through which they may define
+and implement extra job options. These options are made available to
+the user through Slurm commands such as <B><A HREF="srun.html">srun</A></B>(1), <B><A HREF="salloc.html">salloc</A></B>(1),
+and <B><A HREF="sbatch.html">sbatch</A></B>(1). If the option is specified by the user, its value is
+forwarded and registered with the plugin in slurmd when the job is run.
+In this way, <B>SPANK</B> plugins may dynamically provide new options and
+functionality to Slurm.
+<P>
+
+Each option registered by a plugin to Slurm takes the form of
+a <B>struct spank_option</B> which is declared in <B>&lt;<A HREF="file:///usr/include/slurm/spank.h">slurm/spank.h</A>&gt;</B> as
+<PRE>
+   struct spank_option {
+      char *         name;
+      char *         arginfo;
+      char *         usage;
+      int            has_arg;
+      int            val;
+      spank_opt_cb_f cb;
+   };
+</PRE>
+
+<P>
+Where
+<P>
+<DL COMPACT>
+<dt><I>name</I><a class="slurm_link" id="OPT_name" href="#OPT_name"></a></dt><dd>
+<DD>
+is the name of the option. Its length is limited to <B>SPANK_OPTION_MAXLEN</B>
+defined in <B>&lt;<A HREF="file:///usr/include/slurm/spank.h">slurm/spank.h</A>&gt;</B>.
+<DT><DD>
+<P>
+<dt><I>arginfo</I><a class="slurm_link" id="OPT_arginfo" href="#OPT_arginfo"></a></dt><dd>
+<DD>
+is a description of the argument to the option, if the option does take
+an argument.
+<DT><DD>
+<P>
+<dt><I>usage</I><a class="slurm_link" id="OPT_usage" href="#OPT_usage"></a></dt><dd>
+<DD>
+is a short description of the option suitable for --help output.
+<DT><DD>
+<P>
+<dt><I>has_arg</I><a class="slurm_link" id="OPT_has_arg" href="#OPT_has_arg"></a></dt><dd>
+<DD>
+0 if option takes no argument, 1 if option takes an argument, and
+2 if the option takes an optional argument. (See <B>getopt_long</B> (3)).
+<DT><DD>
+<P>
+<dt><I>val</I><a class="slurm_link" id="OPT_val" href="#OPT_val"></a></dt><dd>
+<DD>
+A plugin-local value to return to the option callback function.
+<DT><DD>
+<P>
+<dt><I>cb</I><a class="slurm_link" id="OPT_cb" href="#OPT_cb"></a></dt><dd>
+<DD>
+A callback function that is invoked when the plugin option is
+registered with Slurm. <B>spank_opt_cb_f</B> is typedef'd in
+<B>&lt;<A HREF="file:///usr/include/slurm/spank.h">slurm/spank.h</A>&gt;</B> as
+<DT><DD>
+<PRE>
+  typedef int (*spank_opt_cb_f) (int val, const char *optarg,
+                                 int remote);
+</PRE>
+
+Where <I>val</I> is the value of the <I>val</I> field in the <B>spank_option</B>
+struct, <I>optarg</I> is the supplied argument if applicable, and <I>remote</I>
+is 0 if the function is being called from the &quot;local&quot; host (e.g. host where
+<B>srun</B> or <B>sbatch/salloc</B> are invoked) or 1 from the &quot;remote&quot; host
+(host where slurmd/slurmstepd run) but only executed by <B>slurmstepd</B>
+(remote context) if the option was registered for such context.
+</DL>
+<P>
+
+Plugin options may be registered with Slurm using
+the <B>spank_option_register</B> function. This function is only valid
+when called from the plugin's <B>slurm_spank_init</B> handler, and
+registers one option at a time. The prototype is
+<PRE>
+   spank_err_t spank_option_register (spank_t sp,
+                   struct spank_option *opt);
+</PRE>
+
+This function will return <B>ESPANK_SUCCESS</B> on successful registration
+of an option, or <B>ESPANK_BAD_ARG</B> for errors including invalid spank_t
+handle, or when the function is not called from the <B>slurm_spank_init</B>
+function. All options need to be registered from all contexts in which
+they will be used. For instance, if an option is only used in local (srun)
+and remote (slurmd) contexts, then <B>spank_option_register</B>
+should only be called from within those contexts. For example:
+<PRE>
+   if (spank_context() != S_CTX_ALLOCATOR)
+      spank_option_register (sp, opt);
+</PRE>
+
+If, however, the option is used in all contexts, the <B>spank_option_register</B>
+needs to be called everywhere.
+<P>
+
+In addition to <B>spank_option_register</B>, plugins may also export options
+to Slurm by defining a table of <B>struct spank_option</B> with the
+symbol name <B>spank_options</B>. This method, however, is not supported
+for use with <B>sbatch</B> and <B>salloc</B> (allocator context), thus
+the use of <B>spank_option_register</B> is preferred. When using the
+<B>spank_options</B> table, the final element in the array must be
+filled with zeros. A <B>SPANK_OPTIONS_TABLE_END</B> macro is provided
+in <B>&lt;<A HREF="file:///usr/include/slurm/spank.h">slurm/spank.h</A>&gt;</B> for this purpose.
+<P>
+
+When an option is provided by the user on the local side, either by command line
+options or by environment variables, <B>Slurm</B> will immediately invoke the
+option's callback with <I>remote</I>=0. This is meant for the plugin to do local
+sanity checking of the option before the value is sent to the remote side during
+job launch. If the argument the user specified is invalid, the plugin should
+issue an error and issue a non-zero return code from the callback. The plugin
+should be able to handle cases where the spank option is set multiple times
+through environment variables and command line options. Environment variables
+are processed before command line options.
+<P>
+
+On the remote side, options and their arguments are registered just
+after <B>SPANK</B> plugins are loaded and before the <B>spank_init</B>
+handler is called. This allows plugins to modify behavior of all plugin
+functionality based on the value of user-provided options.
+<P>
+
+As an alternative to use of an option callback and global variable,
+plugins can use the <B>spank_option_getopt</B> option to check for
+supplied options after option processing. This function has the prototype:
+<PRE>
+   spank_err_t spank_option_getopt(spank_t sp,
+       struct spank_option *opt, char **optargp);
+</PRE>
+
+This function returns <B>ESPANK_SUCCESS</B> if the option defined in the
+struct spank_option <I>opt</I> has been used by the user. If <I>optargp</I>
+is non-NULL then it is set to any option argument passed (if the option
+takes an argument). The use of this method is <I>required</I> to process
+options in <B>job_script</B> context (<B>slurm_spank_job_prolog</B> and
+<B>slurm_spank_job_epilog</B>). This function is valid in the following contexts:
+slurm_spank_job_prolog, slurm_spank_local_user_init, slurm_spank_user_init,
+slurm_spank_task_init_privileged, slurm_spank_task_init, slurm_spank_task_exit,
+and slurm_spank_job_epilog.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<h2>CONFIGURATION<a class="slurm_link" id="SECTION_CONFIGURATION" href="#SECTION_CONFIGURATION"></a></h2>
+<P>
+
+The default <B>SPANK</B> plug-in stack configuration file is
+<B>plugstack.conf</B> in the same directory as <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5),
+though this may be changed via the Slurm config parameter
+<I>PlugStackConfig</I>.  Normally the <B>plugstack.conf</B> file
+should be identical on all nodes of the cluster.
+The config file lists <B>SPANK</B> plugins,
+one per line, along with whether the plugin is <I>required</I> or
+<I>optional</I>, and any global arguments that are to be passed to
+the plugin for runtime configuration.  Comments are preceded with '#'
+and extend to the end of the line.  If the configuration file
+is missing or empty, it will simply be ignored.
+<P>
+
+<B>NOTE</B>: The <B>SPANK</B> plugins need to be installed on the machines that
+execute slurmd (compute nodes) as well as on the machines that execute job
+allocation utilities such as salloc, sbatch, etc (login nodes).
+<P>
+
+The format of each non-comment line in the configuration file is:
+<B>
+</B><PRE>
+  required/optional   plugin   arguments
+</PRE>
+
+ For example:
+<PRE>
+  optional /usr/lib/slurm/test.so
+</PRE>
+
+Tells <B>slurmd</B> to load the plugin <B>test.so</B> passing no arguments.
+If a <B>SPANK</B> plugin is <I>required</I>, then failure of any of the
+plugin's functions will cause <B>slurmd</B>, or the job allocator command to
+terminate the job, while <I>optional</I> plugins only cause a warning.
+<P>
+
+If a fully-qualified path is not specified for a plugin, then the
+currently configured <I>PluginDir</I> in <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) is searched.
+<P>
+
+<B>SPANK</B> plugins are stackable, meaning that more than one plugin may
+be placed into the config file. The plugins will simply be called
+in order, one after the other, and appropriate action taken on
+failure given that state of the plugin's <I>optional</I> flag.
+<P>
+
+Additional config files or directories of config files may be included
+in <B>plugstack.conf</B> with the <B>include</B> keyword. The <B>include</B>
+keyword must appear on its own line, and takes a glob as its parameter,
+so multiple files may be included from one <B>include</B> line. For
+example, the following syntax will load all config files in the
+/etc/slurm/plugstack.conf.d directory, in local collation order:
+<PRE>
+  include /etc/slurm/plugstack.conf.d/*
+</PRE>
+
+which might be considered a more flexible method for building up
+a spank plugin stack.
+<P>
+
+The <B>SPANK</B> config file is re-read on each job launch, so editing
+the config file will not affect running jobs. However care should
+be taken so that a partially edited config file is not read by a
+launching job.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<h2>Errors<a class="slurm_link" id="SECTION_Errors" href="#SECTION_Errors"></a></h2>
+When SPANK plugin results in a non-zero result, the following changes will result:
+<P>
+<TABLE BORDER WIDTH=100%>
+<TR VALIGN=top><TD>Command</TD><TD>Function                         </TD><TD ALIGN=center>Context   </TD><TD ALIGN=center>Exitcode </TD><TD ALIGN=center>Drains Node </TD><TD ALIGN=center>Fails job<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_init                 </TD><TD ALIGN=center>local     </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_init_post_opt        </TD><TD ALIGN=center>local     </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_local_user_init      </TD><TD ALIGN=center>local     </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_user_init            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_task_init_privileged </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_task_post_fork       </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_task_init            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_task_exit            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>srun   </TD><TD>slurm_spank_exit                 </TD><TD ALIGN=center>local     </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD COLSPAN=6><HR><HR></TD></TR>
+<TR VALIGN=top><TD>salloc </TD><TD>slurm_spank_init                 </TD><TD ALIGN=center>allocator </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>salloc </TD><TD>slurm_spank_init_post_opt        </TD><TD ALIGN=center>allocator </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>salloc </TD><TD>slurm_spank_user_init            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>salloc </TD><TD>slurm_spank_task_init_privileged </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>salloc </TD><TD>slurm_spank_task_post_fork       </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>salloc </TD><TD>slurm_spank_task_init            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>salloc </TD><TD>slurm_spank_task_exit            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>salloc </TD><TD>slurm_spank_exit                 </TD><TD ALIGN=center>allocator </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD COLSPAN=6><HR><HR></TD></TR>
+<TR VALIGN=top><TD>sbatch </TD><TD>slurm_spank_init                 </TD><TD ALIGN=center>allocator </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>sbatch </TD><TD>slurm_spank_init_post_opt        </TD><TD ALIGN=center>allocator </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>sbatch </TD><TD>slurm_spank_user_init            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>yes         </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>sbatch </TD><TD>slurm_spank_task_init_privileged </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>sbatch </TD><TD>slurm_spank_task_post_fork       </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>yes         </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>sbatch </TD><TD>slurm_spank_task_init            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>1        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>yes<BR></TD></TR>
+<TR VALIGN=top><TD>sbatch </TD><TD>slurm_spank_task_exit            </TD><TD ALIGN=center>remote    </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+<TR VALIGN=top><TD>sbatch </TD><TD>slurm_spank_exit                 </TD><TD ALIGN=center>allocator </TD><TD ALIGN=center>0        </TD><TD ALIGN=center>no          </TD><TD ALIGN=center>no<BR></TD></TR>
+</TABLE>
+
+<P>
+<B>NOTE</B>: The behavior for <B>ProctrackType=proctrack/pgid</B> may result in
+timeouts for <B>slurm_spank_task_post_fork</B> with <B>remote</B> context on
+failure.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Portions copyright (C) 2010-2022 SchedMD LLC.
+Copyright (C) 2006 The Regents of the University of California.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+CODE-OCEC-09-009. All rights reserved.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<A NAME="lbAI">&nbsp;</A>
+<h2>FILES<a class="slurm_link" id="SECTION_FILES" href="#SECTION_FILES"></a></h2>
+<B>/etc/slurm/slurm.conf</B> - Slurm configuration file.
+<BR>
+
+<B>/etc/slurm/plugstack.conf</B> - SPANK configuration file.
+<BR>
+
+<B>/usr/include/slurm/spank.h</B> - SPANK header file.
+<A NAME="lbAJ">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<B><A HREF="srun.html">srun</A></B>(1), <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">SPANK PLUGINS</A><DD>
+<DT><A HREF="#lbAE">SPANK OPTIONS</A><DD>
+<DT><A HREF="#lbAF">CONFIGURATION</A><DD>
+<DT><A HREF="#lbAG">Errors</A><DD>
+<DT><A HREF="#lbAH">COPYING</A><DD>
+<DT><A HREF="#lbAI">FILES</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 05:46:52 GMT, December 07, 2023
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

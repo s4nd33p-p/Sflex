@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - mpi.conf</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/mpi.conf.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>mpi.conf</H1>
+Section: Slurm Configuration File (5)<BR>Updated: Slurm Configuration File<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+mpi.conf - Slurm configuration file to allow the configuration of MPI plugins.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>mpi.conf</B> is an ASCII file which defines parameters that control the
+behavior of MPI plugins. Currently the configuration file can only be used
+to configure the PMIx plugin, but it can be extended to support other MPI
+plugins as well. The file will always be located in the same directory as
+the <B>slurm.conf</B>. This file is optional.
+<P>
+Parameter names are case insensitive. Any text following a &quot;#&quot; in the
+configuration file is treated as a comment through the end of that line.
+Changes to the configuration file take effect upon restart of Slurm daemons,
+daemon receipt of the SIGHUP signal, or execution of the command &quot;scontrol
+reconfigure&quot; unless otherwise noted.
+<P>
+Settings from this configuration file can be viewed in the output of
+&quot;scontrol show config&quot;. This configuration file can be included when using
+&quot;configless&quot; mode. Information from mpi.conf is read at startup or upon
+reconfigure by slurmctld and slurmd. Instances of slurmstepd for batch steps
+will receive information about the plugin requested from slurmd.
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<h2>PARAMETERS<a class="slurm_link" id="SECTION_PARAMETERS" href="#SECTION_PARAMETERS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>PMIxCliTmpDirBase</B>=&lt;<I>path</I>&gt;<a class="slurm_link" id="OPT_PMIxCliTmpDirBase" href="#OPT_PMIxCliTmpDirBase"></a></dt><dd>Directory to have PMIx use for temporary files.
+Defaults to not being set.
+<DT><DD>
+<P>
+<dt><B>PMIxCollFence</B>={mixed|tree|ring}<a class="slurm_link" id="OPT_PMIxCollFence" href="#OPT_PMIxCollFence"></a></dt><dd>Define the type of fence to use for collecting inter-node data.
+Defaults to not being set. See also <B>PMIxFenceBarrier</B>.
+<DT><DD>
+<P>
+<dt><B>PMIxDebug</B>={0|1}<a class="slurm_link" id="OPT_PMIxDebug" href="#OPT_PMIxDebug"></a></dt><dd>Enable debug logging for the PMIx plugin.
+Defaults to 0.
+<DT><DD>
+<P>
+<dt><B>PMIxDirectConn</B>={true|false}<a class="slurm_link" id="OPT_PMIxDirectConn" href="#OPT_PMIxDirectConn"></a></dt><dd>Disable direct launching of tasks. Default is &quot;true&quot;.
+<DT><DD>
+<P>
+<dt><B>PMIxDirectConnEarly</B>={true|false}<a class="slurm_link" id="OPT_PMIxDirectConnEarly" href="#OPT_PMIxDirectConnEarly"></a></dt><dd>Allow early connections to a parent node.
+Defaults to &quot;false&quot;.
+<DT><DD>
+<P>
+<dt><B>PMIxDirectConnUCX</B>={true|false}<a class="slurm_link" id="OPT_PMIxDirectConnUCX" href="#OPT_PMIxDirectConnUCX"></a></dt><dd>Allow PMIx to use UCX for communication.
+Defaults to &quot;false&quot;.
+<DT><DD>
+<P>
+<dt><B>PMIxDirectSameArch</B>={true|false}<a class="slurm_link" id="OPT_PMIxDirectSameArch" href="#OPT_PMIxDirectSameArch"></a></dt><dd>Enable additional communication optimizations when <B>PMIxDirectConn</B> is
+set to true, assuming all the job's nodes have the same architecture.
+Defaults to &quot;false&quot;.
+<DT><DD>
+<P>
+<dt><B>PMIxEnv</B>=&lt;<I>environment variables</I>&gt;<a class="slurm_link" id="OPT_PMIxEnv" href="#OPT_PMIxEnv"></a></dt><dd>Semicolon separated list of environment variables to be set in job environments
+to be used by PMIx. Defaults to not being set.
+<DT><DD>
+<P>
+<dt><B>PMIxFenceBarrier</B>={true|false}<a class="slurm_link" id="OPT_PMIxFenceBarrier" href="#OPT_PMIxFenceBarrier"></a></dt><dd>Define whether to fence inter-node communication for data collection.
+Default is &quot;false&quot;. See also <B>PMIxCollFence</B>.
+<DT><DD>
+<P>
+<dt><B>PMIxNetDevicesUCX</B>=&lt;<I>device type</I>&gt;<a class="slurm_link" id="OPT_PMIxNetDevicesUCX" href="#OPT_PMIxNetDevicesUCX"></a></dt><dd>Type of network device to use for communication.
+Defaults to not being set.
+<DT><DD>
+<P>
+<dt><B>PMIxTimeout</B>=&lt;<I>time</I>&gt;<a class="slurm_link" id="OPT_PMIxTimeout" href="#OPT_PMIxTimeout"></a></dt><dd>The maximum time (in seconds) allowed for communication between hosts to
+take place. Defaults to 300 seconds.
+<DT><DD>
+<P>
+<dt><B>PMIxTlsUCX</B>=&lt;<I>tl1</I>&gt;[,&lt;<I>tl2</I>&gt;...]<a class="slurm_link" id="OPT_PMIxTlsUCX" href="#OPT_PMIxTlsUCX"></a></dt><dd>Sets the UCX_TLS variable which restricts the transports to use. The accepted
+values are defined in the UCX documentation and may vary between installations.
+Multiple values can be set and must be separated by commas.
+If not set, UCX tries to use all available transports and selects the best ones
+according to their performance capabilities and scale.
+Defaults to not being set.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">PARAMETERS</A><DD>
+<DT><A HREF="#lbAE">COPYING</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:46 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

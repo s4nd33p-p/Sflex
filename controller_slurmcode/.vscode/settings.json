@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "read_config.h": "c",
+        "slurmctld.h": "c",
+        "slurm.h": "c"
+    }
+}

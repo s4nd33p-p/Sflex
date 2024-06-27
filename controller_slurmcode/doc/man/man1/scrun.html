@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - scrun</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/scrun.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>scrun</H1>
+Section: Slurm Commands (1)<BR>Updated: Slurm Commands<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+<B>scrun</B> - an OCI runtime proxy for Slurm.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+<P>
+<DL COMPACT>
+<DT></DL>
+<A NAME="lbAD">&nbsp;</A>
+<h2>Create Operation<a class="slurm_link" id="SECTION_Create-Operation" href="#SECTION_Create-Operation"></a></h2>
+<DD>
+<B>scrun</B> [<I>GLOBAL OPTIONS</I>...] <I>create</I> [<I>CREATE OPTIONS</I>] &lt;<I>container-id</I>&gt;
+<DL COMPACT>
+<DT><DD>
+Prepares a new container with container-id in current working directory.
+
+<P>
+<DT></DL>
+<A NAME="lbAE">&nbsp;</A>
+<h2>Start Operation<a class="slurm_link" id="SECTION_Start-Operation" href="#SECTION_Start-Operation"></a></h2>
+<DD>
+<B>scrun</B> [<I>GLOBAL OPTIONS</I>...] <I>start</I> &lt;<I>container-id</I>&gt;
+<DL COMPACT>
+<DT><DD>
+Request to start and run container in job.
+
+<P>
+<DT></DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>Query State Operation<a class="slurm_link" id="SECTION_Query-State-Operation" href="#SECTION_Query-State-Operation"></a></h2>
+<DD>
+<B>scrun</B> [<I>GLOBAL OPTIONS</I>...] <I>state</I> &lt;<I>container-id</I>&gt;
+<DL COMPACT>
+<DT><DD>
+Output OCI defined JSON state of container.
+
+<P>
+<DT></DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>Kill Operation<a class="slurm_link" id="SECTION_Kill-Operation" href="#SECTION_Kill-Operation"></a></h2>
+<DD>
+<B>scrun</B> [<I>GLOBAL OPTIONS</I>...] <I>kill</I> &lt;<I>container-id</I>&gt; [<I>signal</I>]
+<DL COMPACT>
+<DT><DD>
+Send signal (default: SIGTERM) to container.
+
+<P>
+<DT></DL>
+<A NAME="lbAH">&nbsp;</A>
+<h2>Delete Operation<a class="slurm_link" id="SECTION_Delete-Operation" href="#SECTION_Delete-Operation"></a></h2>
+<DD>
+<B>scrun</B> [<I>GLOBAL OPTIONS</I>...] <I>delete</I> [<I>DELETE OPTIONS</I>] &lt;<I>container-id</I>&gt;
+<DL COMPACT>
+<DT><DD>
+Release any resources held by container locally and remotely.
+
+<P>
+Perform OCI runtime operations against <I>container-id</I> per:
+<BR>
+
+<A HREF="https://github.com/opencontainers/runtime-spec/blob/main/runtime.md">https://github.com/opencontainers/runtime-spec/blob/main/runtime.md</A>
+<P>
+<B>scrun</B> attempts to mimic the commandline behavior as closely as possible
+to <B><A HREF="crun.html">crun</A></B>(1) and <B><A HREF="runc.html">runc</A></B>(1) in order to maintain in place replacement
+compatiblity with <B><A HREF="DOCKER.html">DOCKER</A></B>(1) and <B><A HREF="podman.html">podman</A></B>(1). All commandline
+arguments for <B><A HREF="crun.html">crun</A></B>(1) and <B><A HREF="runc.html">runc</A></B>(1) will be accepted for compatiblity
+but may be ignored depending on their applicability.
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>scrun</B> is an OCI runtime proxy for Slurm. <B>scrun</B> will accept all
+commands as an OCI compliant runtime but will instead proxy the container and
+all STDIO to Slurm for scheduling and execution. The containers will be
+executed remotely on Slurm compute nodes according to settings in
+<B><A HREF="oci.conf.html">oci.conf</A></B>(5).
+<P>
+<B>scrun</B> requires all containers to be OCI image complaint per:
+<BR>
+
+<A HREF="https://github.com/opencontainers/image-spec/blob/main/spec.md">https://github.com/opencontainers/image-spec/blob/main/spec.md</A>
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>RETURN VALUE<a class="slurm_link" id="SECTION_RETURN-VALUE" href="#SECTION_RETURN-VALUE"></a></h2>
+On successful operation, <B>scrun</B> will return 0. For any other condition
+<B>scrun</B> will return any non-zero number to denote a error.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<h2>GLOBAL OPTIONS<a class="slurm_link" id="SECTION_GLOBAL-OPTIONS" href="#SECTION_GLOBAL-OPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>--cgroup-manager</B><a class="slurm_link" id="OPT_cgroup-manager" href="#OPT_cgroup-manager"></a></dt><dd>Ignored.
+<DT><DD>
+<P>
+<dt><B>--debug</B><a class="slurm_link" id="OPT_debug" href="#OPT_debug"></a></dt><dd>Activate debug level logging.
+<DT><DD>
+<P>
+<dt><B>-f</B> &lt;<I>slurm_conf_path</I>&gt;<a class="slurm_link" id="OPT_-f" href="#OPT_-f"></a></dt><dd>Use specified slurm.conf for configuration.
+<BR>
+
+Default: sysconfdir from <B>configure</B> during compilation
+<DT><DD>
+<P>
+<dt><B>--usage</B><a class="slurm_link" id="OPT_usage" href="#OPT_usage"></a></dt><dd>Show quick help on how to call <B>scrun</B>
+<DT><DD>
+<P>
+<dt><B>--log-format</B>=&lt;<I>json|text</I>&gt;<a class="slurm_link" id="OPT_log-format" href="#OPT_log-format"></a></dt><dd>Optional select format for logging. May be &quot;json&quot; or &quot;text&quot;.
+<BR>
+
+Default: text
+<DT><DD>
+<P>
+<dt><B>--root</B>=&lt;<I>root_path</I>&gt;<a class="slurm_link" id="OPT_root" href="#OPT_root"></a></dt><dd>Path to spool directory to communication sockets and temporary directories and
+files. This should be a tmpfs and should be cleared on reboot.
+<BR>
+
+Default: /run/user/<I>{user_id}</I>/scrun/
+<DT><DD>
+<P>
+<dt><B>--rootless</B><a class="slurm_link" id="OPT_rootless" href="#OPT_rootless"></a></dt><dd>Ignored. All <B>scrun</B> commands are always rootless.
+<DT><DD>
+<P>
+<dt><B>--systemd-cgroup</B><a class="slurm_link" id="OPT_systemd-cgroup" href="#OPT_systemd-cgroup"></a></dt><dd>Ignored.
+<DT><DD>
+<P>
+<dt><B>-v</B><a class="slurm_link" id="OPT_-v" href="#OPT_-v"></a></dt><dd>Increase logging verbosity. Multiple -v's increase verbosity.
+<DT><DD>
+<P>
+<dt><B>-V</B>, <B>--version</B><a class="slurm_link" id="OPT_version" href="#OPT_version"></a></dt><dd>Print version information and exit.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<h2>CREATE OPTIONS<a class="slurm_link" id="SECTION_CREATE-OPTIONS" href="#SECTION_CREATE-OPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>-b</B> &lt;<I>bundle_path</I>&gt;, <B>--bundle</B>=&lt;<I>bundle_path</I>&gt;<a class="slurm_link" id="OPT_bundle" href="#OPT_bundle"></a></dt><dd>Path to the root of the bundle directory.
+<BR>
+
+Default: caller's working directory
+<DT><DD>
+<P>
+<dt><B>--console-socket</B>=&lt;<I>console_socket_path</I>&gt;<a class="slurm_link" id="OPT_console-socket" href="#OPT_console-socket"></a></dt><dd>Optional path to an AF_UNIX socket which will receive a file descriptor
+referencing the master end of the console's pseudoterminal.
+<BR>
+
+Default: <I>ignored</I>
+<DT><DD>
+<P>
+<dt><B>--no-pivot</B><a class="slurm_link" id="OPT_no-pivot" href="#OPT_no-pivot"></a></dt><dd>Ignored.
+<DT><DD>
+<P>
+<dt><B>--no-new-keyring</B><a class="slurm_link" id="OPT_no-new-keyring" href="#OPT_no-new-keyring"></a></dt><dd>Ignored.
+<DT><DD>
+<P>
+<dt><B>--pid-file</B>=&lt;<I>pid_file_path</I>&gt;<a class="slurm_link" id="OPT_pid-file" href="#OPT_pid-file"></a></dt><dd>Specify the file to lock and populate with process ID.
+<BR>
+
+Default: <I>ignored</I>
+<DT><DD>
+<P>
+<dt><B>--preserve-fds</B><a class="slurm_link" id="OPT_preserve-fds" href="#OPT_preserve-fds"></a></dt><dd>Ignored.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<h2>DELETE OPTIONS<a class="slurm_link" id="SECTION_DELETE-OPTIONS" href="#SECTION_DELETE-OPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>--force</B><a class="slurm_link" id="OPT_force" href="#OPT_force"></a></dt><dd>Ignored. All delete requests are forced and will kill any running jobs.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAN">&nbsp;</A>
+<h2>INPUT ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_INPUT-ENVIRONMENT-VARIABLES" href="#SECTION_INPUT-ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>SCRUN_DEBUG</B>=&lt;quiet|fatal|error|info|verbose|debug|debug2|debug3|debug4|debug5&gt;<a class="slurm_link" id="OPT_SCRUN_DEBUG" href="#OPT_SCRUN_DEBUG"></a></dt><dd>Set logging level.
+<DT><DD>
+<P>
+<dt><B>SCRUN_STDERR_DEBUG</B>=&lt;quiet|fatal|error|info|verbose|debug|debug2|debug3|debug4|debug5&gt;<a class="slurm_link" id="OPT_SCRUN_STDERR_DEBUG" href="#OPT_SCRUN_STDERR_DEBUG"></a></dt><dd>Set logging level for standard error ouput only.
+<DT><DD>
+<P>
+<dt><B>SCRUN_SYSLOG_DEBUG</B>=&lt;quiet|fatal|error|info|verbose|debug|debug2|debug3|debug4|debug5&gt;<a class="slurm_link" id="OPT_SCRUN_SYSLOG_DEBUG" href="#OPT_SCRUN_SYSLOG_DEBUG"></a></dt><dd>Set logging level for syslogging only.
+<DT><DD>
+<P>
+<dt><B>SCRUN_FILE_DEBUG</B>=&lt;quiet|fatal|error|info|verbose|debug|debug2|debug3|debug4|debug5&gt;<a class="slurm_link" id="OPT_SCRUN_FILE_DEBUG" href="#OPT_SCRUN_FILE_DEBUG"></a></dt><dd>Set logging level for log file only.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAO">&nbsp;</A>
+<h2>JOB INPUT ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_JOB-INPUT-ENVIRONMENT-VARIABLES" href="#SECTION_JOB-INPUT-ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>SCRUN_ACCOUNT</B><a class="slurm_link" id="OPT_SCRUN_ACCOUNT" href="#OPT_SCRUN_ACCOUNT"></a></dt><dd>See <B>SLURM_ACCOUNT</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_ACCTG_FREQ</B><a class="slurm_link" id="OPT_SCRUN_ACCTG_FREQ" href="#OPT_SCRUN_ACCTG_FREQ"></a></dt><dd>See <B>SLURM_ACCTG_FREQ</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_BURST_BUFFER</B><a class="slurm_link" id="OPT_SCRUN_BURST_BUFFER" href="#OPT_SCRUN_BURST_BUFFER"></a></dt><dd>See <B>SLURM_BURST_BUFFER</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_CLUSTER_CONSTRAINT</B><a class="slurm_link" id="OPT_SCRUN_CLUSTER_CONSTRAINT" href="#OPT_SCRUN_CLUSTER_CONSTRAINT"></a></dt><dd>See <B>SLURM_CLUSTER_CONSTRAINT</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_CLUSTERS</B><a class="slurm_link" id="OPT_SCRUN_CLUSTERS" href="#OPT_SCRUN_CLUSTERS"></a></dt><dd>See <B>SLURM_CLUSTERS</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_CONSTRAINT</B><a class="slurm_link" id="OPT_SCRUN_CONSTRAINT" href="#OPT_SCRUN_CONSTRAINT"></a></dt><dd>See <B>SLURM_CONSTRAINT</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SLURM_CORE_SPEC</B><a class="slurm_link" id="OPT_SLURM_CORE_SPEC" href="#OPT_SLURM_CORE_SPEC"></a></dt><dd>See <B>SLURM_ACCOUNT</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_CPU_BIND</B><a class="slurm_link" id="OPT_SCRUN_CPU_BIND" href="#OPT_SCRUN_CPU_BIND"></a></dt><dd>See <B>SLURM_CPU_BIND</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_CPU_FREQ_REQ</B><a class="slurm_link" id="OPT_SCRUN_CPU_FREQ_REQ" href="#OPT_SCRUN_CPU_FREQ_REQ"></a></dt><dd>See <B>SLURM_CPU_FREQ_REQ</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_CPUS_PER_GPU</B><a class="slurm_link" id="OPT_SCRUN_CPUS_PER_GPU" href="#OPT_SCRUN_CPUS_PER_GPU"></a></dt><dd>See <B>SLURM_CPUS_PER_GPU</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_CPUS_PER_TASK</B><a class="slurm_link" id="OPT_SCRUN_CPUS_PER_TASK" href="#OPT_SCRUN_CPUS_PER_TASK"></a></dt><dd>See <B>SRUN_CPUS_PER_TASK</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_DELAY_BOOT</B><a class="slurm_link" id="OPT_SCRUN_DELAY_BOOT" href="#OPT_SCRUN_DELAY_BOOT"></a></dt><dd>See <B>SLURM_DELAY_BOOT</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_DEPENDENCY</B><a class="slurm_link" id="OPT_SCRUN_DEPENDENCY" href="#OPT_SCRUN_DEPENDENCY"></a></dt><dd>See <B>SLURM_DEPENDENCY</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_DISTRIBUTION</B><a class="slurm_link" id="OPT_SCRUN_DISTRIBUTION" href="#OPT_SCRUN_DISTRIBUTION"></a></dt><dd>See <B>SLURM_DISTRIBUTION</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_EPILOG</B><a class="slurm_link" id="OPT_SCRUN_EPILOG" href="#OPT_SCRUN_EPILOG"></a></dt><dd>See <B>SLURM_EPILOG</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_EXACT</B><a class="slurm_link" id="OPT_SCRUN_EXACT" href="#OPT_SCRUN_EXACT"></a></dt><dd>See <B>SLURM_EXACT</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_EXCLUSIVE</B><a class="slurm_link" id="OPT_SCRUN_EXCLUSIVE" href="#OPT_SCRUN_EXCLUSIVE"></a></dt><dd>See <B>SLURM_EXCLUSIVE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_GPU_BIND</B><a class="slurm_link" id="OPT_SCRUN_GPU_BIND" href="#OPT_SCRUN_GPU_BIND"></a></dt><dd>See <B>SLURM_GPU_BIND</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_GPU_FREQ</B><a class="slurm_link" id="OPT_SCRUN_GPU_FREQ" href="#OPT_SCRUN_GPU_FREQ"></a></dt><dd>See <B>SLURM_GPU_FREQ</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_GPUS</B><a class="slurm_link" id="OPT_SCRUN_GPUS" href="#OPT_SCRUN_GPUS"></a></dt><dd>See <B>SLURM_GPUS</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_GPUS_PER_NODE</B><a class="slurm_link" id="OPT_SCRUN_GPUS_PER_NODE" href="#OPT_SCRUN_GPUS_PER_NODE"></a></dt><dd>See <B>SLURM_GPUS_PER_NODE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_GPUS_PER_SOCKET</B><a class="slurm_link" id="OPT_SCRUN_GPUS_PER_SOCKET" href="#OPT_SCRUN_GPUS_PER_SOCKET"></a></dt><dd>See <B>SLURM_GPUS_PER_SOCKET</B> from <B><A HREF="salloc.html">salloc</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_GPUS_PER_TASK</B><a class="slurm_link" id="OPT_SCRUN_GPUS_PER_TASK" href="#OPT_SCRUN_GPUS_PER_TASK"></a></dt><dd>See <B>SLURM_GPUS_PER_TASK</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_GRES_FLAGS</B><a class="slurm_link" id="OPT_SCRUN_GRES_FLAGS" href="#OPT_SCRUN_GRES_FLAGS"></a></dt><dd>See <B>SLURM_GRES_FLAGS</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_GRES</B><a class="slurm_link" id="OPT_SCRUN_GRES" href="#OPT_SCRUN_GRES"></a></dt><dd>See <B>SLURM_GRES</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_HINT</B><a class="slurm_link" id="OPT_SCRUN_HINT" href="#OPT_SCRUN_HINT"></a></dt><dd>See <B>SLURM_HIST</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_JOB_NAME</B><a class="slurm_link" id="OPT_SCRUN_JOB_NAME" href="#OPT_SCRUN_JOB_NAME"></a></dt><dd>See <B>SLURM_JOB_NAME</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_JOB_NODELIST</B><a class="slurm_link" id="OPT_SCRUN_JOB_NODELIST" href="#OPT_SCRUN_JOB_NODELIST"></a></dt><dd>See <B>SLURM_JOB_NODELIST</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_JOB_NUM_NODES</B><a class="slurm_link" id="OPT_SCRUN_JOB_NUM_NODES" href="#OPT_SCRUN_JOB_NUM_NODES"></a></dt><dd>See <B>SLURM_JOB_NUM_NODES</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_LABELIO</B><a class="slurm_link" id="OPT_SCRUN_LABELIO" href="#OPT_SCRUN_LABELIO"></a></dt><dd>See <B>SLURM_LABELIO</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_MEM_BIND</B><a class="slurm_link" id="OPT_SCRUN_MEM_BIND" href="#OPT_SCRUN_MEM_BIND"></a></dt><dd>See <B>SLURM_MEM_BIND</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_MEM_PER_CPU</B><a class="slurm_link" id="OPT_SCRUN_MEM_PER_CPU" href="#OPT_SCRUN_MEM_PER_CPU"></a></dt><dd>See <B>SLURM_MEM_PER_CPU</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_MEM_PER_GPU</B><a class="slurm_link" id="OPT_SCRUN_MEM_PER_GPU" href="#OPT_SCRUN_MEM_PER_GPU"></a></dt><dd>See <B>SLURM_MEM_PER_GPU</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_MEM_PER_NODE</B><a class="slurm_link" id="OPT_SCRUN_MEM_PER_NODE" href="#OPT_SCRUN_MEM_PER_NODE"></a></dt><dd>See <B>SLURM_MEM_PER_NODE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_MPI_TYPE</B><a class="slurm_link" id="OPT_SCRUN_MPI_TYPE" href="#OPT_SCRUN_MPI_TYPE"></a></dt><dd>See <B>SLURM_MPI_TYPE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_NCORES_PER_SOCKET</B><a class="slurm_link" id="OPT_SCRUN_NCORES_PER_SOCKET" href="#OPT_SCRUN_NCORES_PER_SOCKET"></a></dt><dd>See <B>SLURM_NCORES_PER_SOCKET</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_NETWORK</B><a class="slurm_link" id="OPT_SCRUN_NETWORK" href="#OPT_SCRUN_NETWORK"></a></dt><dd>See <B>SLURM_NETWORK</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_NSOCKETS_PER_NODE</B><a class="slurm_link" id="OPT_SCRUN_NSOCKETS_PER_NODE" href="#OPT_SCRUN_NSOCKETS_PER_NODE"></a></dt><dd>See <B>SLURM_NSOCKETS_PER_NODE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_NTASKS</B><a class="slurm_link" id="OPT_SCRUN_NTASKS" href="#OPT_SCRUN_NTASKS"></a></dt><dd>See <B>SLURM_NTASKS</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_NTASKS_PER_CORE</B><a class="slurm_link" id="OPT_SCRUN_NTASKS_PER_CORE" href="#OPT_SCRUN_NTASKS_PER_CORE"></a></dt><dd>See <B>SLURM_NTASKS_PER_CORE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_NTASKS_PER_GPU</B><a class="slurm_link" id="OPT_SCRUN_NTASKS_PER_GPU" href="#OPT_SCRUN_NTASKS_PER_GPU"></a></dt><dd>See <B>SLURM_NTASKS_PER_GPU</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_NTASKS_PER_NODE</B><a class="slurm_link" id="OPT_SCRUN_NTASKS_PER_NODE" href="#OPT_SCRUN_NTASKS_PER_NODE"></a></dt><dd>See <B>SLURM_NTASKS_PER_NODE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_NTASKS_PER_TRES</B><a class="slurm_link" id="OPT_SCRUN_NTASKS_PER_TRES" href="#OPT_SCRUN_NTASKS_PER_TRES"></a></dt><dd>See <B>SLURM_NTASKS_PER_TRES</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_OPEN_MODE</B><a class="slurm_link" id="OPT_SCRUN_OPEN_MODE" href="#OPT_SCRUN_OPEN_MODE"></a></dt><dd>See <B>SLURM_MODE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_OVERCOMMIT</B><a class="slurm_link" id="OPT_SCRUN_OVERCOMMIT" href="#OPT_SCRUN_OVERCOMMIT"></a></dt><dd>See <B>SLURM_OVERCOMMIT</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_OVERLAP</B><a class="slurm_link" id="OPT_SCRUN_OVERLAP" href="#OPT_SCRUN_OVERLAP"></a></dt><dd>See <B>SLURM_OVERLAP</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_PARTITION</B><a class="slurm_link" id="OPT_SCRUN_PARTITION" href="#OPT_SCRUN_PARTITION"></a></dt><dd>See <B>SLURM_PARTITION</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_POWER</B><a class="slurm_link" id="OPT_SCRUN_POWER" href="#OPT_SCRUN_POWER"></a></dt><dd>See <B>SLURM_POWER</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_PROFILE</B><a class="slurm_link" id="OPT_SCRUN_PROFILE" href="#OPT_SCRUN_PROFILE"></a></dt><dd>See <B>SLURM_PROFILE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_PROLOG</B><a class="slurm_link" id="OPT_SCRUN_PROLOG" href="#OPT_SCRUN_PROLOG"></a></dt><dd>See <B>SLURM_PROLOG</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_QOS</B><a class="slurm_link" id="OPT_SCRUN_QOS" href="#OPT_SCRUN_QOS"></a></dt><dd>See <B>SLURM_QOS</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_REMOTE_CWD</B><a class="slurm_link" id="OPT_SCRUN_REMOTE_CWD" href="#OPT_SCRUN_REMOTE_CWD"></a></dt><dd>See <B>SLURM_REMOTE_CWD</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_REQ_SWITCH</B><a class="slurm_link" id="OPT_SCRUN_REQ_SWITCH" href="#OPT_SCRUN_REQ_SWITCH"></a></dt><dd>See <B>SLURM_REQ_SWITCH</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_RESERVATION</B><a class="slurm_link" id="OPT_SCRUN_RESERVATION" href="#OPT_SCRUN_RESERVATION"></a></dt><dd>See <B>SLURM_RESERVATION</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_SIGNAL</B><a class="slurm_link" id="OPT_SCRUN_SIGNAL" href="#OPT_SCRUN_SIGNAL"></a></dt><dd>See <B>SLURM_SIGNAL</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_SLURMD_DEBUG</B><a class="slurm_link" id="OPT_SCRUN_SLURMD_DEBUG" href="#OPT_SCRUN_SLURMD_DEBUG"></a></dt><dd>See <B>SLURMD_DEBUG</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_SPREAD_JOB</B><a class="slurm_link" id="OPT_SCRUN_SPREAD_JOB" href="#OPT_SCRUN_SPREAD_JOB"></a></dt><dd>See <B>SLURM_SPREAD_JOB</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_TASK_EPILOG</B><a class="slurm_link" id="OPT_SCRUN_TASK_EPILOG" href="#OPT_SCRUN_TASK_EPILOG"></a></dt><dd>See <B>SLURM_TASK_EPILOG</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_TASK_PROLOG</B><a class="slurm_link" id="OPT_SCRUN_TASK_PROLOG" href="#OPT_SCRUN_TASK_PROLOG"></a></dt><dd>See <B>SLURM_TASK_PROLOG</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_THREAD_SPEC</B><a class="slurm_link" id="OPT_SCRUN_THREAD_SPEC" href="#OPT_SCRUN_THREAD_SPEC"></a></dt><dd>See <B>SLURM_THREAD_SPEC</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_THREADS_PER_CORE</B><a class="slurm_link" id="OPT_SCRUN_THREADS_PER_CORE" href="#OPT_SCRUN_THREADS_PER_CORE"></a></dt><dd>See <B>SLURM_THREADS_PER_CORE</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_THREADS</B><a class="slurm_link" id="OPT_SCRUN_THREADS" href="#OPT_SCRUN_THREADS"></a></dt><dd>See <B>SLURM_THREADS</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_TIMELIMIT</B><a class="slurm_link" id="OPT_SCRUN_TIMELIMIT" href="#OPT_SCRUN_TIMELIMIT"></a></dt><dd>See <B>SLURM_TIMELIMIT</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_TRES_PER_TASK</B><a class="slurm_link" id="OPT_SCRUN_TRES_PER_TASK" href="#OPT_SCRUN_TRES_PER_TASK"></a></dt><dd>See <B>SLURM_TRES_PER_TASK</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_UNBUFFEREDIO</B><a class="slurm_link" id="OPT_SCRUN_UNBUFFEREDIO" href="#OPT_SCRUN_UNBUFFEREDIO"></a></dt><dd>See <B>SLURM_UNBUFFEREDIO</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_USE_MIN_NODES</B><a class="slurm_link" id="OPT_SCRUN_USE_MIN_NODES" href="#OPT_SCRUN_USE_MIN_NODES"></a></dt><dd>See <B>SLURM_USE_MIN_NODES</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_WAIT4SWITCH</B><a class="slurm_link" id="OPT_SCRUN_WAIT4SWITCH" href="#OPT_SCRUN_WAIT4SWITCH"></a></dt><dd>See <B>SLURM_WAIT4SWITCH</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_WCKEY</B><a class="slurm_link" id="OPT_SCRUN_WCKEY" href="#OPT_SCRUN_WCKEY"></a></dt><dd>See <B>SLURM_WCKEY</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+<dt><B>SCRUN_WORKING_DIR</B><a class="slurm_link" id="OPT_SCRUN_WORKING_DIR" href="#OPT_SCRUN_WORKING_DIR"></a></dt><dd>See <B>SLURM_WORKING_DIR</B> from <B><A HREF="srun.html">srun</A></B>(1).
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAP">&nbsp;</A>
+<h2>OUTPUT ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_OUTPUT-ENVIRONMENT-VARIABLES" href="#SECTION_OUTPUT-ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>SCRUN_OCI_VERSION</B><a class="slurm_link" id="OPT_SCRUN_OCI_VERSION" href="#OPT_SCRUN_OCI_VERSION"></a></dt><dd>Advertised version of OCI compliance of container.
+<DT><DD>
+<P>
+<dt><B>SCRUN_CONTAINER_ID</B><a class="slurm_link" id="OPT_SCRUN_CONTAINER_ID" href="#OPT_SCRUN_CONTAINER_ID"></a></dt><dd>Value based as <I>container_id</I> during create operation.
+<DT><DD>
+<P>
+<dt><B>SCRUN_PID</B><a class="slurm_link" id="OPT_SCRUN_PID" href="#OPT_SCRUN_PID"></a></dt><dd>PID of process used to monitor and control container on allocation node.
+<DT><DD>
+<P>
+<dt><B>SCRUN_BUNDLE</B><a class="slurm_link" id="OPT_SCRUN_BUNDLE" href="#OPT_SCRUN_BUNDLE"></a></dt><dd>Path to container bundle directory.
+<DT><DD>
+<P>
+<dt><B>SCRUN_SUBMISSION_BUNDLE</B><a class="slurm_link" id="OPT_SCRUN_SUBMISSION_BUNDLE" href="#OPT_SCRUN_SUBMISSION_BUNDLE"></a></dt><dd>Path to container bundle directory before modification by Lua script.
+<DT><DD>
+<P>
+<dt><B>SCRUN_ANNOTATION_*</B><a class="slurm_link" id="OPT_SCRUN_ANNOTATION_*" href="#OPT_SCRUN_ANNOTATION_*"></a></dt><dd>List of annotations from container's config.json.
+<DT><DD>
+<P>
+<dt><B>SCRUN_PID_FILE</B><a class="slurm_link" id="OPT_SCRUN_PID_FILE" href="#OPT_SCRUN_PID_FILE"></a></dt><dd>Path to pid file that is locked and populated with PID of scrun.
+<DT><DD>
+<P>
+<dt><B>SCRUN_SOCKET</B><a class="slurm_link" id="OPT_SCRUN_SOCKET" href="#OPT_SCRUN_SOCKET"></a></dt><dd>Path to control socket for scrun.
+<DT><DD>
+<P>
+<dt><B>SCRUN_SPOOL_DIR</B><a class="slurm_link" id="OPT_SCRUN_SPOOL_DIR" href="#OPT_SCRUN_SPOOL_DIR"></a></dt><dd>Path to workspace for all temporary files for current container. Purged by
+deletion operation.
+<DT><DD>
+<P>
+<dt><B>SCRUN_SUBMISSION_CONFIG_FILE</B><a class="slurm_link" id="OPT_SCRUN_SUBMISSION_CONFIG_FILE" href="#OPT_SCRUN_SUBMISSION_CONFIG_FILE"></a></dt><dd>Path to container's config.json file at time of submission.
+<DT><DD>
+<P>
+<dt><B>SCRUN_USER</B><a class="slurm_link" id="OPT_SCRUN_USER" href="#OPT_SCRUN_USER"></a></dt><dd>Name of user that called create operation.
+<DT><DD>
+<P>
+<dt><B>SCRUN_USER_ID</B><a class="slurm_link" id="OPT_SCRUN_USER_ID" href="#OPT_SCRUN_USER_ID"></a></dt><dd>Numeric ID of user that called create operation.
+<DT><DD>
+<P>
+<dt><B>SCRUN_GROUP</B><a class="slurm_link" id="OPT_SCRUN_GROUP" href="#OPT_SCRUN_GROUP"></a></dt><dd>Name of user's primary group that called create operation.
+<DT><DD>
+<P>
+<dt><B>SCRUN_GROUP_ID</B><a class="slurm_link" id="OPT_SCRUN_GROUP_ID" href="#OPT_SCRUN_GROUP_ID"></a></dt><dd>Numeric ID of user primary group that called create operation.
+<DT><DD>
+<P>
+<dt><B>SCRUN_ROOT</B><a class="slurm_link" id="OPT_SCRUN_ROOT" href="#OPT_SCRUN_ROOT"></a></dt><dd>See <B>--root</B>.
+<DT><DD>
+<P>
+<dt><B>SCRUN_ROOTFS_PATH</B><a class="slurm_link" id="OPT_SCRUN_ROOTFS_PATH" href="#OPT_SCRUN_ROOTFS_PATH"></a></dt><dd>Path to container's root directory.
+<DT><DD>
+<P>
+<dt><B>SCRUN_SUBMISSION_ROOTFS_PATH</B><a class="slurm_link" id="OPT_SCRUN_SUBMISSION_ROOTFS_PATH" href="#OPT_SCRUN_SUBMISSION_ROOTFS_PATH"></a></dt><dd>Path to container's root directory at submission time.
+<DT><DD>
+<P>
+<dt><B>SCRUN_LOG_FILE</B><a class="slurm_link" id="OPT_SCRUN_LOG_FILE" href="#OPT_SCRUN_LOG_FILE"></a></dt><dd>Path to scrun's log file during create operation.
+<DT><DD>
+<P>
+<dt><B>SCRUN_LOG_FORMAT</B><a class="slurm_link" id="OPT_SCRUN_LOG_FORMAT" href="#OPT_SCRUN_LOG_FORMAT"></a></dt><dd>Log format type during create operation.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAQ">&nbsp;</A>
+<h2>JOB OUTPUT ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_JOB-OUTPUT-ENVIRONMENT-VARIABLES" href="#SECTION_JOB-OUTPUT-ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>SLURM_*_HET_GROUP_#</B><a class="slurm_link" id="OPT_SLURM_*_HET_GROUP_#" href="#OPT_SLURM_*_HET_GROUP_#"></a></dt><dd>For a heterogeneous job allocation, the environment variables are set separately
+for each component.
+<DT><DD>
+<P>
+<dt><B>SLURM_CLUSTER_NAME</B><a class="slurm_link" id="OPT_SLURM_CLUSTER_NAME" href="#OPT_SLURM_CLUSTER_NAME"></a></dt><dd>Name of the cluster on which the job is executing.
+<DT><DD>
+<P>
+<dt><B>SLURM_CONTAINER</B><a class="slurm_link" id="OPT_SLURM_CONTAINER" href="#OPT_SLURM_CONTAINER"></a></dt><dd>OCI Bundle for job.
+<DT><DD>
+<P>
+<dt><B>SLURM_CONTAINER_ID</B><a class="slurm_link" id="OPT_SLURM_CONTAINER_ID" href="#OPT_SLURM_CONTAINER_ID"></a></dt><dd>OCI id for job.
+<DT><DD>
+<P>
+<dt><B>SLURM_CPUS_PER_GPU</B><a class="slurm_link" id="OPT_SLURM_CPUS_PER_GPU" href="#OPT_SLURM_CPUS_PER_GPU"></a></dt><dd>Number of CPUs requested per allocated GPU.
+<DT><DD>
+<P>
+<dt><B>SLURM_CPUS_PER_TASK</B><a class="slurm_link" id="OPT_SLURM_CPUS_PER_TASK" href="#OPT_SLURM_CPUS_PER_TASK"></a></dt><dd>Number of CPUs requested per task.
+<DT><DD>
+<P>
+<dt><B>SLURM_DIST_PLANESIZE</B><a class="slurm_link" id="OPT_SLURM_DIST_PLANESIZE" href="#OPT_SLURM_DIST_PLANESIZE"></a></dt><dd>Plane distribution size. Only set for plane distributions.
+<DT><DD>
+<P>
+<dt><B>SLURM_DISTRIBUTION</B><a class="slurm_link" id="OPT_SLURM_DISTRIBUTION" href="#OPT_SLURM_DISTRIBUTION"></a></dt><dd>Distribution type for the allocated jobs.
+<DT><DD>
+<P>
+<dt><B>SLURM_GPU_BIND</B><a class="slurm_link" id="OPT_SLURM_GPU_BIND" href="#OPT_SLURM_GPU_BIND"></a></dt><dd>Requested binding of tasks to GPU.
+<DT><DD>
+<P>
+<dt><B>SLURM_GPU_FREQ</B><a class="slurm_link" id="OPT_SLURM_GPU_FREQ" href="#OPT_SLURM_GPU_FREQ"></a></dt><dd>Requested GPU frequency.
+<DT><DD>
+<P>
+<dt><B>SLURM_GPUS</B><a class="slurm_link" id="OPT_SLURM_GPUS" href="#OPT_SLURM_GPUS"></a></dt><dd>Number of GPUs requested.
+<DT><DD>
+<P>
+<dt><B>SLURM_GPUS_PER_NODE</B><a class="slurm_link" id="OPT_SLURM_GPUS_PER_NODE" href="#OPT_SLURM_GPUS_PER_NODE"></a></dt><dd>Requested GPU count per allocated node.
+<DT><DD>
+<P>
+<dt><B>SLURM_GPUS_PER_SOCKET</B><a class="slurm_link" id="OPT_SLURM_GPUS_PER_SOCKET" href="#OPT_SLURM_GPUS_PER_SOCKET"></a></dt><dd>Requested GPU count per allocated socket.
+<DT><DD>
+<P>
+<dt><B>SLURM_GPUS_PER_TASK</B><a class="slurm_link" id="OPT_SLURM_GPUS_PER_TASK" href="#OPT_SLURM_GPUS_PER_TASK"></a></dt><dd>Requested GPU count per allocated task.
+<DT><DD>
+<P>
+<dt><B>SLURM_HET_SIZE</B><a class="slurm_link" id="OPT_SLURM_HET_SIZE" href="#OPT_SLURM_HET_SIZE"></a></dt><dd>Set to count of components in heterogeneous job.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_ACCOUNT</B><a class="slurm_link" id="OPT_SLURM_JOB_ACCOUNT" href="#OPT_SLURM_JOB_ACCOUNT"></a></dt><dd>Account name associated of the job allocation.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_CPUS_PER_NODE</B><a class="slurm_link" id="OPT_SLURM_JOB_CPUS_PER_NODE" href="#OPT_SLURM_JOB_CPUS_PER_NODE"></a></dt><dd>Count of CPUs available to the job on the nodes in the allocation, using the
+format <I>CPU_count</I>[(x<I>number_of_nodes</I>)][,<I>CPU_count</I>
+[(x<I>number_of_nodes</I>)] ...].
+For example: SLURM_JOB_CPUS_PER_NODE='72(x2),36' indicates that on the
+first and second nodes (as listed by SLURM_JOB_NODELIST) the allocation
+has 72 CPUs, while the third node has 36 CPUs.
+<B>NOTE</B>: The <B>select/linear</B> plugin allocates entire nodes to jobs, so
+the value indicates the total count of CPUs on allocated nodes. The
+<B>select/cons_res</B> and <B>select/cons_tres</B> plugins allocate individual
+CPUs to jobs, so this number indicates the number of CPUs allocated to the job.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_END_TIME</B><a class="slurm_link" id="OPT_SLURM_JOB_END_TIME" href="#OPT_SLURM_JOB_END_TIME"></a></dt><dd>The UNIX timestamp for a job's projected end time.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_GPUS</B><a class="slurm_link" id="OPT_SLURM_JOB_GPUS" href="#OPT_SLURM_JOB_GPUS"></a></dt><dd>The global GPU IDs of the GPUs allocated to this job. The GPU IDs are not
+relative to any device cgroup, even if devices are constrained with task/cgroup.
+Only set in batch and interactive jobs.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_ID</B><a class="slurm_link" id="OPT_SLURM_JOB_ID" href="#OPT_SLURM_JOB_ID"></a></dt><dd>The ID of the job allocation.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_NODELIST</B><a class="slurm_link" id="OPT_SLURM_JOB_NODELIST" href="#OPT_SLURM_JOB_NODELIST"></a></dt><dd>List of nodes allocated to the job.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_NUM_NODES</B><a class="slurm_link" id="OPT_SLURM_JOB_NUM_NODES" href="#OPT_SLURM_JOB_NUM_NODES"></a></dt><dd>Total number of nodes in the job allocation.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_PARTITION</B><a class="slurm_link" id="OPT_SLURM_JOB_PARTITION" href="#OPT_SLURM_JOB_PARTITION"></a></dt><dd>Name of the partition in which the job is running.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_QOS</B><a class="slurm_link" id="OPT_SLURM_JOB_QOS" href="#OPT_SLURM_JOB_QOS"></a></dt><dd>Quality Of Service (QOS) of the job allocation.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_RESERVATION</B><a class="slurm_link" id="OPT_SLURM_JOB_RESERVATION" href="#OPT_SLURM_JOB_RESERVATION"></a></dt><dd>Advanced reservation containing the job allocation, if any.
+<DT><DD>
+<P>
+<dt><B>SLURM_JOB_START_TIME</B><a class="slurm_link" id="OPT_SLURM_JOB_START_TIME" href="#OPT_SLURM_JOB_START_TIME"></a></dt><dd>UNIX timestamp for a job's start time.
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_BIND</B><a class="slurm_link" id="OPT_SLURM_MEM_BIND" href="#OPT_SLURM_MEM_BIND"></a></dt><dd>Bind tasks to memory.
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_BIND_LIST</B><a class="slurm_link" id="OPT_SLURM_MEM_BIND_LIST" href="#OPT_SLURM_MEM_BIND_LIST"></a></dt><dd>Set to bit mask used for memory binding.
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_BIND_PREFER</B><a class="slurm_link" id="OPT_SLURM_MEM_BIND_PREFER" href="#OPT_SLURM_MEM_BIND_PREFER"></a></dt><dd>Set to &quot;prefer&quot; if the <B>SLURM_MEM_BIND</B> option includes the prefer option.
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_BIND_SORT</B><a class="slurm_link" id="OPT_SLURM_MEM_BIND_SORT" href="#OPT_SLURM_MEM_BIND_SORT"></a></dt><dd>Sort free cache pages (run zonesort on Intel KNL nodes)
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_BIND_TYPE</B><a class="slurm_link" id="OPT_SLURM_MEM_BIND_TYPE" href="#OPT_SLURM_MEM_BIND_TYPE"></a></dt><dd>Set to the memory binding type specified with the <B>SLURM_MEM_BIND</B> option.
+Possible values are &quot;none&quot;, &quot;rank&quot;, &quot;map_map&quot;, &quot;mask_mem&quot; and &quot;local&quot;.
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_BIND_VERBOSE</B><a class="slurm_link" id="OPT_SLURM_MEM_BIND_VERBOSE" href="#OPT_SLURM_MEM_BIND_VERBOSE"></a></dt><dd>Set to &quot;verbose&quot; if the <B>SLURM_MEM_BIND</B> option includes the verbose option.
+Set to &quot;quiet&quot; otherwise.
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_PER_CPU</B><a class="slurm_link" id="OPT_SLURM_MEM_PER_CPU" href="#OPT_SLURM_MEM_PER_CPU"></a></dt><dd>Minimum memory required per usable allocated CPU.
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_PER_GPU</B><a class="slurm_link" id="OPT_SLURM_MEM_PER_GPU" href="#OPT_SLURM_MEM_PER_GPU"></a></dt><dd>Requested memory per allocated GPU.
+<DT><DD>
+<P>
+<dt><B>SLURM_MEM_PER_NODE</B><a class="slurm_link" id="OPT_SLURM_MEM_PER_NODE" href="#OPT_SLURM_MEM_PER_NODE"></a></dt><dd>Specify the real memory required per node.
+<DT><DD>
+<P>
+<dt><B>SLURM_NODE_ALIASES</B><a class="slurm_link" id="OPT_SLURM_NODE_ALIASES" href="#OPT_SLURM_NODE_ALIASES"></a></dt><dd>Sets of node name, communication address and hostname for nodes allocated to
+the job from the cloud. Each element in the set if colon separated and each
+set is comma separated. For example:
+SLURM_NODE_ALIASES=ec0:1.2.3.4:foo,ec1:1.2.3.5:bar
+<DT><DD>
+<P>
+<dt><B>SLURM_NTASKS</B><a class="slurm_link" id="OPT_SLURM_NTASKS" href="#OPT_SLURM_NTASKS"></a></dt><dd>Specify the number of tasks to run.
+<DT><DD>
+<P>
+<dt><B>SLURM_NTASKS_PER_CORE</B><a class="slurm_link" id="OPT_SLURM_NTASKS_PER_CORE" href="#OPT_SLURM_NTASKS_PER_CORE"></a></dt><dd>Request the maximum <I>ntasks</I> be invoked on each core.
+<DT><DD>
+<P>
+<dt><B>SLURM_NTASKS_PER_GPU</B><a class="slurm_link" id="OPT_SLURM_NTASKS_PER_GPU" href="#OPT_SLURM_NTASKS_PER_GPU"></a></dt><dd>Request that there are <I>ntasks</I> tasks invoked for every GPU.
+<DT><DD>
+<P>
+<dt><B>SLURM_NTASKS_PER_NODE</B><a class="slurm_link" id="OPT_SLURM_NTASKS_PER_NODE" href="#OPT_SLURM_NTASKS_PER_NODE"></a></dt><dd>Request that <I>ntasks</I> be invoked on each node.
+<DT><DD>
+<P>
+<dt><B>SLURM_NTASKS_PER_SOCKET</B><a class="slurm_link" id="OPT_SLURM_NTASKS_PER_SOCKET" href="#OPT_SLURM_NTASKS_PER_SOCKET"></a></dt><dd>Request the maximum <I>ntasks</I> be invoked on each socket.
+<DT><DD>
+<P>
+<dt><B>SLURM_OVERCOMMIT</B><a class="slurm_link" id="OPT_SLURM_OVERCOMMIT" href="#OPT_SLURM_OVERCOMMIT"></a></dt><dd>Overcommit resources.
+<DT><DD>
+<P>
+<dt><B>SLURM_PROFILE</B><a class="slurm_link" id="OPT_SLURM_PROFILE" href="#OPT_SLURM_PROFILE"></a></dt><dd>Enables detailed data collection by the acct_gather_profile plugin.
+<DT><DD>
+<P>
+<dt><B>SLURM_SHARDS_ON_NODE</B><a class="slurm_link" id="OPT_SLURM_SHARDS_ON_NODE" href="#OPT_SLURM_SHARDS_ON_NODE"></a></dt><dd>Number of GPU Shards available to the step on this node.
+<DT><DD>
+<P>
+<dt><B>SLURM_SUBMIT_HOST</B><a class="slurm_link" id="OPT_SLURM_SUBMIT_HOST" href="#OPT_SLURM_SUBMIT_HOST"></a></dt><dd>The hostname of the computer from which <B>scrun</B> was invoked.
+<DT><DD>
+<P>
+<dt><B>SLURM_TASKS_PER_NODE</B><a class="slurm_link" id="OPT_SLURM_TASKS_PER_NODE" href="#OPT_SLURM_TASKS_PER_NODE"></a></dt><dd>Number of tasks to be initiated on each node. Values are
+comma separated and in the same order as SLURM_JOB_NODELIST.
+If two or more consecutive nodes are to have the same task
+count, that count is followed by &quot;(x#)&quot; where &quot;#&quot; is the
+repetition count. For example, &quot;SLURM_TASKS_PER_NODE=2(x3),1&quot;
+indicates that the first three nodes will each execute two
+tasks and the fourth node will execute one task.
+<DT><DD>
+<P>
+<dt><B>SLURM_THREADS_PER_CORE</B><a class="slurm_link" id="OPT_SLURM_THREADS_PER_CORE" href="#OPT_SLURM_THREADS_PER_CORE"></a></dt><dd>This is only set if <B>--threads-per-core</B> or
+<B>SCRUN_THREADS_PER_CORE</B> were specified. The value will be set to the
+value specified by <B>--threads-per-core</B> or
+<B>SCRUN_THREADS_PER_CORE</B>. This is used by subsequent srun calls within the
+job allocation.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAR">&nbsp;</A>
+<h2>SCRUN.LUA<a class="slurm_link" id="SECTION_SCRUN.LUA" href="#SECTION_SCRUN.LUA"></a></h2>
+<P>
+
+/etc/slurm/<B>scrun.lua</B> must be present on any node
+where <B>scrun</B> will be invoked. <B>scrun.lua</B> must be a compliant
+<B><A HREF="lua.html">lua</A></B>(1) script.
+<P>
+<A NAME="lbAS">&nbsp;</A>
+<h3>Required functions<a class="slurm_link" id="SECTION_Required-functions" href="#SECTION_Required-functions"></a></h3>
+The following functions must be defined.
+<P>
+<DL COMPACT>
+<DT>&bull; function <B>slurm_scrun_stage_in</B>(<B>id</B>, <B>bundle</B>, <B>spool_dir</B>, <B>config_file</B>, <B>job_id</B>, <B>user_id</B>, <B>group_id</B>, <B>job_env</B>)<DD>
+Called right after job allocation to stage container into job node(s). Must
+return <I>SLURM.success</I> or job will be cancelled. It is required that
+function will prepare the container for execution on job node(s) as required to
+run as configured in <B><A HREF="oci.conf.html">oci.conf</A></B>(1). The function may block as long as
+required until container has been fully prepared (up to the job's max wall
+time).
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>id</B><a class="slurm_link" id="OPT_id" href="#OPT_id"></a></dt><dd>Container ID
+<dt><B>bundle</B><a class="slurm_link" id="OPT_bundle_1" href="#OPT_bundle_1"></a></dt><dd>OCI bundle path
+<dt><B>spool_dir</B><a class="slurm_link" id="OPT_spool_dir" href="#OPT_spool_dir"></a></dt><dd>Temporary working directory for container
+<dt><B>config_file</B><a class="slurm_link" id="OPT_config_file" href="#OPT_config_file"></a></dt><dd>Path to config.json for container
+<dt><B>job_id</B><a class="slurm_link" id="OPT_job_id" href="#OPT_job_id"></a></dt><dd><I>jobid</I> of job allocation
+<dt><B>user_id</B><a class="slurm_link" id="OPT_user_id" href="#OPT_user_id"></a></dt><dd>Resolved numeric user id of job allocation. It is generally expected that the
+lua script will be executed inside of a user namespace running under the
+<I>root(0)</I> user.
+<dt><B>group_id</B><a class="slurm_link" id="OPT_group_id" href="#OPT_group_id"></a></dt><dd>Resolved numeric group id of job allocation. It is generally expected that the
+lua script will be executed inside of a user namespace running under the
+<I>root(0)</I> group.
+<dt><B>job_env</B><a class="slurm_link" id="OPT_job_env" href="#OPT_job_env"></a></dt><dd>Table with each entry of Key=Value or Value of each environment variable of the
+job.
+<DT><DD>
+</DL>
+</DL>
+
+<P>
+<DT>&bull; function <B>slurm_scrun_stage_out</B>(<B>id</B>, <B>bundle</B>, <B>orig_bundle</B>, <B>root_path</B>, <B>orig_root_path</B>, <B>spool_dir</B>, <B>config_file</B>, <B>jobid</B>, <B>user_id</B>, <B>group_id</B>)<DD>
+Called right after container step completes to stage out files from job nodes.
+Must return <I>SLURM.success</I> or job will be cancelled. It is required that
+function will pull back any changes and cleanup the container on job node(s).
+The function may block as long as required until container has been fully
+prepared (up to the job's max wall time).
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>id</B><a class="slurm_link" id="OPT_id_1" href="#OPT_id_1"></a></dt><dd>Container ID
+<dt><B>bundle</B><a class="slurm_link" id="OPT_bundle_2" href="#OPT_bundle_2"></a></dt><dd>OCI bundle path
+<dt><B>orig_bundle</B><a class="slurm_link" id="OPT_orig_bundle" href="#OPT_orig_bundle"></a></dt><dd>Originally submitted OCI bundle path before modification by
+<B>set_bundle_path</B>().
+<dt><B>root_path</B><a class="slurm_link" id="OPT_root_path" href="#OPT_root_path"></a></dt><dd>Path to directory root of container contents.
+<dt><B>orig_root_path</B><a class="slurm_link" id="OPT_orig_root_path" href="#OPT_orig_root_path"></a></dt><dd>Original path to directory root of container contents before modification by
+<B>set_root_path</B>().
+<dt><B>spool_dir</B><a class="slurm_link" id="OPT_spool_dir_1" href="#OPT_spool_dir_1"></a></dt><dd>Temporary working directory for container
+<dt><B>config_file</B><a class="slurm_link" id="OPT_config_file_1" href="#OPT_config_file_1"></a></dt><dd>Path to config.json for container
+<dt><B>job_id</B><a class="slurm_link" id="OPT_job_id_1" href="#OPT_job_id_1"></a></dt><dd><I>jobid</I> of job allocation
+<dt><B>user_id</B><a class="slurm_link" id="OPT_user_id_1" href="#OPT_user_id_1"></a></dt><dd>Resolved numeric user id of job allocation. It is generally expected that the
+lua script will be executed inside of a user namespace running under the
+<I>root(0)</I> user.
+<dt><B>group_id</B><a class="slurm_link" id="OPT_group_id_1" href="#OPT_group_id_1"></a></dt><dd>Resolved numeric group id of job allocation. It is generally expected that the
+lua script will be executed inside of a user namespace running under the
+<I>root(0)</I> group.
+</DL>
+</DL>
+
+<P>
+</DL>
+<A NAME="lbAT">&nbsp;</A>
+<h3>Provided functions<a class="slurm_link" id="SECTION_Provided-functions" href="#SECTION_Provided-functions"></a></h3>
+The following functions are provided for any Lua function to call as needed.
+<P>
+<DL COMPACT>
+<DT>&bull; <B>slurm.set_bundle_path</B>(<I>PATH</I>)<DD>
+Called to notify <B>scrun</B> to use <I>PATH</I> as new OCI container bundle
+path. Depending on the filesystem layout, cloning the container bundle may be
+required to allow execution on job nodes.
+<P>
+<DT>&bull; <B>slurm.set_root_path</B>(<I>PATH</I>)<DD>
+Called to notify <B>scrun</B> to use <I>PATH</I> as new container root filesystem
+path. Depending on the filesystem layout, cloning the container bundle may be
+required to allow execution on job nodes. Script must also update #/root/path
+in config.json when changing root path.
+<P>
+<DT>&bull; <I>STATUS</I>,<I>OUTPUT</I> = <B>slurm.remote_command</B>(<I>SCRIPT</I>)<DD>
+Run <I>SCRIPT</I> in new job step on all job nodes. Returns numeric job status
+as <I>STATUS</I> and job stdio as <I>OUTPUT</I>. Blocks until <I>SCRIPT</I> exits.
+<P>
+<DT>&bull; <I>STATUS</I>,<I>OUTPUT</I> = <B>slurm.allocator_command</B>(<I>SCRIPT</I>)<DD>
+Run <I>SCRIPT</I> as forked child process of <B>scrun</B>. Returns numeric job status
+as <I>STATUS</I> and job stdio as <I>OUTPUT</I>. Blocks until <I>SCRIPT</I> exits.
+<P>
+<DT>&bull; <B>slurm.log</B>(<I>MSG</I>, <I>LEVEL</I>)<DD>
+Log <I>MSG</I> at log <I>LEVEL</I>. Valid range of values for <I>LEVEL</I> is [0,
+4].
+<P>
+<DT>&bull; <B>slurm.error</B>(<I>MSG</I>)<DD>
+Log error <I>MSG</I>.
+<P>
+<DT>&bull; <B>slurm.log_error</B>(<I>MSG</I>)<DD>
+Log error <I>MSG</I>.
+<P>
+<DT>&bull; <B>slurm.log_info</B>(<I>MSG</I>)<DD>
+Log <I>MSG</I> at log level INFO.
+<P>
+<DT>&bull; <B>slurm.log_verbose</B>(<I>MSG</I>)<DD>
+Log <I>MSG</I> at log level VERBOSE.
+<P>
+<DT>&bull; <B>slurm.log_verbose</B>(<I>MSG</I>)<DD>
+Log <I>MSG</I> at log level VERBOSE.
+<P>
+<DT>&bull; <B>slurm.log_debug</B>(<I>MSG</I>)<DD>
+Log <I>MSG</I> at log level DEBUG.
+<P>
+<DT>&bull; <B>slurm.log_debug2</B>(<I>MSG</I>)<DD>
+Log <I>MSG</I> at log level DEBUG2.
+<P>
+<DT>&bull; <B>slurm.log_debug3</B>(<I>MSG</I>)<DD>
+Log <I>MSG</I> at log level DEBUG3.
+<P>
+<DT>&bull; <B>slurm.log_debug4</B>(<I>MSG</I>)<DD>
+Log <I>MSG</I> at log level DEBUG4.
+<P>
+<DT>&bull; <I>MINUTES</I> = <B>slurm.time_str2mins</B>(<I>TIME_STRING</I>)<DD>
+Parse <I>TIME_STRING</I> into number of minutes as <I>MINUTES</I>. Valid formats:
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>&bull; days-[hours[:minutes[:seconds]]]<DD>
+<DT>&bull; hours:minutes:seconds<DD>
+<DT>&bull; minutes[:seconds]<DD>
+<DT>&bull; -1<DD>
+<DT>&bull; INFINITE<DD>
+<DT>&bull; UNLIMITED<DD>
+</DL>
+</DL>
+
+<P>
+</DL>
+<A NAME="lbAU">&nbsp;</A>
+<h3>Example <B>scrun.lua</B> scripts<a class="slurm_link" id="SECTION_Example-<B>scrun.lua</B>-scripts" href="#SECTION_Example-<B>scrun.lua</B>-scripts"></a></h3>
+<P>
+<DL COMPACT>
+<DT>Minimal required for <B>scrun</B> operation:<DD>
+<PRE>
+function slurm_scrun_stage_in(id, bundle, spool_dir, config_file, job_id, user_id, group_id, job_env)
+        return slurm.SUCCESS
+end
+
+function slurm_scrun_stage_out(id, bundle, orig_bundle, root_path, orig_root_path, spool_dir, config_file, jobid, user_id, group_id)
+        return slurm.SUCCESS
+end
+
+return slurm.SUCCESS
+</PRE>
+
+<P>
+<DT>Full Container staging using rsync:<DD>
+This is full example that will stage container as given by <B><A HREF="docker.html">docker</A></B>(1) or
+<B><A HREF="podman.html">podman</A></B>(1). Container's config.json is modified to remove unwanted
+functions that may cause container run to under <B><A HREF="crun.html">crun</A></B>(1) or <B><A HREF="crun.html">crun</A></B>(1).
+Script uses rsync to move container to an shared /home filesystem.
+<P>
+<PRE>
+local json = require 'json'
+local open = io.open
+
+local function read_file(path)
+        local file = open(path, &quot;rb&quot;)
+        if not file then return nil end
+        local content = file:read &quot;*all&quot;
+        file:close()
+        return content
+end
+
+local function write_file(path, contents)
+        local file = open(path, &quot;wb&quot;)
+        if not file then return nil end
+        file:write(contents)
+        file:close()
+        return
+end
+
+function slurm_scrun_stage_in(id, bundle, spool_dir, config_file, job_id, user_id, group_id, job_env)
+        slurm.log_debug(string.format(&quot;stage_in(%s, %s, %s, %s, %d, %d, %d)&quot;,
+                       id, bundle, spool_dir, config_file, job_id, user_id, group_id))
+
+        local status, output, user, rc
+        local config = json.decode(read_file(config_file))
+        local src_rootfs = config[&quot;root&quot;][&quot;path&quot;]
+        rc, user = slurm.allocator_command(string.format(&quot;id -un %d&quot;, user_id))
+        user = string.gsub(user, &quot;%s+&quot;, &quot;&quot;)
+        local root = &quot;/home/&quot;..user..&quot;/containers/&quot;
+        local dst_bundle = root..&quot;/&quot;..id..&quot;/&quot;
+        local dst_config = root..&quot;/&quot;..id..&quot;/config.json&quot;
+        local dst_rootfs = root..&quot;/&quot;..id..&quot;/rootfs/&quot;
+
+        if string.sub(src_rootfs, 1, 1) ~= &quot;/&quot;
+        then
+                -- always use absolute path
+                src_rootfs = string.format(&quot;%s/%s&quot;, bundle, src_rootfs)
+        end
+
+        status, output = slurm.allocator_command(&quot;mkdir -p &quot;..dst_rootfs)
+        if (status ~= 0)
+        then
+                slurm.log_info(string.format(&quot;mkdir(%s) failed %u: %s&quot;,
+                               dst_rootfs, status, output))
+                return slurm.ERROR
+        end
+
+        status, output = slurm.allocator_command(string.format(&quot;/usr/bin/env rsync --exclude sys --exclude proc --numeric-ids --delete-after --ignore-errors --stats -a -- %s/ %s/&quot;, src_rootfs, dst_rootfs))
+        if (status ~= 0)
+        then
+                -- rsync can fail due to permissions which may not matter
+                slurm.log_info(string.format(&quot;WARNING: rsync failed: %s&quot;, output))
+        end
+
+        slurm.set_bundle_path(dst_bundle)
+        slurm.set_root_path(dst_rootfs)
+
+        config[&quot;root&quot;][&quot;path&quot;] = dst_rootfs
+
+        -- Always force user namespace support in container or runc will reject
+        if ((config[&quot;process&quot;] ~= nil) and (config[&quot;process&quot;][&quot;user&quot;] ~= nil))
+        then
+                -- purge additionalGids as they are not supported in rootless
+                config[&quot;process&quot;][&quot;user&quot;][&quot;additionalGids&quot;] = nil
+        end
+
+        if (config[&quot;linux&quot;] ~= nil)
+        then
+                -- force user namespace to always be defined for rootless mode
+                local found = false
+                if (config[&quot;linux&quot;][&quot;namespaces&quot;] == nil)
+                then
+                        config[&quot;linux&quot;][&quot;namespaces&quot;] = {}
+                else
+                        for _, namespace in ipairs(config[&quot;linux&quot;][&quot;namespaces&quot;]) do
+                                if (namespace[&quot;type&quot;] == &quot;user&quot;)
+                                then
+                                        found=true
+                                        break
+                                end
+                        end
+                end
+                if (found == false)
+                then
+                        table.insert(config[&quot;linux&quot;][&quot;namespaces&quot;], {type= &quot;user&quot;})
+                end
+
+                -- clear all attempts to map uid/gids
+                config[&quot;linux&quot;][&quot;uidMappings&quot;] = nil
+                config[&quot;linux&quot;][&quot;gidMappings&quot;] = nil
+
+                -- disable trying to use a specific cgroup
+                config[&quot;linux&quot;][&quot;cgroupsPath&quot;] = nil
+        end
+
+        if (config[&quot;mounts&quot;] ~= nil)
+        then
+                -- Find and remove any user/group settings in mounts
+                for _, mount in ipairs(config[&quot;mounts&quot;]) do
+                        local opts = {}
+
+                        if (mount[&quot;options&quot;] ~= nil)
+                        then
+                                for _, opt in ipairs(mount[&quot;options&quot;]) do
+                                        if ((string.sub(opt, 1, 4) ~= &quot;gid=&quot;) and (string.sub(opt, 1, 4) ~= &quot;uid=&quot;))
+                                        then
+                                                table.insert(opts, opt)
+                                        end
+                                end
+                        end
+
+                        mount[&quot;options&quot;] = opts
+                end
+
+                -- Remove all bind mounts by copying files into rootfs
+                local mounts = {}
+                for i, mount in ipairs(config[&quot;mounts&quot;]) do
+                        if ((mount[&quot;type&quot;] ~= nil) and (mount[&quot;type&quot;] == &quot;bind&quot;) and (string.sub(mount[&quot;source&quot;], 1, 4) ~= &quot;/sys&quot;) and (string.sub(mount[&quot;source&quot;], 1, 5) ~= &quot;/proc&quot;))
+                        then
+                                status, output = slurm.allocator_command(string.format(&quot;/usr/bin/env rsync --numeric-ids --ignore-errors --stats -a -- %s %s&quot;, mount[&quot;source&quot;], dst_rootfs..mount[&quot;destination&quot;]))
+                                if (status ~= 0)
+                                then
+                                        -- rsync can fail due to permissions which may not matter
+                                        slurm.log_info(&quot;rsync failed&quot;)
+                                end
+                        else
+                                table.insert(mounts, mount)
+                        end
+                end
+                config[&quot;mounts&quot;] = mounts
+        end
+
+        -- Merge in Job environment into container
+        if (config[&quot;process&quot;][&quot;env&quot;] == nil)
+        then
+                config[&quot;process&quot;][&quot;env&quot;] = {}
+        end
+        for _, env in ipairs(job_env) do
+                table.insert(config[&quot;process&quot;][&quot;env&quot;], env)
+        end
+
+        -- Remove all prestart hooks to squash any networking attempts
+        if ((config[&quot;hooks&quot;] ~= nil) and (config[&quot;hooks&quot;][&quot;prestart&quot;] ~= nil))
+        then
+                config[&quot;hooks&quot;][&quot;prestart&quot;] = nil
+        end
+
+        -- Remove all rlimits
+        if ((config[&quot;process&quot;] ~= nil) and (config[&quot;process&quot;][&quot;rlimits&quot;] ~= nil))
+        then
+                config[&quot;process&quot;][&quot;rlimits&quot;] = nil
+        end
+
+        write_file(dst_config, json.encode(config))
+        slurm.log_info(&quot;created: &quot;..dst_config)
+
+        return slurm.SUCCESS
+end
+
+function slurm_scrun_stage_out(id, bundle, orig_bundle, root_path, orig_root_path, spool_dir, config_file, jobid, user_id, group_id)
+        slurm.log_debug(string.format(&quot;stage_out(%s, %s, %s, %s, %s, %s, %s, %d, %d, %d)&quot;,
+                       id, bundle, orig_bundle, root_path, orig_root_path, spool_dir, config_file, jobid, user_id, group_id))
+
+        if (bundle == orig_bundle)
+        then
+                slurm.log_info(string.format(&quot;skipping stage_out as bundle=orig_bundle=%s&quot;, bundle))
+                return slurm.SUCCESS
+        end
+
+        status, output = slurm.allocator_command(string.format(&quot;/usr/bin/env rsync --numeric-ids --delete-after --ignore-errors --stats -a -- %s/ %s/&quot;, root_path, orig_root_path))
+        if (status ~= 0)
+        then
+                -- rsync can fail due to permissions which may not matter
+                slurm.log_info(&quot;rsync failed&quot;)
+        end
+
+        return slurm.SUCCESS
+end
+
+slurm.log_info(&quot;initialized scrun.lua&quot;)
+
+return slurm.SUCCESS
+</PRE>
+
+<P>
+<P>
+</DL>
+<A NAME="lbAV">&nbsp;</A>
+<h2>SIGNALS<a class="slurm_link" id="SECTION_SIGNALS" href="#SECTION_SIGNALS"></a></h2>
+<P>
+
+When <B>scrun</B> receives SIGINT, it will attempt to gracefully cancel any
+related jobs (if any) and cleanup.
+<P>
+<A NAME="lbAW">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2023 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAX">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<B><A HREF="Slurm.html">Slurm</A></B>(1), <B><A HREF="oci.conf.html">oci.conf</A></B>(5), <B><A HREF="srun.html">srun</A></B>(1), <B><A HREF="crun.html">crun</A></B>(1), <B><A HREF="runc.html">runc</A></B>(1),
+<B><A HREF="DOCKER.html">DOCKER</A></B>(1) and <B><A HREF="podman.html">podman</A></B>(1)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">Create Operation</A><DD>
+<DT><A HREF="#lbAE">Start Operation</A><DD>
+<DT><A HREF="#lbAF">Query State Operation</A><DD>
+<DT><A HREF="#lbAG">Kill Operation</A><DD>
+<DT><A HREF="#lbAH">Delete Operation</A><DD>
+<DT><A HREF="#lbAI">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAJ">RETURN VALUE</A><DD>
+<DT><A HREF="#lbAK">GLOBAL OPTIONS</A><DD>
+<DT><A HREF="#lbAL">CREATE OPTIONS</A><DD>
+<DT><A HREF="#lbAM">DELETE OPTIONS</A><DD>
+<DT><A HREF="#lbAN">INPUT ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAO">JOB INPUT ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAP">OUTPUT ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAQ">JOB OUTPUT ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAR">SCRUN.LUA</A><DD>
+<DL>
+<DT><A HREF="#lbAS">Required functions</A><DD>
+<DT><A HREF="#lbAT">Provided functions</A><DD>
+<DT><A HREF="#lbAU">Example <B>scrun.lua</B> scripts</A><DD>
+</DL>
+<DT><A HREF="#lbAV">SIGNALS</A><DD>
+<DT><A HREF="#lbAW">COPYING</A><DD>
+<DT><A HREF="#lbAX">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 05:46:51 GMT, December 07, 2023
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

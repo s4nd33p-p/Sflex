@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - scancel</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/scancel.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>scancel</H1>
+Section: Slurm Commands (1)<BR>Updated: Slurm Commands<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+scancel - Used to signal jobs or job steps that are under the control of Slurm.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+<B>scancel</B> [<I>OPTIONS</I>...] [<I>job_id</I>[_<I>array_id</I>][.<I>step_id</I>]] [<I>job_id</I>[_<I>array_id</I>][.<I>step_id</I>]...]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>scancel</B> is used to signal or cancel jobs, job arrays or job steps.
+An arbitrary number of jobs or job steps may be signaled using job
+specification filters or a space separated list of specific job and/or
+job step IDs.
+If the job ID of a job array is specified with an array ID value then only that
+job array element will be cancelled.
+If the job ID of a job array is specified without an array ID value then all
+job array elements will be cancelled.
+While a heterogeneous job is in a PENDING state, only the entire job can be
+cancelled rather than its individual components.
+A request to cancel an individual component of a heterogeneous job while in
+a PENDING state will return an error.
+After the job has begun execution, an individual component can be cancelled.
+A job or job step can only be signaled by the owner of that job or user root.
+If an attempt is made by an unauthorized user to signal a job or job step, an
+error message will be printed and the job will not be signaled.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>OPTIONS<a class="slurm_link" id="SECTION_OPTIONS" href="#SECTION_OPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>-A</B>, <B>--account</B>=<I>account</I><a class="slurm_link" id="OPT_account" href="#OPT_account"></a></dt><dd>Restrict the scancel operation to jobs under this charge account.
+<DT><DD>
+<P>
+<dt><B>-b</B>, <B>--batch</B><a class="slurm_link" id="OPT_batch" href="#OPT_batch"></a></dt><dd>By default, signals other than SIGKILL are not sent to the batch step (the shell
+script). With this option <B>scancel</B> signals only the batch step, but not
+any other steps.
+This is useful when the shell script has to trap the signal and take some
+application defined action.
+Most shells cannot handle signals while a command is running (i.e. is a child
+process of the batch step), so the shell needs to wait until the command ends to
+then handle the signal.
+Children of the batch step are not signaled with this option. If this is
+desired, use <B>-f</B>, <B>--full</B> instead.
+NOTE: If used with <B>-f</B>, <B>--full</B>, this option ignored.
+NOTE: This option is not applicable if <I>step_id</I> is specified.
+NOTE: The shell itself may exit upon receipt of many signals.
+You may avoid this by explicitly trap signals within the shell
+script (e.g. &quot;trap &lt;arg&gt; &lt;signals&gt;&quot;). See the shell documentation
+for details.
+<DT><DD>
+<P>
+<dt><B>-M</B>, <B>--clusters</B>=&lt;<I>string</I>&gt;<a class="slurm_link" id="OPT_clusters" href="#OPT_clusters"></a></dt><dd>Cluster to issue commands to. Implies <B>--ctld</B>.
+Note that the SlurmDBD must be up for this option to work properly.
+<DT><DD>
+<P>
+<dt><B>--ctld</B><a class="slurm_link" id="OPT_ctld" href="#OPT_ctld"></a></dt><dd>Send the job signal request to the slurmctld daemon rather than directly to the
+slurmd daemons. This increases overhead, but offers better fault tolerance.
+This is the default behavior on architectures using front end nodes (e.g.
+Cray ALPS computers) or when the <B>--clusters</B> option is used.
+<DT><DD>
+<P>
+<dt><B>-c</B>, <B>--cron</B><a class="slurm_link" id="OPT_cron" href="#OPT_cron"></a></dt><dd>Confirm request to cancel a job submitted by scrontab.  This option only has
+effect with the &quot;explicit_scancel&quot; option is set in <B>ScronParameters</B>.
+<DT><DD>
+<P>
+<dt><B>-f</B>, <B>--full</B><a class="slurm_link" id="OPT_full" href="#OPT_full"></a></dt><dd>By default, signals other than SIGKILL are not sent to the batch step (the shell
+script). With this option <B>scancel</B> also signals the batch script and its
+children processes.
+Most shells cannot handle signals while a command is running (i.e. is a child
+process of the batch step), so the shell needs to wait until the command ends to
+then handle the signal.
+Unlike <B>-b</B>, <B>--batch</B>, children of the batch step
+are also signaled with this option.
+NOTE: srun steps are also children of the batch step, so steps are also signaled
+with this option.
+<DT><DD>
+<P>
+<dt><B>--help</B><a class="slurm_link" id="OPT_help" href="#OPT_help"></a></dt><dd>Print a help message describing all <B>scancel</B> options.
+<DT><DD>
+<P>
+<dt><B>-H</B>, <B>--hurry</B><a class="slurm_link" id="OPT_hurry" href="#OPT_hurry"></a></dt><dd>Do not stage out any burst buffer data.
+<DT><DD>
+<P>
+<dt><B>-i</B>, <B>--interactive</B><a class="slurm_link" id="OPT_interactive" href="#OPT_interactive"></a></dt><dd>Interactive mode. Confirm each job_id.step_id before performing the cancel operation.
+<DT><DD>
+<P>
+<dt><B>-n</B>, <B>--jobname</B>=<I>job_name</I>, <B>--name</B>=<I>job_name</I><a class="slurm_link" id="OPT_jobname" href="#OPT_jobname"></a></dt><dd>Restrict the scancel operation to jobs with this job name.
+<DT><DD>
+<P>
+<dt><B>--me</B><a class="slurm_link" id="OPT_me" href="#OPT_me"></a></dt><dd>Restrict the scancel operation to jobs owned by the current user.
+<P>
+<dt><B>-w</B>, <B>--nodelist=</B><I>host1,host2,...</I><a class="slurm_link" id="OPT_nodelist=" href="#OPT_nodelist="></a></dt><dd>Cancel any jobs using any of the given hosts.  The list may be specified as
+a comma-separated list of hosts, a range of hosts (host[1-5,7,...] for
+example), or a filename. The host list will be assumed to be a filename only
+if it contains a &quot;/&quot; character.
+<DT><DD>
+<P>
+<dt><B>-p</B>, <B>--partition</B>=<I>partition_name</I><a class="slurm_link" id="OPT_partition" href="#OPT_partition"></a></dt><dd>Restrict the scancel operation to jobs in this partition.
+<DT><DD>
+<P>
+<dt><B>-q</B>, <B>--qos</B>=<I>qos</I><a class="slurm_link" id="OPT_qos" href="#OPT_qos"></a></dt><dd>Restrict the scancel operation to jobs with this quality of service.
+<DT><DD>
+<P>
+<dt><B>-Q</B>, <B>--quiet</B><a class="slurm_link" id="OPT_quiet" href="#OPT_quiet"></a></dt><dd>Do not report an error if the specified job is already completed.
+This option is incompatible with the <B>--verbose</B> option.
+<DT><DD>
+<P>
+<dt><B>-R</B>, <B>--reservation</B>=<I>reservation_name</I><a class="slurm_link" id="OPT_reservation" href="#OPT_reservation"></a></dt><dd>Restrict the scancel operation to jobs with this reservation name.
+<DT><DD>
+<P>
+<dt><B>--sibling</B>=<I>cluster_name</I><a class="slurm_link" id="OPT_sibling" href="#OPT_sibling"></a></dt><dd>Remove an active sibling job from a federated job.
+<DT><DD>
+<P>
+<dt><B>-s</B>, <B>--signal</B>=<I>signal_name</I><a class="slurm_link" id="OPT_signal" href="#OPT_signal"></a></dt><dd>The name or number of the signal to send.  If this option is not used
+the specified job or step will be terminated. <B>Note</B>. If this option
+is used the signal is sent directly to the slurmd where the job is
+running bypassing the slurmctld thus the job state will not change even
+if the signal is delivered to it. Use the <I>scontrol</I> command if
+you want the job state change be known to slurmctld.
+<DT><DD>
+<P>
+<dt><B>-t</B>, <B>--state</B>=<I>job_state_name</I><a class="slurm_link" id="OPT_state" href="#OPT_state"></a></dt><dd>Restrict the scancel operation to jobs in this
+state. <I>job_state_name</I> may have a value of either &quot;PENDING&quot;,
+&quot;RUNNING&quot; or &quot;SUSPENDED&quot;.
+<DT><DD>
+<P>
+<dt><B>--usage</B><a class="slurm_link" id="OPT_usage" href="#OPT_usage"></a></dt><dd>Print a brief help message listing the <B>scancel</B> options.
+<DT><DD>
+<P>
+<dt><B>-u</B>, <B>--user</B>=<I>user_name</I><a class="slurm_link" id="OPT_user" href="#OPT_user"></a></dt><dd>Restrict the scancel operation to jobs owned by the given user.
+<DT><DD>
+<P>
+<dt><B>-v</B>, <B>--verbose</B><a class="slurm_link" id="OPT_verbose" href="#OPT_verbose"></a></dt><dd>Print additional logging. Multiple v's increase logging detail.
+This option is incompatible with the <B>--quiet</B> option.
+<DT><DD>
+<P>
+<dt><B>-V</B>, <B>--version</B><a class="slurm_link" id="OPT_version" href="#OPT_version"></a></dt><dd>Print the version number of the scancel command.
+<DT><DD>
+<P>
+<dt><B>--wckey</B>=<I>wckey</I><a class="slurm_link" id="OPT_wckey" href="#OPT_wckey"></a></dt><dd>Restrict the scancel operation to jobs using this workload
+characterization key.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>ARGUMENTS<a class="slurm_link" id="SECTION_ARGUMENTS" href="#SECTION_ARGUMENTS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><I>job_id</I><a class="slurm_link" id="OPT_job_id" href="#OPT_job_id"></a></dt><dd>The Slurm job ID to be signaled.
+<DT><DD>
+<P>
+<dt><I>step_id</I><a class="slurm_link" id="OPT_step_id" href="#OPT_step_id"></a></dt><dd>The step ID of the job step to be signaled.
+If not specified, the operation is performed at the level of a job.
+<P>
+If neither <B>--batch</B> nor <B>--signal</B> are used,
+the entire job will be terminated.
+<P>
+When <B>--batch</B> is used, the batch shell processes will be signaled.
+The child processes of the shell will not be signaled by Slurm, but
+the shell may forward the signal.
+<P>
+When <B>--batch</B> is not used but <B>--signal</B> is used,
+then all job steps will be signaled, but the batch script itself
+will not be signaled.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>PERFORMANCE<a class="slurm_link" id="SECTION_PERFORMANCE" href="#SECTION_PERFORMANCE"></a></h2>
+<P>
+
+Executing <B>scancel</B> sends a remote procedure call to <B>slurmctld</B>. If
+enough calls from <B>scancel</B> or other Slurm client commands that send remote
+procedure calls to the <B>slurmctld</B> daemon come in at once, it can result in
+a degradation of performance of the <B>slurmctld</B> daemon, possibly resulting
+in a denial of service.
+<P>
+
+Do not run <B>scancel</B> or other Slurm client commands that send remote
+procedure calls to <B>slurmctld</B> from loops in shell scripts or other
+programs. Ensure that programs limit calls to <B>scancel</B> to the minimum
+necessary for the information you are trying to gather.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<h2>ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_ENVIRONMENT-VARIABLES" href="#SECTION_ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+
+Some <B>scancel</B> options may be set via environment variables. These
+environment variables, along with their corresponding options, are listed below.
+(Note: Command line options will always override these settings.)
+<P>
+<DL COMPACT>
+<dt><B>SCANCEL_ACCOUNT</B><a class="slurm_link" id="OPT_SCANCEL_ACCOUNT" href="#OPT_SCANCEL_ACCOUNT"></a></dt><dd><B>-A</B>, <B>--account</B>=<I>account</I>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_BATCH</B><a class="slurm_link" id="OPT_SCANCEL_BATCH" href="#OPT_SCANCEL_BATCH"></a></dt><dd><B>-b, --batch</B>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_CTLD</B><a class="slurm_link" id="OPT_SCANCEL_CTLD" href="#OPT_SCANCEL_CTLD"></a></dt><dd><B>--ctld</B>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_CRON</B><a class="slurm_link" id="OPT_SCANCEL_CRON" href="#OPT_SCANCEL_CRON"></a></dt><dd><B>-c, --cron</B>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_FULL</B><a class="slurm_link" id="OPT_SCANCEL_FULL" href="#OPT_SCANCEL_FULL"></a></dt><dd><B>-f, --full</B>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_HURRY</B><a class="slurm_link" id="OPT_SCANCEL_HURRY" href="#OPT_SCANCEL_HURRY"></a></dt><dd><B>-H</B>, <B>--hurry</B>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_INTERACTIVE</B><a class="slurm_link" id="OPT_SCANCEL_INTERACTIVE" href="#OPT_SCANCEL_INTERACTIVE"></a></dt><dd><B>-i</B>, <B>--interactive</B>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_NAME</B><a class="slurm_link" id="OPT_SCANCEL_NAME" href="#OPT_SCANCEL_NAME"></a></dt><dd><B>-n</B>, <B>--name</B>=<I>job_name</I>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_PARTITION</B><a class="slurm_link" id="OPT_SCANCEL_PARTITION" href="#OPT_SCANCEL_PARTITION"></a></dt><dd><B>-p</B>, <B>--partition</B>=<I>partition_name</I>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_QOS</B><a class="slurm_link" id="OPT_SCANCEL_QOS" href="#OPT_SCANCEL_QOS"></a></dt><dd><B>-q</B>, <B>--qos</B>=<I>qos</I>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_STATE</B><a class="slurm_link" id="OPT_SCANCEL_STATE" href="#OPT_SCANCEL_STATE"></a></dt><dd><B>-t</B>, <B>--state</B>=<I>job_state_name</I>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_USER</B><a class="slurm_link" id="OPT_SCANCEL_USER" href="#OPT_SCANCEL_USER"></a></dt><dd><B>-u</B>, <B>--user</B>=<I>user_name</I>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_VERBOSE</B><a class="slurm_link" id="OPT_SCANCEL_VERBOSE" href="#OPT_SCANCEL_VERBOSE"></a></dt><dd><B>-v</B>, <B>--verbose</B>
+<DT><DD>
+<P>
+<dt><B>SCANCEL_WCKEY</B><a class="slurm_link" id="OPT_SCANCEL_WCKEY" href="#OPT_SCANCEL_WCKEY"></a></dt><dd><B>--wckey</B>=<I>wckey</I>
+<DT><DD>
+<P>
+<dt><B>SLURM_CONF</B><a class="slurm_link" id="OPT_SLURM_CONF" href="#OPT_SLURM_CONF"></a></dt><dd>The location of the Slurm configuration file.
+<DT><DD>
+<P>
+<dt><B>SLURM_CLUSTERS</B><a class="slurm_link" id="OPT_SLURM_CLUSTERS" href="#OPT_SLURM_CLUSTERS"></a></dt><dd><B>-M</B>, <B>--clusters</B>
+<DT><DD>
+<P>
+<dt><B>SLURM_DEBUG_FLAGS</B><a class="slurm_link" id="OPT_SLURM_DEBUG_FLAGS" href="#OPT_SLURM_DEBUG_FLAGS"></a></dt><dd>Specify debug flags for scancel to use. See DebugFlags in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for a full list of flags. The environment
+variable takes precedence over the setting in the slurm.conf.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<h2>NOTES<a class="slurm_link" id="SECTION_NOTES" href="#SECTION_NOTES"></a></h2>
+<P>
+
+If multiple filters are supplied (e.g. <B>--partition</B> and <B>--name</B>)
+only the jobs satisfying all of the filtering options will be signaled.
+<P>
+
+Cancelling a job step will not result in the job being terminated.
+The job must be cancelled to release a resource allocation.
+<P>
+
+To cancel a job, invoke <B>scancel</B> without --signal option.  This
+will send first a SIGCONT to all steps to eventually wake them up followed by
+a SIGTERM, then wait the KillWait duration defined in the slurm.conf file
+and finally if they have not terminated send a SIGKILL.  This gives
+time for the running job/step(s) to clean up.
+<P>
+
+If a signal value of &quot;KILL&quot; is sent to an entire job, this will cancel
+the active job steps but not cancel the job itself.
+<P>
+
+On Cray systems, all signals <B>except</B>
+SIGCHLD, SIGCONT, SIGSTOP, SIGTSTP, SIGTTIN, SIGTTOU, SIGURG, or SIGWINCH
+cause the ALPS reservation to be released.
+The job however will not be terminated except in the case of SIGKILL and
+may then be used for post processing.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>AUTHORIZATION<a class="slurm_link" id="SECTION_AUTHORIZATION" href="#SECTION_AUTHORIZATION"></a></h2>
+<P>
+When using SlurmDBD, users who have an AdminLevel defined (Operator
+or Admin) and users who are account coordinators are given the
+authority to invoke scancel on other users jobs.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<h2>EXAMPLES<a class="slurm_link" id="SECTION_EXAMPLES" href="#SECTION_EXAMPLES"></a></h2>
+<DL COMPACT>
+<DT><DD>
+<P>
+<DT>Send SIGTERM to steps 1 and 3 of job 1234:<DD>
+<DT><DD>
+<PRE>
+$ scancel --signal=TERM 1234.1 1234.3
+</PRE>
+
+<P>
+<DT>Cancel job 1234 along with all of its steps:<DD>
+<DT><DD>
+<PRE>
+$ scancel 1234
+</PRE>
+
+<P>
+<DT>Send SIGKILL to all steps of job 1235, but do not cancel the job itself:<DD>
+<DT><DD>
+<PRE>
+$ scancel --signal=KILL 1235
+</PRE>
+
+<P>
+<DT>Send SIGUSR1 to the batch shell processes of job 1236:<DD>
+<DT><DD>
+<PRE>
+$ scancel --signal=USR1 --batch 1236
+</PRE>
+
+<P>
+<DT>Cancel all pending jobs belonging to user &quot;bob&quot; in partition &quot;debug&quot;:<DD>
+<DT><DD>
+<PRE>
+$ scancel --state=PENDING --user=bob --partition=debug
+</PRE>
+
+<P>
+<DT>Cancel only array ID 4 of job array 1237<DD>
+<DT><DD>
+<PRE>
+$ scancel 1237_4
+</PRE>
+
+<P>
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2002-2007 The Regents of the University of California.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2008-2011 Lawrence Livermore National Security.
+<BR>
+
+Copyright (C) 2010-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAM">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<B>slurm_kill_job</B> (3), <B>slurm_kill_job_step</B> (3)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">ARGUMENTS</A><DD>
+<DT><A HREF="#lbAG">PERFORMANCE</A><DD>
+<DT><A HREF="#lbAH">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAI">NOTES</A><DD>
+<DT><A HREF="#lbAJ">AUTHORIZATION</A><DD>
+<DT><A HREF="#lbAK">EXAMPLES</A><DD>
+<DT><A HREF="#lbAL">COPYING</A><DD>
+<DT><A HREF="#lbAM">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:45 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

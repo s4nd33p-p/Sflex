@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - sinfo</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/sinfo.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>sinfo</H1>
+Section: Slurm Commands (1)<BR>Updated: Slurm Commands<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+sinfo - View information about Slurm nodes and partitions.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+<B>sinfo</B> [<I>OPTIONS</I>...]
+<A NAME="lbAD">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>sinfo</B> is used to view partition and node information for a
+system running Slurm.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>OPTIONS<a class="slurm_link" id="SECTION_OPTIONS" href="#SECTION_OPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>-a</B>, <B>--all</B><a class="slurm_link" id="OPT_all" href="#OPT_all"></a></dt><dd>Display information about all partitions. This causes information to be
+displayed about partitions that are configured as hidden and partitions that
+are unavailable to the user's group.
+<DT><DD>
+<P>
+<dt><B>-M</B>, <B>--clusters</B>=&lt;<I>string</I>&gt;<a class="slurm_link" id="OPT_clusters" href="#OPT_clusters"></a></dt><dd>Clusters to issue commands to.  Multiple cluster names may be comma separated.
+A value of '<B>all</B>' will query all clusters. Note that the
+<B>SlurmDBD</B> must be up for this option to work properly.
+This option implicitly sets the <B>--local</B> option.
+<DT><DD>
+<P>
+<dt><B>-d</B>, <B>--dead</B><a class="slurm_link" id="OPT_dead" href="#OPT_dead"></a></dt><dd>If set, only report state information for non-responding (dead) nodes.
+<DT><DD>
+<P>
+<dt><B>-e</B>, <B>--exact</B><a class="slurm_link" id="OPT_exact" href="#OPT_exact"></a></dt><dd>If set, do not group node information on multiple nodes unless
+their configurations to be reported are identical. Otherwise
+cpu count, memory size, and disk space for nodes will be listed
+with the minimum value followed by a &quot;+&quot; for nodes with the
+same partition and state (e.g. &quot;250+&quot;).
+<DT><DD>
+<P>
+<dt><B>--federation</B><a class="slurm_link" id="OPT_federation" href="#OPT_federation"></a></dt><dd>Show all partitions from the federation if a member of one.
+<DT><DD>
+<P>
+<dt><B>-F</B>, <B>--future</B><a class="slurm_link" id="OPT_future" href="#OPT_future"></a></dt><dd>Report nodes in FUTURE state.
+<DT><DD>
+<P>
+<dt><B>-o</B>, <B>--format</B>=&lt;<I>output_format</I>&gt;<a class="slurm_link" id="OPT_format" href="#OPT_format"></a></dt><dd>Specify the information to be displayed using an <B>sinfo</B>
+format string.
+If the command is executed in a federated cluster environment and information
+about more than one cluster is to be displayed and the <B>-h, --noheader</B>
+option is used, then the cluster name will be displayed before the default
+output formats shown below.
+Format strings transparently used by <B>sinfo</B> when running with various
+options are:
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><I>default</I><a class="slurm_link" id="OPT_default" href="#OPT_default"></a></dt><dd>
+<DD>
+&quot;%#P %.5a %.10l %.6D %.6t %N&quot;
+<DT><DD>
+<P>
+<dt><I>--summarize</I><a class="slurm_link" id="OPT_summarize" href="#OPT_summarize"></a></dt><dd>
+<DD>
+&quot;%#P %.5a %.10l %.16F  %N&quot;
+<DT><DD>
+<P>
+<dt><I>--long</I><a class="slurm_link" id="OPT_long" href="#OPT_long"></a></dt><dd>
+<DD>
+&quot;%#P %.5a %.10l %.10s %.4r %.8h %.10g %.6D %.11T %.11i %N&quot;
+<DT><DD>
+<P>
+<dt><I>--Node</I><a class="slurm_link" id="OPT_Node" href="#OPT_Node"></a></dt><dd>
+<DD>
+&quot;%#N %.6D %#P %6t&quot;
+<DT><DD>
+<P>
+<dt><I>--long --Node</I><a class="slurm_link" id="OPT_long---Node" href="#OPT_long---Node"></a></dt><dd>
+<DD>
+&quot;%#N %.6D %#P %.11T %.4c %.8z %.6m %.8d %.6w %.8f %20E&quot;
+<DT><DD>
+<P>
+<dt><I>--list-reasons</I><a class="slurm_link" id="OPT_list-reasons" href="#OPT_list-reasons"></a></dt><dd>
+<DD>
+&quot;%20E %9u %19H %N&quot;
+<DT><DD>
+<P>
+<dt><I>--long --list-reasons</I><a class="slurm_link" id="OPT_long---list-reasons" href="#OPT_long---list-reasons"></a></dt><dd>
+<DD>
+&quot;%20E %12U %19H %6t %N&quot;
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+In the above format strings, the use of &quot;#&quot; represents the
+maximum length of any partition name or node list to be printed.
+A pass is made over the records to be printed to establish the size in order
+to align the sinfo output, then a second pass is made over the records to
+print them.
+Note that the literal character &quot;#&quot; itself is not a valid field length
+specification, but is only used to document this behavior.
+<P>
+The format of each field is &quot;%[[.]size]type[suffix]&quot;
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><I>size</I><a class="slurm_link" id="OPT_size" href="#OPT_size"></a></dt><dd>Minimum field size. If no size is specified, whatever is needed to print the
+information will be used.
+<DT><DD>
+<P>
+<dt><I>.</I><a class="slurm_link" id="OPT_." href="#OPT_."></a></dt><dd>Indicates the output should be right justified and size must be specified.
+By default output is left justified.
+<DT><DD>
+<P>
+<dt><I>suffix</I><a class="slurm_link" id="OPT_suffix" href="#OPT_suffix"></a></dt><dd>Arbitrary string to append to the end of the field.
+<DT><DD>
+</DL>
+</DL>
+
+<P>
+Valid <I>type</I> specifications include:
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>%all</B><a class="slurm_link" id="OPT_%all" href="#OPT_%all"></a></dt><dd>Print all fields available for this data type with a vertical bar separating
+each field.
+<DT><DD>
+<P>
+<dt><B>%a</B><a class="slurm_link" id="OPT_%a" href="#OPT_%a"></a></dt><dd>State/availability of a partition.
+<DT><DD>
+<P>
+<dt><B>%A</B><a class="slurm_link" id="OPT_%A" href="#OPT_%A"></a></dt><dd>Number of nodes by state in the format &quot;allocated/idle&quot;.
+Do not use this with a node state option (&quot;%t&quot; or &quot;%T&quot;) or
+the different node states will be placed on separate lines.
+<DT><DD>
+<P>
+<dt><B>%b</B><a class="slurm_link" id="OPT_%b" href="#OPT_%b"></a></dt><dd>Features currently active on the nodes, also see <B>%f</B>.
+<DT><DD>
+<P>
+<dt><B>%B</B><a class="slurm_link" id="OPT_%B" href="#OPT_%B"></a></dt><dd>The max number of CPUs per node available to jobs in the partition.
+<DT><DD>
+<P>
+<dt><B>%c</B><a class="slurm_link" id="OPT_%c" href="#OPT_%c"></a></dt><dd>Number of CPUs per node.
+<DT><DD>
+<P>
+<dt><B>%C</B><a class="slurm_link" id="OPT_%C" href="#OPT_%C"></a></dt><dd>Number of CPUs by state in the format
+&quot;allocated/idle/other/total&quot;. Do not use this with a node
+state option (&quot;%t&quot; or &quot;%T&quot;) or the different node states will
+be placed on separate lines.
+<DT><DD>
+<P>
+<dt><B>%d</B><a class="slurm_link" id="OPT_%d" href="#OPT_%d"></a></dt><dd>Size of temporary disk space per node in megabytes.
+<DT><DD>
+<P>
+<dt><B>%D</B><a class="slurm_link" id="OPT_%D" href="#OPT_%D"></a></dt><dd>Number of nodes.
+<DT><DD>
+<P>
+<dt><B>%e</B><a class="slurm_link" id="OPT_%e" href="#OPT_%e"></a></dt><dd>The total memory, in MB, currently free on the node as reported by the OS. This
+value is for informational use only and is not used for scheduling.
+<DT><DD>
+<P>
+<dt><B>%E</B><a class="slurm_link" id="OPT_%E" href="#OPT_%E"></a></dt><dd>The reason a node is unavailable (down, drained, or draining states).
+<DT><DD>
+<P>
+<dt><B>%f</B><a class="slurm_link" id="OPT_%f" href="#OPT_%f"></a></dt><dd>Features available the nodes, also see <B>%b</B>.
+<DT><DD>
+<P>
+<dt><B>%F</B><a class="slurm_link" id="OPT_%F" href="#OPT_%F"></a></dt><dd>Number of nodes by state in the format
+&quot;allocated/idle/other/total&quot;.  Note the use of this format option with a node
+state format option (&quot;%t&quot; or &quot;%T&quot;) will result in the different node states
+being be reported on separate lines.
+<DT><DD>
+<P>
+<dt><B>%g</B><a class="slurm_link" id="OPT_%g" href="#OPT_%g"></a></dt><dd>Groups which may use the nodes.
+<DT><DD>
+<P>
+<dt><B>%G</B><a class="slurm_link" id="OPT_%G" href="#OPT_%G"></a></dt><dd>Generic resources (gres) associated with the nodes.
+<DT><DD>
+<P>
+<dt><B>%h</B><a class="slurm_link" id="OPT_%h" href="#OPT_%h"></a></dt><dd>Print the OverSubscribe setting for the partition.
+<DT><DD>
+<P>
+<dt><B>%H</B><a class="slurm_link" id="OPT_%H" href="#OPT_%H"></a></dt><dd>Print the timestamp of the reason a node is unavailable.
+<DT><DD>
+<P>
+<dt><B>%i</B><a class="slurm_link" id="OPT_%i" href="#OPT_%i"></a></dt><dd>If a node is in an advanced reservation print the name of that reservation.
+<DT><DD>
+<P>
+<dt><B>%I</B><a class="slurm_link" id="OPT_%I" href="#OPT_%I"></a></dt><dd>Partition job priority weighting factor.
+<DT><DD>
+<P>
+<dt><B>%l</B><a class="slurm_link" id="OPT_%l" href="#OPT_%l"></a></dt><dd>Maximum time for any job in the format &quot;days-hours:minutes:seconds&quot;
+<DT><DD>
+<P>
+<dt><B>%L</B><a class="slurm_link" id="OPT_%L" href="#OPT_%L"></a></dt><dd>Default time for any job in the format &quot;days-hours:minutes:seconds&quot;
+<DT><DD>
+<P>
+<dt><B>%m</B><a class="slurm_link" id="OPT_%m" href="#OPT_%m"></a></dt><dd>Size of memory per node in megabytes.
+<DT><DD>
+<P>
+<dt><B>%M</B><a class="slurm_link" id="OPT_%M" href="#OPT_%M"></a></dt><dd>PreemptionMode.
+<DT><DD>
+<P>
+<dt><B>%n</B><a class="slurm_link" id="OPT_%n" href="#OPT_%n"></a></dt><dd>List of node hostnames.
+<DT><DD>
+<P>
+<dt><B>%N</B><a class="slurm_link" id="OPT_%N" href="#OPT_%N"></a></dt><dd>List of node names.
+<DT><DD>
+<P>
+<dt><B>%o</B><a class="slurm_link" id="OPT_%o" href="#OPT_%o"></a></dt><dd>List of node communication addresses.
+<DT><DD>
+<P>
+<dt><B>%O</B><a class="slurm_link" id="OPT_%O" href="#OPT_%O"></a></dt><dd>CPU load of a node as reported by the OS.
+<DT><DD>
+<P>
+<dt><B>%p</B><a class="slurm_link" id="OPT_%p" href="#OPT_%p"></a></dt><dd>Partition scheduling tier priority.
+<DT><DD>
+<P>
+<dt><B>%P</B><a class="slurm_link" id="OPT_%P" href="#OPT_%P"></a></dt><dd>Partition name followed by &quot;*&quot; for the default partition, also see <B>%R</B>.
+<DT><DD>
+<P>
+<dt><B>%r</B><a class="slurm_link" id="OPT_%r" href="#OPT_%r"></a></dt><dd>Only user root may initiate jobs, &quot;yes&quot; or &quot;no&quot;.
+<DT><DD>
+<P>
+<dt><B>%R</B><a class="slurm_link" id="OPT_%R" href="#OPT_%R"></a></dt><dd>Partition name, also see <B>%P</B>.
+<DT><DD>
+<P>
+<dt><B>%s</B><a class="slurm_link" id="OPT_%s" href="#OPT_%s"></a></dt><dd>Maximum job size in nodes.
+<DT><DD>
+<P>
+<dt><B>%S</B><a class="slurm_link" id="OPT_%S" href="#OPT_%S"></a></dt><dd>Allowed allocating nodes.
+<DT><DD>
+<P>
+<dt><B>%t</B><a class="slurm_link" id="OPT_%t" href="#OPT_%t"></a></dt><dd>State of nodes, compact form.
+<DT><DD>
+<P>
+<dt><B>%T</B><a class="slurm_link" id="OPT_%T" href="#OPT_%T"></a></dt><dd>State of nodes, extended form.
+<DT><DD>
+<P>
+<dt><B>%u</B><a class="slurm_link" id="OPT_%u" href="#OPT_%u"></a></dt><dd>Print the user name of who set the reason a node is unavailable.
+<DT><DD>
+<P>
+<dt><B>%U</B><a class="slurm_link" id="OPT_%U" href="#OPT_%U"></a></dt><dd>Print the user name and uid of who set the reason a node is unavailable.
+<DT><DD>
+<P>
+<dt><B>%v</B><a class="slurm_link" id="OPT_%v" href="#OPT_%v"></a></dt><dd>Print the version of the running slurmd daemon.
+<DT><DD>
+<P>
+<dt><B>%V</B><a class="slurm_link" id="OPT_%V" href="#OPT_%V"></a></dt><dd>Print the cluster name if running in a federation.
+<DT><DD>
+<P>
+<dt><B>%w</B><a class="slurm_link" id="OPT_%w" href="#OPT_%w"></a></dt><dd>Scheduling weight of the nodes.
+<DT><DD>
+<P>
+<dt><B>%X</B><a class="slurm_link" id="OPT_%X" href="#OPT_%X"></a></dt><dd>Number of sockets per node.
+<DT><DD>
+<P>
+<dt><B>%Y</B><a class="slurm_link" id="OPT_%Y" href="#OPT_%Y"></a></dt><dd>Number of cores per socket.
+<DT><DD>
+<P>
+<dt><B>%Z</B><a class="slurm_link" id="OPT_%Z" href="#OPT_%Z"></a></dt><dd>Number of threads per core.
+<DT><DD>
+<P>
+<dt><B>%z</B><a class="slurm_link" id="OPT_%z" href="#OPT_%z"></a></dt><dd>Extended processor information: number of sockets, cores, threads (S:C:T) per node.
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>-O</B>, <B>--Format</B>=&lt;<I>output_format</I>&gt;<a class="slurm_link" id="OPT_Format" href="#OPT_Format"></a></dt><dd>Specify the information to be displayed.
+Also see the <B>-o &lt;output_format&gt;</B>, <B>--format=&lt;output_format&gt;</B>
+option (which supports greater flexibility in formatting, but
+does not support access to all fields because we ran out of letters).
+Requests a comma separated list of job information to be displayed.
+<P>
+The format of each field is &quot;type[:[.][size][suffix]]&quot;
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><I>size</I><a class="slurm_link" id="OPT_size_1" href="#OPT_size_1"></a></dt><dd>The minimum field size.
+If no size is specified, 20 characters will be allocated to print the information.
+<DT><DD>
+<P>
+<dt><I>.</I><a class="slurm_link" id="OPT_._1" href="#OPT_._1"></a></dt><dd>Indicates the output should be right justified and size must be specified.
+By default, output is left justified.
+<DT><DD>
+<P>
+<dt><I>suffix</I><a class="slurm_link" id="OPT_suffix_1" href="#OPT_suffix_1"></a></dt><dd>Arbitrary string to append to the end of the field.
+<DT><DD>
+</DL>
+</DL>
+
+<P>
+Valid <I>type</I> specifications include:
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>All</B><a class="slurm_link" id="OPT_All" href="#OPT_All"></a></dt><dd>Print all fields available in the -o format for this data type with a
+vertical bar separating each field.
+<DT><DD>
+<P>
+<dt><B>AllocMem</B><a class="slurm_link" id="OPT_AllocMem" href="#OPT_AllocMem"></a></dt><dd>Prints the amount of allocated memory on a node.
+<DT><DD>
+<P>
+<dt><B>AllocNodes</B><a class="slurm_link" id="OPT_AllocNodes" href="#OPT_AllocNodes"></a></dt><dd>Allowed allocating nodes.
+<DT><DD>
+<P>
+<dt><B>Available</B><a class="slurm_link" id="OPT_Available" href="#OPT_Available"></a></dt><dd>State/availability of a partition.
+<DT><DD>
+<P>
+<dt><B>Cluster</B><a class="slurm_link" id="OPT_Cluster" href="#OPT_Cluster"></a></dt><dd>Print the cluster name if running in a federation.
+<DT><DD>
+<P>
+<dt><B>Comment</B><a class="slurm_link" id="OPT_Comment" href="#OPT_Comment"></a></dt><dd>Comment. (Arbitrary descriptive string)
+<DT><DD>
+<P>
+<dt><B>Cores</B><a class="slurm_link" id="OPT_Cores" href="#OPT_Cores"></a></dt><dd>Number of cores per socket.
+<DT><DD>
+<P>
+<dt><B>CPUs</B><a class="slurm_link" id="OPT_CPUs" href="#OPT_CPUs"></a></dt><dd>Number of CPUs per node.
+<DT><DD>
+<P>
+<dt><B>CPUsLoad</B><a class="slurm_link" id="OPT_CPUsLoad" href="#OPT_CPUsLoad"></a></dt><dd>CPU load of a node as reported by the OS.
+<DT><DD>
+<P>
+<dt><B>CPUsState</B><a class="slurm_link" id="OPT_CPUsState" href="#OPT_CPUsState"></a></dt><dd>Number of CPUs by state in the format
+&quot;allocated/idle/other/total&quot;. Do not use this with a node
+state option (&quot;%t&quot; or &quot;%T&quot;) or the different node states will
+be placed on separate lines.
+<DT><DD>
+<P>
+<dt><B>DefaultTime</B><a class="slurm_link" id="OPT_DefaultTime" href="#OPT_DefaultTime"></a></dt><dd>Default time for any job in the format &quot;days-hours:minutes:seconds&quot;.
+<DT><DD>
+<P>
+<dt><B>Disk</B><a class="slurm_link" id="OPT_Disk" href="#OPT_Disk"></a></dt><dd>Size of temporary disk space per node in megabytes.
+<DT><DD>
+<P>
+<dt><B>Extra</B><a class="slurm_link" id="OPT_Extra" href="#OPT_Extra"></a></dt><dd>Arbitrary string on the node.
+<DT><DD>
+<P>
+<dt><B>Features</B><a class="slurm_link" id="OPT_Features" href="#OPT_Features"></a></dt><dd>Features available on the nodes. Also see <B>features_act</B>.
+<DT><DD>
+<P>
+<dt><B>features_act</B><a class="slurm_link" id="OPT_features_act" href="#OPT_features_act"></a></dt><dd>Features currently active on the nodes. Also see <B>features</B>.
+<DT><DD>
+<P>
+<dt><B>FreeMem</B><a class="slurm_link" id="OPT_FreeMem" href="#OPT_FreeMem"></a></dt><dd>The total memory, in MB, currently free on the node as reported by the OS. This
+value is for informational use only and is not used for scheduling.
+<DT><DD>
+<P>
+<dt><B>Gres</B><a class="slurm_link" id="OPT_Gres" href="#OPT_Gres"></a></dt><dd>Generic resources (gres) associated with the nodes.
+<DT><DD>
+<P>
+<dt><B>GresUsed</B><a class="slurm_link" id="OPT_GresUsed" href="#OPT_GresUsed"></a></dt><dd>Generic resources (gres) currently in use on the nodes.
+<DT><DD>
+<P>
+<dt><B>Groups</B><a class="slurm_link" id="OPT_Groups" href="#OPT_Groups"></a></dt><dd>Groups which may use the nodes.
+<DT><DD>
+<P>
+<dt><B>MaxCPUsPerNode</B><a class="slurm_link" id="OPT_MaxCPUsPerNode" href="#OPT_MaxCPUsPerNode"></a></dt><dd>The max number of CPUs per node available to jobs in the partition.
+<DT><DD>
+<P>
+<dt><B>Memory</B><a class="slurm_link" id="OPT_Memory" href="#OPT_Memory"></a></dt><dd>Size of memory per node in megabytes.
+<DT><DD>
+<P>
+<dt><B>NodeAddr</B><a class="slurm_link" id="OPT_NodeAddr" href="#OPT_NodeAddr"></a></dt><dd>List of node communication addresses.
+<DT><DD>
+<P>
+<dt><B>NodeAI</B><a class="slurm_link" id="OPT_NodeAI" href="#OPT_NodeAI"></a></dt><dd>Number of nodes by state in the format &quot;allocated/idle&quot;.
+Do not use this with a node state option (&quot;%t&quot; or &quot;%T&quot;) or
+the different node states will be placed on separate lines.
+<DT><DD>
+<P>
+<dt><B>NodeAIOT</B><a class="slurm_link" id="OPT_NodeAIOT" href="#OPT_NodeAIOT"></a></dt><dd>Number of nodes by state in the format
+&quot;allocated/idle/other/total&quot;.  Do not use this with a node
+state option (&quot;%t&quot; or &quot;%T&quot;) or the different node states will
+be placed on separate lines.
+<DT><DD>
+<P>
+<dt><B>NodeHost</B><a class="slurm_link" id="OPT_NodeHost" href="#OPT_NodeHost"></a></dt><dd>List of node hostnames.
+<DT><DD>
+<P>
+<dt><B>NodeList</B><a class="slurm_link" id="OPT_NodeList" href="#OPT_NodeList"></a></dt><dd>List of node names.
+<DT><DD>
+<P>
+<dt><B>Nodes</B><a class="slurm_link" id="OPT_Nodes" href="#OPT_Nodes"></a></dt><dd>Number of nodes.
+<DT><DD>
+<P>
+<dt><B>OverSubscribe</B><a class="slurm_link" id="OPT_OverSubscribe" href="#OPT_OverSubscribe"></a></dt><dd>Whether jobs may oversubscribe compute resources (e.g. CPUs).
+<DT><DD>
+<P>
+<dt><B>Partition</B><a class="slurm_link" id="OPT_Partition" href="#OPT_Partition"></a></dt><dd>Partition name followed by &quot;*&quot; for the default partition, also see <B>%R</B>.
+<DT><DD>
+<P>
+<dt><B>PartitionName</B><a class="slurm_link" id="OPT_PartitionName" href="#OPT_PartitionName"></a></dt><dd>Partition name, also see <B>%P</B>.
+<DT><DD>
+<P>
+<dt><B>Port</B><a class="slurm_link" id="OPT_Port" href="#OPT_Port"></a></dt><dd>Node TCP port.
+<DT><DD>
+<P>
+<dt><B>PreemptMode</B><a class="slurm_link" id="OPT_PreemptMode" href="#OPT_PreemptMode"></a></dt><dd>Preemption mode.
+<DT><DD>
+<P>
+<dt><B>PriorityJobFactor</B><a class="slurm_link" id="OPT_PriorityJobFactor" href="#OPT_PriorityJobFactor"></a></dt><dd>Partition factor used by priority/multifactor plugin in calculating job priority.
+<DT><DD>
+<P>
+<dt><B>PriorityTier</B> or <B>Priority</B><a class="slurm_link" id="OPT_PriorityTier" href="#OPT_PriorityTier"></a></dt><dd>Partition scheduling tier priority.
+<DT><DD>
+<P>
+<dt><B>Reason</B><a class="slurm_link" id="OPT_Reason" href="#OPT_Reason"></a></dt><dd>The reason a node is unavailable (down, drained, or draining states).
+<DT><DD>
+<P>
+<dt><B>Root</B><a class="slurm_link" id="OPT_Root" href="#OPT_Root"></a></dt><dd>Only user root may initiate jobs, &quot;yes&quot; or &quot;no&quot;.
+<DT><DD>
+<P>
+<dt><B>Size</B><a class="slurm_link" id="OPT_Size" href="#OPT_Size"></a></dt><dd>Maximum job size in nodes.
+<DT><DD>
+<P>
+<dt><B>SocketCoreThread</B><a class="slurm_link" id="OPT_SocketCoreThread" href="#OPT_SocketCoreThread"></a></dt><dd>Extended processor information: number of sockets, cores, threads (S:C:T) per node.
+<DT><DD>
+<P>
+<dt><B>Sockets</B><a class="slurm_link" id="OPT_Sockets" href="#OPT_Sockets"></a></dt><dd>Number of sockets per node.
+<DT><DD>
+<P>
+<dt><B>StateCompact</B><a class="slurm_link" id="OPT_StateCompact" href="#OPT_StateCompact"></a></dt><dd>State of nodes, compact form.
+<DT><DD>
+<P>
+<dt><B>StateLong</B><a class="slurm_link" id="OPT_StateLong" href="#OPT_StateLong"></a></dt><dd>State of nodes, extended form.
+<DT><DD>
+<P>
+<dt><B>StateComplete</B><a class="slurm_link" id="OPT_StateComplete" href="#OPT_StateComplete"></a></dt><dd>State of nodes, including all node state flags. e.g. &quot;idle+cloud+power&quot;
+<DT><DD>
+<P>
+<dt><B>Threads</B><a class="slurm_link" id="OPT_Threads" href="#OPT_Threads"></a></dt><dd>Number of threads per core.
+<DT><DD>
+<P>
+<dt><B>Time</B><a class="slurm_link" id="OPT_Time" href="#OPT_Time"></a></dt><dd>Maximum time for any job in the format &quot;days-hours:minutes:seconds&quot;.
+<DT><DD>
+<P>
+<dt><B>TimeStamp</B><a class="slurm_link" id="OPT_TimeStamp" href="#OPT_TimeStamp"></a></dt><dd>Print the timestamp of the reason a node is unavailable.
+<DT><DD>
+<P>
+<dt><B>User</B><a class="slurm_link" id="OPT_User" href="#OPT_User"></a></dt><dd>Print the user name of who set the reason a node is unavailable.
+<DT><DD>
+<P>
+<dt><B>UserLong</B><a class="slurm_link" id="OPT_UserLong" href="#OPT_UserLong"></a></dt><dd>Print the user name and uid of who set the reason a node is unavailable.
+<DT><DD>
+<P>
+<dt><B>Version</B><a class="slurm_link" id="OPT_Version" href="#OPT_Version"></a></dt><dd>Print the version of the running slurmd daemon.
+<DT><DD>
+<P>
+<dt><B>Weight</B><a class="slurm_link" id="OPT_Weight" href="#OPT_Weight"></a></dt><dd>Scheduling weight of the nodes.
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>--help</B><a class="slurm_link" id="OPT_help" href="#OPT_help"></a></dt><dd>Print a message describing all <B>sinfo</B> options.
+<DT><DD>
+<P>
+<dt><B>--hide</B><a class="slurm_link" id="OPT_hide" href="#OPT_hide"></a></dt><dd>Do not display information about hidden partitions. Partitions
+that are configured as hidden or are not available to the user's group
+will not be displayed. This is the default behavior.
+<DT><DD>
+<P>
+<dt><B>-i</B>, <B>--iterate</B>=&lt;<I>seconds</I>&gt;<a class="slurm_link" id="OPT_iterate" href="#OPT_iterate"></a></dt><dd>Print the state on a periodic basis.
+Sleep for the indicated number of seconds between reports.
+By default prints a time stamp with the header.
+<DT><DD>
+<P>
+<dt><B>--json</B><a class="slurm_link" id="OPT_json" href="#OPT_json"></a></dt><dd>Dump node information as JSON. All other formatting and filtering arguments will
+be ignored.
+<DT><DD>
+<P>
+<dt><B>-R</B>, <B>--list-reasons</B><a class="slurm_link" id="OPT_list-reasons_1" href="#OPT_list-reasons_1"></a></dt><dd>List reasons nodes are in the down, drained, fail or failing state.
+When nodes are in these states Slurm supports the inclusion
+of a &quot;reason&quot; string by an administrator.
+This option will display the first 20 characters of the reason
+field and list of nodes with that reason for all nodes that are,
+by default, down, drained, draining or failing.
+This option may be used with other node filtering options
+(e.g. <B>-r</B>, <B>-d</B>, <B>-t</B>, <B>-n</B>),
+however, combinations of these options that result in a
+list of nodes that are not down or drained or failing will
+not produce any output.
+When used with <B>-l</B> the output additionally includes
+the current node state.
+<DT><DD>
+<P>
+<dt><B>--local</B><a class="slurm_link" id="OPT_local" href="#OPT_local"></a></dt><dd>Show only jobs local to this cluster. Ignore other clusters in this federation
+(if any). Overrides <B>--federation</B>.
+<DT><DD>
+<P>
+<dt><B>-l</B>, <B>--long</B><a class="slurm_link" id="OPT_long_1" href="#OPT_long_1"></a></dt><dd>Print more detailed information.
+This is ignored if the <B>--format</B> option is specified.
+<DT><DD>
+<P>
+<dt><B>--noconvert</B><a class="slurm_link" id="OPT_noconvert" href="#OPT_noconvert"></a></dt><dd>Don't convert units from their original type (e.g. 2048M won't be converted to
+2G).
+<DT><DD>
+<P>
+<dt><B>-N</B>, <B>--Node</B><a class="slurm_link" id="OPT_Node_1" href="#OPT_Node_1"></a></dt><dd>Print information in a node-oriented format with one line per node
+and partition. That is, if a node belongs to more than one partition, then one
+line for each node-partition pair will be shown.
+If <B>--partition</B> is also specified, then only one line per node in this
+partition is shown.
+The default is to print information in a partition-oriented format.
+This is ignored if the <B>--format</B> option is specified.
+<DT><DD>
+<P>
+<dt><B>-n</B>, <B>--nodes</B>=&lt;<I>nodes</I>&gt;<a class="slurm_link" id="OPT_nodes" href="#OPT_nodes"></a></dt><dd>Print information about the specified node(s).
+Multiple nodes may be comma separated or expressed using a
+node range expression (e.g. &quot;linux[00-17]&quot;)
+Limiting the query to just the relevant nodes can measurably improve the
+performance of the command for large clusters.
+<DT><DD>
+<P>
+<dt><B>-h</B>, <B>--noheader</B><a class="slurm_link" id="OPT_noheader" href="#OPT_noheader"></a></dt><dd>Do not print a header on the output.
+<DT><DD>
+<P>
+<dt><B>-p</B>, <B>--partition</B>=&lt;<I>partition</I>&gt;<a class="slurm_link" id="OPT_partition" href="#OPT_partition"></a></dt><dd>Print information only about the specified partition(s). Multiple partitions
+are separated by commas.
+<DT><DD>
+<P>
+<dt><B>-T</B>, <B>--reservation</B><a class="slurm_link" id="OPT_reservation" href="#OPT_reservation"></a></dt><dd>Only display information about Slurm reservations.
+<P>
+<B>NOTE</B>: This option causes <B>sinfo</B> to ignore most other options,
+which are focused on partition and node information.
+<DT><DD>
+<P>
+<dt><B>-r</B>, <B>--responding</B><a class="slurm_link" id="OPT_responding" href="#OPT_responding"></a></dt><dd>If set only report state information for responding nodes.
+<DT><DD>
+<P>
+<dt><B>-S</B>, <B>--sort</B>=&lt;<I>sort_list</I>&gt;<a class="slurm_link" id="OPT_sort" href="#OPT_sort"></a></dt><dd>Specification of the order in which records should be reported.
+This uses the same field specification as the &lt;output_format&gt;.
+Multiple sorts may be performed by listing multiple sort fields
+separated by commas.  The field specifications may be preceded
+by &quot;+&quot; or &quot;-&quot; for ascending (default) and descending order
+respectively.  The partition field specification, &quot;P&quot;, may be
+preceded by a &quot;#&quot; to report partitions in the same order that
+they appear in Slurm's  configuration file, <B>slurm.conf</B>.
+For example, a sort value of &quot;+P,-m&quot; requests that records
+be printed in order of increasing partition name and within a
+partition by decreasing memory size.  The default value of sort
+is &quot;#P,-t&quot; (partitions ordered as configured then decreasing
+node state).  If the <B>--Node</B> option is selected, the
+default sort value is &quot;N&quot; (increasing node name).
+<DT><DD>
+<P>
+<dt><B>-t</B>, <B>--states</B>=&lt;<I>states</I>&gt;<a class="slurm_link" id="OPT_states" href="#OPT_states"></a></dt><dd>List nodes only having the given state(s).  Multiple states
+may be comma separated and the comparison is case insensitive.
+If the states are separated by '&amp;', then the nodes must be in all states.
+Possible values include (case insensitive): ALLOC, ALLOCATED, CLOUD,
+COMP, COMPLETING, DOWN, DRAIN (for node in DRAINING or DRAINED
+states), DRAINED, DRAINING, FAIL, FUTURE, FUTR,
+IDLE, MAINT, MIX, MIXED, NO_RESPOND, NPC, PERFCTRS, PLANNED,
+POWER_DOWN, POWERING_DOWN, POWERED_DOWN, POWERING_UP, REBOOT_ISSUED,
+REBOOT_REQUESTED, RESV, RESERVED, UNK, and UNKNOWN.
+By default nodes in the specified state are reported whether
+they are responding or not.
+The <B>--dead</B> and <B>--responding</B> options may be
+used to filter nodes by the corresponding flag.
+<DT><DD>
+<P>
+<dt><B>-s</B>, <B>--summarize</B><a class="slurm_link" id="OPT_summarize_1" href="#OPT_summarize_1"></a></dt><dd>List only a partition state summary with no node state details.
+This is ignored if the <B>--format</B> option is specified.
+<DT><DD>
+<P>
+<dt><B>--usage</B><a class="slurm_link" id="OPT_usage" href="#OPT_usage"></a></dt><dd>Print a brief message listing the <B>sinfo</B> options.
+<DT><DD>
+<P>
+<dt><B>-v</B>, <B>--verbose</B><a class="slurm_link" id="OPT_verbose" href="#OPT_verbose"></a></dt><dd>Provide detailed event logging through program execution.
+<DT><DD>
+<P>
+<dt><B>-V</B>, <B>--version</B><a class="slurm_link" id="OPT_version" href="#OPT_version"></a></dt><dd>Print version information and exit.
+<DT><DD>
+<P>
+<dt><B>--yaml</B><a class="slurm_link" id="OPT_yaml" href="#OPT_yaml"></a></dt><dd>Dump node information as YAML. All other formatting and filtering arguments will
+be ignored.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>OUTPUT FIELD DESCRIPTIONS<a class="slurm_link" id="SECTION_OUTPUT-FIELD-DESCRIPTIONS" href="#SECTION_OUTPUT-FIELD-DESCRIPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>AVAIL</B><a class="slurm_link" id="OPT_AVAIL" href="#OPT_AVAIL"></a></dt><dd>Partition state. Can be either <B>up</B>, <B>down</B>, <B>drain</B>, or <B>inact</B>
+(for INACTIVE). See the partition definition's <B>State</B> parameter in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for more information.
+<DT><DD>
+<P>
+<dt><B>CPUS</B><a class="slurm_link" id="OPT_CPUS" href="#OPT_CPUS"></a></dt><dd>Count of CPUs (processors) on these nodes.
+<DT><DD>
+<P>
+<dt><B>S:C:T</B><a class="slurm_link" id="OPT_S:C:T" href="#OPT_S:C:T"></a></dt><dd>Count of sockets (S), cores (C), and threads (T) on these nodes.
+<DT><DD>
+<P>
+<dt><B>SOCKETS</B><a class="slurm_link" id="OPT_SOCKETS" href="#OPT_SOCKETS"></a></dt><dd>Count of sockets on these nodes.
+<DT><DD>
+<P>
+<dt><B>CORES</B><a class="slurm_link" id="OPT_CORES" href="#OPT_CORES"></a></dt><dd>Count of cores on these nodes.
+<DT><DD>
+<P>
+<dt><B>THREADS</B><a class="slurm_link" id="OPT_THREADS" href="#OPT_THREADS"></a></dt><dd>Count of threads on these nodes.
+<DT><DD>
+<P>
+<dt><B>GROUPS</B><a class="slurm_link" id="OPT_GROUPS" href="#OPT_GROUPS"></a></dt><dd>Resource allocations in this partition are restricted to the
+named groups.  <B>all</B> indicates that all groups may use
+this partition.
+<DT><DD>
+<P>
+<dt><B>JOB_SIZE</B><a class="slurm_link" id="OPT_JOB_SIZE" href="#OPT_JOB_SIZE"></a></dt><dd>Minimum and maximum node count that can be allocated to any
+user job.  A single number indicates the minimum and maximum
+node count are the same.  <B>infinite</B> is used to identify
+partitions without a maximum node count.
+<DT><DD>
+<P>
+<dt><B>TIMELIMIT</B><a class="slurm_link" id="OPT_TIMELIMIT" href="#OPT_TIMELIMIT"></a></dt><dd>Maximum time limit for any user job in
+days-hours:minutes:seconds.  <B>infinite</B> is used to identify
+partitions without a job time limit.
+<DT><DD>
+<P>
+<dt><B>MEMORY</B><a class="slurm_link" id="OPT_MEMORY" href="#OPT_MEMORY"></a></dt><dd>Size of real memory in megabytes on these nodes.
+<DT><DD>
+<P>
+<dt><B>NODELIST</B><a class="slurm_link" id="OPT_NODELIST" href="#OPT_NODELIST"></a></dt><dd>Names of nodes associated with this particular configuration.
+<DT><DD>
+<P>
+<dt><B>NODES</B><a class="slurm_link" id="OPT_NODES" href="#OPT_NODES"></a></dt><dd>Count of nodes with this particular configuration.
+<DT><DD>
+<P>
+<dt><B>NODES(A/I)</B><a class="slurm_link" id="OPT_NODES(A/I)" href="#OPT_NODES(A/I)"></a></dt><dd>Count of nodes with this particular configuration by node
+state in the form &quot;allocated/idle&quot;.
+<DT><DD>
+<P>
+<dt><B>NODES(A/I/O/T)</B><a class="slurm_link" id="OPT_NODES(A/I/O/T)" href="#OPT_NODES(A/I/O/T)"></a></dt><dd>Count of nodes with this particular configuration by node
+state in the form &quot;allocated/idle/other/total&quot;.
+<DT><DD>
+<P>
+<dt><B>PARTITION</B><a class="slurm_link" id="OPT_PARTITION" href="#OPT_PARTITION"></a></dt><dd>Name of a partition.  Note that the suffix &quot;*&quot; identifies the
+default partition.
+<DT><DD>
+<P>
+<dt><B>PORT</B><a class="slurm_link" id="OPT_PORT" href="#OPT_PORT"></a></dt><dd>Local TCP port used by slurmd on the node.
+<DT><DD>
+<P>
+<dt><B>ROOT</B><a class="slurm_link" id="OPT_ROOT" href="#OPT_ROOT"></a></dt><dd>Is the ability to allocate resources in this partition
+restricted to user root, <B>yes</B> or <B>no</B>.
+<DT><DD>
+<P>
+<dt><B>OVERSUBSCRIBE</B><a class="slurm_link" id="OPT_OVERSUBSCRIBE" href="#OPT_OVERSUBSCRIBE"></a></dt><dd>Whether jobs allocated resources in this partition can/will oversubscribe
+those compute resources (e.g. CPUs).
+<B>NO</B> indicates resources are never oversubscribed.
+<B>EXCLUSIVE</B> indicates whole nodes are dedicated to jobs
+(equivalent to srun --exclusive option, may be used even
+with select/cons_res managing individual processors).
+<B>FORCE</B> indicates resources are always available to be oversubscribed.
+<B>YES</B> indicates resource may be oversubscribed, if requested by the job's
+resource allocation.
+<P>
+<B>NOTE</B>: If OverSubscribe is set to FORCE or YES,
+the OversubScribe value will be appended to the output.
+<DT><DD>
+<P>
+<dt><B>STATE</B><a class="slurm_link" id="OPT_STATE" href="#OPT_STATE"></a></dt><dd>State of the nodes.
+Possible states include: allocated, completing, down,
+drained, draining, fail, failing, future, idle, maint, mixed,
+perfctrs, planned, power_down, power_up, reserved, and unknown.
+Their abbreviated forms are: alloc, comp, down, drain, drng,
+fail, failg, futr, idle, maint, mix, npc, plnd, pow_dn, pow_up, resv,
+and unk respectively.
+<P>
+<B>NOTE</B>: The suffix &quot;*&quot; identifies nodes that are presently
+not responding.
+<DT><DD>
+<P>
+<dt><B>TMP_DISK</B><a class="slurm_link" id="OPT_TMP_DISK" href="#OPT_TMP_DISK"></a></dt><dd>Size of temporary disk space in megabytes on these nodes.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>NODE STATE CODES<a class="slurm_link" id="SECTION_NODE-STATE-CODES" href="#SECTION_NODE-STATE-CODES"></a></h2>
+<P>
+
+Node state codes are shortened as required for the field size.
+These node states may be followed by a special character to identify
+state flags associated with the node.
+The following node suffixes and states are used:
+<P>
+<DL COMPACT>
+<dt><B>*</B><a class="slurm_link" id="OPT_*" href="#OPT_*"></a></dt><dd>The node is presently not responding and will not be allocated
+any new work.  If the node remains non-responsive, it will
+be placed in the <B>DOWN</B> state (except in the case of
+<B>COMPLETING</B>, <B>DRAINED</B>, <B>DRAINING</B>,
+<B>FAIL</B>, <B>FAILING</B> nodes).
+<DT><DD>
+<P>
+<dt><B>~</B><a class="slurm_link" id="OPT_~" href="#OPT_~"></a></dt><dd>The node is presently in powered off.
+<DT><DD>
+<P>
+<dt><B>#</B><a class="slurm_link" id="OPT_#" href="#OPT_#"></a></dt><dd>The node is presently being powered up or configured.
+<DT><DD>
+<P>
+<dt><B>!</B><a class="slurm_link" id="OPT_!" href="#OPT_!"></a></dt><dd>The node is pending power down.
+<DT><DD>
+<P>
+<dt><B>%</B><a class="slurm_link" id="OPT_%" href="#OPT_%"></a></dt><dd>The node is presently being powered down.
+<DT><DD>
+<P>
+<dt><B>$</B><a class="slurm_link" id="OPT_$" href="#OPT_$"></a></dt><dd>The node is currently in a reservation with a flag value of &quot;maintenance&quot;.
+<DT><DD>
+<P>
+<dt><B>@</B><a class="slurm_link" id="OPT_@" href="#OPT_@"></a></dt><dd>The node is pending reboot.
+<DT><DD>
+<P>
+<dt><B>^</B><a class="slurm_link" id="OPT_^" href="#OPT_^"></a></dt><dd>The node reboot was issued.
+<DT><DD>
+<P>
+<dt><B>-</B><a class="slurm_link" id="OPT_-" href="#OPT_-"></a></dt><dd>The node is planned by the backfill scheduler for a higher priority job.
+<DT><DD>
+<P>
+<dt><B>ALLOCATED</B><a class="slurm_link" id="OPT_ALLOCATED" href="#OPT_ALLOCATED"></a></dt><dd>The node has been allocated to one or more jobs.
+<DT><DD>
+<P>
+<dt><B>ALLOCATED+</B><a class="slurm_link" id="OPT_ALLOCATED+" href="#OPT_ALLOCATED+"></a></dt><dd>The node is allocated to one or more active jobs plus
+one or more jobs are in the process of COMPLETING.
+<DT><DD>
+<P>
+<dt><B>COMPLETING</B><a class="slurm_link" id="OPT_COMPLETING" href="#OPT_COMPLETING"></a></dt><dd>All jobs associated with this node are in the process of
+COMPLETING.  This node state will be removed when
+all of the job's processes have terminated and the Slurm
+epilog program (if any) has terminated. See the <B>Epilog</B>
+parameter description in the <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for
+more information.
+<DT><DD>
+<P>
+<dt><B>DOWN</B><a class="slurm_link" id="OPT_DOWN" href="#OPT_DOWN"></a></dt><dd>The node is unavailable for use. Slurm can automatically
+place nodes in this state if some failure occurs. System
+administrators may also explicitly place nodes in this state. If
+a node resumes normal operation, Slurm can automatically
+return it to service. See the <B>ReturnToService</B>
+and <B>SlurmdTimeout</B> parameter descriptions in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for more information.
+<DT><DD>
+<P>
+<dt><B>DRAINED</B><a class="slurm_link" id="OPT_DRAINED" href="#OPT_DRAINED"></a></dt><dd>The node is unavailable for use per system administrator
+request.  See the <B>update node</B> command in the
+<B><A HREF="scontrol.html">scontrol</A></B>(1) man page or the <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page
+for more information.
+<DT><DD>
+<P>
+<dt><B>DRAINING</B><a class="slurm_link" id="OPT_DRAINING" href="#OPT_DRAINING"></a></dt><dd>The node is currently executing a job, but will not be allocated
+additional jobs. The node state will be changed to state
+<B>DRAINED</B> when the last job on it completes. Nodes enter
+this state per system administrator request. See the <B>update
+node</B> command in the <B><A HREF="scontrol.html">scontrol</A></B>(1) man page or the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for more information.
+<DT><DD>
+<P>
+<dt><B>FAIL</B><a class="slurm_link" id="OPT_FAIL" href="#OPT_FAIL"></a></dt><dd>The node is expected to fail soon and is unavailable for
+use per system administrator request.
+See the <B>update node</B> command in the <B><A HREF="scontrol.html">scontrol</A></B>(1)
+man page or the <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for more information.
+<DT><DD>
+<P>
+<dt><B>FAILING</B><a class="slurm_link" id="OPT_FAILING" href="#OPT_FAILING"></a></dt><dd>The node is currently executing a job, but is expected to fail
+soon and is unavailable for use per system administrator request.
+See the <B>update node</B> command in the <B><A HREF="scontrol.html">scontrol</A></B>(1)
+man page or the <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for more information.
+<DT><DD>
+<P>
+<dt><B>FUTURE</B><a class="slurm_link" id="OPT_FUTURE" href="#OPT_FUTURE"></a></dt><dd>The node is currently not fully configured, but expected to be available at
+some point in the indefinite future for use.
+<DT><DD>
+<P>
+<dt><B>IDLE</B><a class="slurm_link" id="OPT_IDLE" href="#OPT_IDLE"></a></dt><dd>The node is not allocated to any jobs and is available for use.
+<DT><DD>
+<P>
+<dt><B>INVAL</B><a class="slurm_link" id="OPT_INVAL" href="#OPT_INVAL"></a></dt><dd>The node did not register correctly with the controller. This happens when
+a node registers with less resources than configured in the slurm.conf file.
+The node will clear from this state with a valid registration (i.e. a slurmd
+restart is required).
+<DT><DD>
+<P>
+<dt><B>MAINT</B><a class="slurm_link" id="OPT_MAINT" href="#OPT_MAINT"></a></dt><dd>The node is currently in a reservation with a flag value of &quot;maintenance&quot;.
+<DT><DD>
+<P>
+<dt><B>REBOOT_ISSUED</B><a class="slurm_link" id="OPT_REBOOT_ISSUED" href="#OPT_REBOOT_ISSUED"></a></dt><dd>A reboot request has been sent to the agent configured to handle this request.
+<DT><DD>
+<P>
+<dt><B>REBOOT_REQUESTED</B><a class="slurm_link" id="OPT_REBOOT_REQUESTED" href="#OPT_REBOOT_REQUESTED"></a></dt><dd>A request to reboot this node has been made, but hasn't been handled yet.
+<DT><DD>
+<P>
+<dt><B>MIXED</B><a class="slurm_link" id="OPT_MIXED" href="#OPT_MIXED"></a></dt><dd>The node has some of its CPUs <B>ALLOCATED</B> while others are <B>IDLE</B>.
+<DT><DD>
+<P>
+<dt><B>PERFCTRS (NPC)</B><a class="slurm_link" id="OPT_PERFCTRS-(NPC)" href="#OPT_PERFCTRS-(NPC)"></a></dt><dd>Network Performance Counters associated with this node are in use, rendering
+this node as not usable for any other jobs
+<DT><DD>
+<P>
+<dt><B>PLANNED</B><a class="slurm_link" id="OPT_PLANNED" href="#OPT_PLANNED"></a></dt><dd>The node is planned by the backfill scheduler for a higher priority job.
+<DT><DD>
+<P>
+<dt><B>POWER_DOWN</B><a class="slurm_link" id="OPT_POWER_DOWN" href="#OPT_POWER_DOWN"></a></dt><dd>The node is pending power down.
+<DT><DD>
+<P>
+<dt><B>POWERED_DOWN</B><a class="slurm_link" id="OPT_POWERED_DOWN" href="#OPT_POWERED_DOWN"></a></dt><dd>The node is currently powered down and not capable of running any jobs.
+<DT><DD>
+<P>
+<dt><B>POWERING_DOWN</B><a class="slurm_link" id="OPT_POWERING_DOWN" href="#OPT_POWERING_DOWN"></a></dt><dd>The node is in the process of powering down and not capable of running any jobs.
+<DT><DD>
+<P>
+<dt><B>POWERING_UP</B><a class="slurm_link" id="OPT_POWERING_UP" href="#OPT_POWERING_UP"></a></dt><dd>The node is in the process of being powered up.
+<DT><DD>
+<P>
+<dt><B>RESERVED</B><a class="slurm_link" id="OPT_RESERVED" href="#OPT_RESERVED"></a></dt><dd>The node is in an advanced reservation and not generally available.
+<DT><DD>
+<P>
+<dt><B>UNKNOWN</B><a class="slurm_link" id="OPT_UNKNOWN" href="#OPT_UNKNOWN"></a></dt><dd>The Slurm controller has just started and the node's state
+has not yet been determined.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<h2>PERFORMANCE<a class="slurm_link" id="SECTION_PERFORMANCE" href="#SECTION_PERFORMANCE"></a></h2>
+<P>
+
+Executing <B>sinfo</B> sends a remote procedure call to <B>slurmctld</B>. If
+enough calls from <B>sinfo</B> or other Slurm client commands that send remote
+procedure calls to the <B>slurmctld</B> daemon come in at once, it can result in
+a degradation of performance of the <B>slurmctld</B> daemon, possibly resulting
+in a denial of service.
+<P>
+
+Do not run <B>sinfo</B> or other Slurm client commands that send remote procedure
+calls to <B>slurmctld</B> from loops in shell scripts or other programs. Ensure
+that programs limit calls to <B>sinfo</B> to the minimum necessary for the
+information you are trying to gather.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<h2>ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_ENVIRONMENT-VARIABLES" href="#SECTION_ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+
+Some <B>sinfo</B> options may
+be set via environment variables. These environment variables,
+along with their corresponding options, are listed below.
+<B>NOTE</B>: Command line options will always override these settings.
+<P>
+<DL COMPACT>
+<dt><B>SINFO_ALL</B><a class="slurm_link" id="OPT_SINFO_ALL" href="#OPT_SINFO_ALL"></a></dt><dd>Same as <B>-a, --all</B>
+<DT><DD>
+<P>
+<dt><B>SINFO_FEDERATION</B><a class="slurm_link" id="OPT_SINFO_FEDERATION" href="#OPT_SINFO_FEDERATION"></a></dt><dd>Same as <B>--federation</B>
+<DT><DD>
+<P>
+<dt><B>SCONTROL_FUTURE</B><a class="slurm_link" id="OPT_SCONTROL_FUTURE" href="#OPT_SCONTROL_FUTURE"></a></dt><dd><B>-F, --future</B>
+<DT><DD>
+<P>
+<dt><B>SINFO_FORMAT</B><a class="slurm_link" id="OPT_SINFO_FORMAT" href="#OPT_SINFO_FORMAT"></a></dt><dd>Same as <B>-o &lt;output_format&gt;, --format=&lt;output_format&gt;</B>
+<DT><DD>
+<P>
+<dt><B>SINFO_LOCAL</B><a class="slurm_link" id="OPT_SINFO_LOCAL" href="#OPT_SINFO_LOCAL"></a></dt><dd>Same as <B>--local</B>
+<DT><DD>
+<P>
+<dt><B>SINFO_PARTITION</B><a class="slurm_link" id="OPT_SINFO_PARTITION" href="#OPT_SINFO_PARTITION"></a></dt><dd>Same as <B>-p &lt;partition&gt;, --partition=&lt;partition&gt;</B>
+<DT><DD>
+<P>
+<dt><B>SINFO_SORT</B><a class="slurm_link" id="OPT_SINFO_SORT" href="#OPT_SINFO_SORT"></a></dt><dd>Same as <B>-S &lt;sort&gt;, --sort=&lt;sort&gt;</B>
+<DT><DD>
+<P>
+<dt><B>SLURM_CLUSTERS</B><a class="slurm_link" id="OPT_SLURM_CLUSTERS" href="#OPT_SLURM_CLUSTERS"></a></dt><dd>Same as <B>--clusters</B>
+<DT><DD>
+<P>
+<dt><B>SLURM_CONF</B><a class="slurm_link" id="OPT_SLURM_CONF" href="#OPT_SLURM_CONF"></a></dt><dd>The location of the Slurm configuration file.
+<DT><DD>
+<P>
+<dt><B>SLURM_DEBUG_FLAGS</B><a class="slurm_link" id="OPT_SLURM_DEBUG_FLAGS" href="#OPT_SLURM_DEBUG_FLAGS"></a></dt><dd>Specify debug flags for sinfo to use. See DebugFlags in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for a full list of flags. The environment
+variable takes precedence over the setting in the slurm.conf.
+<DT><DD>
+<P>
+<dt><B>SLURM_TIME_FORMAT</B><a class="slurm_link" id="OPT_SLURM_TIME_FORMAT" href="#OPT_SLURM_TIME_FORMAT"></a></dt><dd>Specify the format used to report time stamps. A value of <I>standard</I>, the
+default value, generates output in the form &quot;year-month-dateThour:minute:second&quot;.
+A value of <I>relative</I> returns only &quot;hour:minute:second&quot; if the current day.
+For other dates in the current year it prints the &quot;hour:minute&quot; preceded by
+&quot;Tomorr&quot; (tomorrow), &quot;Ystday&quot; (yesterday), the name of the day for the coming
+week (e.g. &quot;Mon&quot;, &quot;Tue&quot;, etc.), otherwise the date (e.g. &quot;25 Apr&quot;).
+For other years it returns a date month and year without a time (e.g.
+&quot;6 Jun 2012&quot;). All of the time stamps use a 24 hour format.
+<P>
+A valid strftime() format can also be specified. For example, a value of
+&quot;%a %T&quot; will report the day of the week and a time stamp (e.g. &quot;Mon 12:34:56&quot;).
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>EXAMPLES<a class="slurm_link" id="SECTION_EXAMPLES" href="#SECTION_EXAMPLES"></a></h2>
+<P>
+<DL COMPACT>
+<DT>Report basic node and partition configurations:<DD>
+<DT><DD>
+<PRE>
+$ sinfo
+PARTITION AVAIL TIMELIMIT NODES STATE  NODELIST
+batch     up     infinite     2 alloc  adev[8-9]
+batch     up     infinite     6 idle   adev[10-15]
+debug*    up        30:00     8 idle   adev[0-7]
+</PRE>
+
+<P>
+<DT>Report partition summary information:<DD>
+<DT><DD>
+<PRE>
+$ sinfo -s
+PARTITION AVAIL TIMELIMIT NODES(A/I/O/T) NODELIST
+batch     up     infinite 2/6/0/8        adev[8-15]
+debug*    up        30:00 0/8/0/8        adev[0-7]
+</PRE>
+
+<P>
+<DT>Report more complete information about the partition debug:<DD>
+<DT><DD>
+<PRE>
+$ sinfo --long --partition=debug
+PARTITION AVAIL TIMELIMIT JOB_SIZE ROOT OVERSUBS GROUPS NODES STATE NODELIST
+debug*    up        30:00        8 no   no       all        8 idle  dev[0-7]
+</PRE>
+
+<P>
+<DT>Report only those nodes that are in state DRAINED:<DD>
+<DT><DD>
+<PRE>
+$ sinfo --states=drained
+PARTITION AVAIL NODES TIMELIMIT STATE  NODELIST
+debug*    up        2     30:00 drain  adev[6-7]
+</PRE>
+
+<P>
+<DT>Report node-oriented information with details and exact matches:<DD>
+<DT><DD>
+<PRE>
+$ sinfo -Nel
+NODELIST    NODES PARTITION STATE  CPUS MEMORY TMP_DISK WEIGHT FEATURES REASON
+adev[0-1]       2 debug*    idle      2   3448    38536     16 (null)   (null)
+adev[2,4-7]     5 debug*    idle      2   3384    38536     16 (null)   (null)
+adev3           1 debug*    idle      2   3394    38536     16 (null)   (null)
+adev[8-9]       2 batch     allocated 2    246    82306     16 (null)   (null)
+adev[10-15]     6 batch     idle      2    246    82306     16 (null)   (null)
+</PRE>
+
+<P>
+<DT>Report only down, drained and draining nodes and their reason field:<DD>
+<DT><DD>
+<PRE>
+$ sinfo -R
+REASON                              NODELIST
+Memory errors                       dev[0,5]
+Not Responding                      dev8
+</PRE>
+
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2002-2007 The Regents of the University of California.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2008-2009 Lawrence Livermore National Security.
+<BR>
+
+Copyright (C) 2010-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<B><A HREF="scontrol.html">scontrol</A></B>(1), <B><A HREF="squeue.html">squeue</A></B>(1),
+<B>slurm_load_ctl_conf</B> (3), <B>slurm_load_jobs</B> (3),
+<B>slurm_load_node</B> (3),
+<B>slurm_load_partitions</B> (3),
+<B>slurm_reconfigure</B> (3), <B>slurm_shutdown</B> (3),
+<B>slurm_update_job</B> (3), <B>slurm_update_node</B> (3),
+<B>slurm_update_partition</B> (3),
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">OUTPUT FIELD DESCRIPTIONS</A><DD>
+<DT><A HREF="#lbAG">NODE STATE CODES</A><DD>
+<DT><A HREF="#lbAH">PERFORMANCE</A><DD>
+<DT><A HREF="#lbAI">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAJ">EXAMPLES</A><DD>
+<DT><A HREF="#lbAK">COPYING</A><DD>
+<DT><A HREF="#lbAL">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:45 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

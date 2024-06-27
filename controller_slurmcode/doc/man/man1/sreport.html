@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - sreport</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/sreport.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>sreport</H1>
+Section: Slurm Commands (1)<BR>Updated: Slurm Commands<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+sreport - Generate reports from the slurm accounting data.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+<B>sreport</B> [<I>OPTIONS</I>...] [<I>COMMAND</I>...]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>sreport</B> is used to generate reports of job usage and cluster
+utilization for Slurm jobs saved to the Slurm Database,
+<B>slurmdbd</B>.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>OPTIONS<a class="slurm_link" id="SECTION_OPTIONS" href="#SECTION_OPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>-a</B>, <B>--all_clusters</B><a class="slurm_link" id="OPT_all_clusters" href="#OPT_all_clusters"></a></dt><dd>Use all clusters instead of only the cluster from which the command was
+executed.
+<DT><DD>
+<P>
+<dt><B>-M</B>, <B>--cluster</B><a class="slurm_link" id="OPT_cluster" href="#OPT_cluster"></a></dt><dd>The cluster(s) to generate reports for. Default is local cluster, unless the
+local cluster is currently part of a federation and in that case generate a
+report for all clusters in the current federation. If the clusters included
+in a federation vary through time, use this option to identify the clusters
+to be included in report. Implies --local.
+<DT><DD>
+<P>
+<dt><B>--federation</B><a class="slurm_link" id="OPT_federation" href="#OPT_federation"></a></dt><dd>Generate a report for the federation if a member of one.
+<DT><DD>
+<P>
+<dt><B>-h</B>, <B>--help</B><a class="slurm_link" id="OPT_help" href="#OPT_help"></a></dt><dd>Print a help message describing the usage of <B>sreport</B>.
+<DT><DD>
+<P>
+<dt><B>--local</B><a class="slurm_link" id="OPT_local" href="#OPT_local"></a></dt><dd>Generate a report for the local cluster, even if part of a federation.
+Overrides <B>--federation</B>.
+<DT><DD>
+<P>
+<dt><B>-n</B>, <B>--noheader</B><a class="slurm_link" id="OPT_noheader" href="#OPT_noheader"></a></dt><dd>Don't display header when listing results.
+<DT><DD>
+<P>
+<dt><B>-p</B>, <B>--parsable</B><a class="slurm_link" id="OPT_parsable" href="#OPT_parsable"></a></dt><dd>Output will be '|' delimited with a '|' at the end.
+<DT><DD>
+<P>
+<dt><B>-P</B>, <B>--parsable2</B><a class="slurm_link" id="OPT_parsable2" href="#OPT_parsable2"></a></dt><dd>Output will be '|' delimited without a '|' at the end.
+<DT><DD>
+<P>
+<dt><B>-Q</B>, <B>--quiet</B><a class="slurm_link" id="OPT_quiet" href="#OPT_quiet"></a></dt><dd>Print no warning or informational messages, only error messages.
+<DT><DD>
+<P>
+<dt><B>-t</B> &lt;<I>time_format</I>&gt;<a class="slurm_link" id="OPT_-t" href="#OPT_-t"></a></dt><dd>Specify the output time format. Time format options are case
+insensitive and may be abbreviated. The default format is Minutes.
+Supported time format options are listed in the <B>time</B> command
+section below.
+<DT><DD>
+<P>
+<dt><B>-T</B>, <B>--tres</B>=&lt;<I>tres_names</I>&gt;<a class="slurm_link" id="OPT_tres" href="#OPT_tres"></a></dt><dd>Trackable resource (TRES) to report values for.
+By default CPU resource use is reported (except for reservation reports. All
+TRES types reserved by a reservation will be shown by default unless overridden
+with this option).
+Multiple TRES names may be separated using a comma separated list for all
+reports except the job reports, which can only support a single TRES name, or
+&quot;ALL&quot; for all TRES.
+<P>
+The &quot;Reported&quot; Billing TRES is calculated from the largest Billing TRES of each
+node multiplied by the time frame. For example, if a node is part of multiple
+partitions and each has a different TRESBillingWeights defined the Billing TRES
+for the node will be the highest of the partitions.  If TRESBillingWeights is
+not defined on any partition for a node then the Billing TRES will be equal to
+the number of CPUs on the node.
+<P>
+TRES node usage is no longer reported in percent format or in Cluster
+Utilization.  Please use TRES CPU instead.
+The main issue with using node is in most configurations multiple jobs are able
+to run on the same node.  This makes TRES node accounting count the same node
+multiple times in the same period.  In exclusive node configurations, CPU
+accounting returns the same usage node accounting would.
+<DT><DD>
+<P>
+<dt><B>-v</B>, <B>--verbose</B><a class="slurm_link" id="OPT_verbose" href="#OPT_verbose"></a></dt><dd>Print detailed event logging.
+<DT><DD>
+<P>
+<dt><B>-V</B> , <B>--version</B><a class="slurm_link" id="OPT_version" href="#OPT_version"></a></dt><dd>Print version information and exit.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>COMMANDS<a class="slurm_link" id="SECTION_COMMANDS" href="#SECTION_COMMANDS"></a></h2>
+<P>
+<P>
+
+&lt;keyword&gt; may be omitted from the execute line and sreport will
+execute in interactive mode. sreport will process commands as entered until
+explicitly terminated.
+<P>
+<DL COMPACT>
+<dt><B>exit</B><a class="slurm_link" id="OPT_exit" href="#OPT_exit"></a></dt><dd>Terminate the execution of sreport.
+Identical to the <B>quit</B> command.
+<DT><DD>
+<P>
+<dt><B>help</B><a class="slurm_link" id="OPT_help_1" href="#OPT_help_1"></a></dt><dd>Display a description of sreport options and commands.
+<DT><DD>
+<P>
+<dt><B>nonparsable</B><a class="slurm_link" id="OPT_nonparsable" href="#OPT_nonparsable"></a></dt><dd>Return output to normal after parsable or parsable2 has been set.
+<DT><DD>
+<P>
+<dt><B>parsable</B><a class="slurm_link" id="OPT_parsable_1" href="#OPT_parsable_1"></a></dt><dd>Output will be | delimited with an ending '|'.
+<DT><DD>
+<P>
+<dt><B>parsable2</B><a class="slurm_link" id="OPT_parsable2_1" href="#OPT_parsable2_1"></a></dt><dd>Output will be | delimited without an ending '|'.
+<DT><DD>
+<P>
+<dt><B>quiet</B><a class="slurm_link" id="OPT_quiet_1" href="#OPT_quiet_1"></a></dt><dd>Print no warning or informational messages, only fatal error messages.
+<DT><DD>
+<P>
+<dt><B>quit</B><a class="slurm_link" id="OPT_quit" href="#OPT_quit"></a></dt><dd>Terminate the execution of sreport.
+Identical to the <B>exit</B> command.
+<DT><DD>
+<P>
+<dt><B>time &lt;time_format&gt;</B><a class="slurm_link" id="OPT_time-&lt;time_format&gt;" href="#OPT_time-&lt;time_format&gt;"></a></dt><dd>Specify the output time format. Time format options are case
+insensitive and may be abbreviated. The default format is Minutes.
+Supported time format options include:
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>SecPer</B><a class="slurm_link" id="OPT_SecPer" href="#OPT_SecPer"></a></dt><dd>Seconds/Percentage of Total
+<DT><DD>
+<P>
+<dt><B>MinPer</B><a class="slurm_link" id="OPT_MinPer" href="#OPT_MinPer"></a></dt><dd>Minutes/Percentage of Total
+<DT><DD>
+<P>
+<dt><B>HourPer</B><a class="slurm_link" id="OPT_HourPer" href="#OPT_HourPer"></a></dt><dd>Hours/Percentage of Total
+<DT><DD>
+<P>
+<dt><B>Seconds</B><a class="slurm_link" id="OPT_Seconds" href="#OPT_Seconds"></a></dt><dd>Seconds
+<DT><DD>
+<P>
+<dt><B>Minutes</B><a class="slurm_link" id="OPT_Minutes" href="#OPT_Minutes"></a></dt><dd>Minutes
+<DT><DD>
+<P>
+<dt><B>Hours</B><a class="slurm_link" id="OPT_Hours" href="#OPT_Hours"></a></dt><dd>Hours
+<DT><DD>
+<P>
+<dt><B>Percent</B><a class="slurm_link" id="OPT_Percent" href="#OPT_Percent"></a></dt><dd>Percentage of Total
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>verbose</B><a class="slurm_link" id="OPT_verbose_1" href="#OPT_verbose_1"></a></dt><dd>Enable detailed event logging.
+<DT><DD>
+<P>
+<dt><B>version</B><a class="slurm_link" id="OPT_version_1" href="#OPT_version_1"></a></dt><dd>Display the sreport version number.
+<DT><DD>
+<P>
+<dt><B>!!</B><a class="slurm_link" id="OPT_!!" href="#OPT_!!"></a></dt><dd>Repeat the last command executed.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>REPORT TYPES<a class="slurm_link" id="SECTION_REPORT-TYPES" href="#SECTION_REPORT-TYPES"></a></h2>
+<P>
+Valid report types are:
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>cluster</B> &lt;REPORT&gt; &lt;OPTIONS&gt;<a class="slurm_link" id="OPT_cluster_1" href="#OPT_cluster_1"></a></dt><dd><DT><DD>
+<P>
+<dt><B>job</B> &lt;REPORT&gt; &lt;OPTIONS&gt;<a class="slurm_link" id="OPT_job" href="#OPT_job"></a></dt><dd><DT><DD>
+<P>
+<dt><B>reservation</B> &lt;REPORT&gt; &lt;OPTIONS&gt;<a class="slurm_link" id="OPT_reservation" href="#OPT_reservation"></a></dt><dd><DT><DD>
+<P>
+<dt><B>user</B> &lt;REPORT&gt; &lt;OPTIONS&gt;<a class="slurm_link" id="OPT_user" href="#OPT_user"></a></dt><dd><DT><DD>
+</DL>
+</DL>
+
+<P>
+&lt;REPORT&gt; options for each type include:
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>cluster</B><a class="slurm_link" id="OPT_cluster_2" href="#OPT_cluster_2"></a></dt><dd>AccountUtilizationByUser, UserUtilizationByAccount,
+UserUtilizationByWckey, Utilization, WCKeyUtilizationByUser
+<DT><DD>
+<P>
+<dt><B>job</B><a class="slurm_link" id="OPT_job_1" href="#OPT_job_1"></a></dt><dd>SizesByAccount, SizesByAccountAndWcKey, SizesByWckey
+<DT><DD>
+<P>
+<dt><B>reservation</B><a class="slurm_link" id="OPT_reservation_1" href="#OPT_reservation_1"></a></dt><dd>Utilization
+<DT><DD>
+<P>
+<dt><B>user</B><a class="slurm_link" id="OPT_user_1" href="#OPT_user_1"></a></dt><dd>TopUsage
+<DT><DD>
+</DL>
+</DL>
+
+<P>
+<P>
+
+<B>NOTE</B>: If <B>OverSubscribe</B> is configured to <B>FORCE</B> or <B>YES</B>
+in your slurm.conf and the system is not configured to use preemption
+(<B>PreemptMode=OFF</B>) accounting can easily grow to values greater than
+the actual utilization. It may be common on such systems to get error messages
+in the slurmdbd log stating: &quot;We have more allocated time than is possible.&quot;
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<h2>REPORT DESCRIPTION<a class="slurm_link" id="SECTION_REPORT-DESCRIPTION" href="#SECTION_REPORT-DESCRIPTION"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>cluster AccountUtilizationByUser</B><a class="slurm_link" id="OPT_cluster-AccountUtilizationByUser" href="#OPT_cluster-AccountUtilizationByUser"></a></dt><dd>
+<DD>
+This report will display account utilization as it appears on the
+hierarchical tree.  Starting with the specified account or the
+root account by default this report will list the underlying
+usage with a sum on each level.  Use the 'tree' option to span
+the tree for better visibility.
+<P>
+<B>NOTE</B>: Idle reservation time will be split evenly among accounts/users
+given access to it. When a reservation is assigned to whole accounts, the
+time will be counted in the association for the accounts, not the user
+associations in the accounts. In this case, the usage of a parent account can
+be larger than the sum of its children.
+<DT><DD>
+<P>
+<dt><B>cluster UserUtilizationByAccount</B><a class="slurm_link" id="OPT_cluster-UserUtilizationByAccount" href="#OPT_cluster-UserUtilizationByAccount"></a></dt><dd>
+<DD>
+This report will display users by account in order of utilization without
+grouping multiple accounts by user into one, but displaying them
+on separate lines.
+<DT><DD>
+<P>
+<dt><B>cluster UserUtilizationByWCKey</B><a class="slurm_link" id="OPT_cluster-UserUtilizationByWCKey" href="#OPT_cluster-UserUtilizationByWCKey"></a></dt><dd>
+<DD>
+This report will display users by wckey in order of utilization without
+grouping multiple wckey by user into one, but displaying them
+on separate lines.
+<DT><DD>
+<P>
+<dt><B>cluster Utilization</B><a class="slurm_link" id="OPT_cluster-Utilization" href="#OPT_cluster-Utilization"></a></dt><dd>
+<DD>
+This report will display total usage divided amongst Allocated, Down,
+Planned Down, Idle, and Planned time for selected clusters.
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>Allocated<DD>
+<P>
+Time that nodes were in use with active jobs or an active reservation.
+This does not include reservations created with the MAINT or IGNORE_JOBS
+flags.
+<DT>Down<DD>
+<P>
+Time that nodes were marked as Down or fully Drained, or time that slurmctld was
+not responding (assuming TrackSlurmctldDown is set in slurmdbd.conf).
+<DT>Idle<DD>
+<P>
+Time that nodes were not Allocated, Down, PlannedDown, or Planned.
+<DT>OverCommitted<DD>
+<P>
+Time of eligible jobs waiting in the queue over the Planned time. Unlike
+Planned, this has no limit. It is typically useful to determine whether your
+system is overloaded and by how much.
+<DT>PlannedDown<DD>
+<P>
+Time that nodes were in use by a reservation created with the MAINT flag
+but not the IGNORE_JOBS flag. Also, time that nodes were in the FUTURE state or
+CLOUD nodes that were POWERED_DOWN.
+<DT>Planned<DD>
+<P>
+Time that nodes were not Allocated, Down or PlannedDown with eligible jobs in
+the queue that were unable to start due to time or size constraints. The maximum
+time is limited to the amount of time possible on the system. If this value is
+not of importance for you then the number can be grouped with idle time.
+<DT>TresCount<DD>
+<P>
+Configured number of TRES' on the reported nodes. See also the
+<B>TresName</B> field.
+</DL>
+</DL>
+
+<DL COMPACT><DT><DD>
+<P>
+Note: Reservations created with the IGNORE_JOBS flag are not tracked
+in the Cluster Utilization report due to the fact that allowing any
+current/active jobs to continue to run in the reservation introduces the
+possibility for them to be accounted for incorrectly.
+The jobs in these reservations will be tracked as normal rather than
+being bundled in the reservation time, as they are with reservations that
+do not have the IGNORE_JOBS flag.
+</DL>
+
+<DL COMPACT><DT><DD>
+<P>
+Note: The default view for the &quot;Cluster Utilization&quot; report includes the
+following fields: Cluster, Allocated, Down, PlannedDown, Idle, Planned,
+Reported. You can include additional fields like OverCommitted and TresCount
+fields with the <B>Format</B> option. The TresName will also be included if
+using the <B>-T,  --tres &lt;tres_names&gt;</B> option.
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>cluster WCKeyUtilizationByUser</B><a class="slurm_link" id="OPT_cluster-WCKeyUtilizationByUser" href="#OPT_cluster-WCKeyUtilizationByUser"></a></dt><dd>
+<DD>
+This report will display wckey utilization sorted by WCKey name for
+each user on each cluster.
+<DT><DD>
+<P>
+<dt><B>job SizesByAccount</B><a class="slurm_link" id="OPT_job-SizesByAccount" href="#OPT_job-SizesByAccount"></a></dt><dd>
+<DD>
+This report will display the amount of time used for job ranges
+specified by the 'grouping=' option.  Only a single level in the tree
+is displayed defaulting to the root dir.  If you specify other
+accounts with the 'account=' option sreport will use those accounts as
+the root account and you will receive the aggregated totals of each listed
+account plus their sub accounts.
+<DT><DD>
+<P>
+<dt><B>job SizesByAccountAndWckey</B><a class="slurm_link" id="OPT_job-SizesByAccountAndWckey" href="#OPT_job-SizesByAccountAndWckey"></a></dt><dd>
+<DD>
+This report is very similar to SizesByAccount with the difference being
+each account is pair with wckeys so the identifier is account:wckey
+instead of just account so there will most likely be multiple accounts
+listed depending on the number of wckeys used.
+<DT><DD>
+<P>
+<dt><B>job SizesByWckey</B><a class="slurm_link" id="OPT_job-SizesByWckey" href="#OPT_job-SizesByWckey"></a></dt><dd>
+<DD>
+This report will display the amount of time for each wckey for job ranges
+specified by the 'grouping=' option.
+<DT><DD>
+<P>
+<dt><B>reservation Utilization</B><a class="slurm_link" id="OPT_reservation-Utilization" href="#OPT_reservation-Utilization"></a></dt><dd>
+<DD>
+This report will display total usage for reservations on the systems.
+Note: Time requests on this report will not truncate the time the reservation
+used, only the reservations that ran at any time during the period requested.
+<DT><DD>
+<P>
+<dt><B>user TopUsage</B><a class="slurm_link" id="OPT_user-TopUsage" href="#OPT_user-TopUsage"></a></dt><dd>
+<DD>
+Displays the top users on a cluster, i.e. users with the highest usage.
+By default users are sorted by CPUTime, but the -T, --tres option will
+sort users by the first TRES specified.
+<P>
+Use the group option to group accounts together.
+The default is to have a different line for each user account combination.
+<DT><DD>
+<P>
+</DL>
+<P>
+
+Each report type has various options...
+<P>
+<P>
+
+<B>OPTIONS FOR ALL REPORT TYPES</B>
+
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>All_Clusters</B><a class="slurm_link" id="OPT_All_Clusters" href="#OPT_All_Clusters"></a></dt><dd>
+<DD>
+Use all monitored clusters. Default is local cluster.
+<DT><DD>
+<P>
+<dt><B>Clusters=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Clusters=&lt;OPT&gt;" href="#OPT_Clusters=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+List of clusters to include in report.  Default is local cluster.
+<DT><DD>
+<P>
+<dt><B>End=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_End=&lt;OPT&gt;" href="#OPT_End=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+Period ending for report. Default is 23:59:59 of previous day.
+Valid time formats are...
+<P>
+HH:MM[:SS] [AM|PM]
+<BR>
+
+MMDD[YY] or MM/DD[/YY] or MM.DD[.YY]
+<BR>
+
+MM/DD[/YY]-HH:MM[:SS]
+<BR>
+
+YYYY-MM-DD[THH:MM[:SS]]
+<BR>
+
+now[{+|-}<I>count</I>[seconds(default)|minutes|hours|days|weeks]]
+<DT><DD>
+<P>
+<dt><B>Format=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Format=&lt;OPT&gt;" href="#OPT_Format=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+Comma separated list of fields to display in report.
+<P>
+When using the format option for listing various fields you can put a
+%NUMBER afterwards to specify how many characters should be printed.
+<P>
+e.g. format=name%30 will print 30 characters of field name right
+justified.  A -30 will print 30 characters left justified.
+<DT><DD>
+<P>
+<dt><B>Start=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Start=&lt;OPT&gt;" href="#OPT_Start=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+Period start for report.  Default is 00:00:00 of previous day.
+Valid time formats are...
+<P>
+HH:MM[:SS] [AM|PM]
+<BR>
+
+MMDD[YY] or MM/DD[/YY] or MM.DD[.YY]
+<BR>
+
+MM/DD[/YY]-HH:MM[:SS]
+<BR>
+
+YYYY-MM-DD[THH:MM[:SS]]
+<BR>
+
+now[{+|-}<I>count</I>[seconds(default)|minutes|hours|days|weeks]]
+
+</DL>
+</DL>
+
+<DL COMPACT>
+<DT><DD>
+<P>
+</DL>
+<P>
+
+<B>OPTIONS SPECIFICALLY FOR CLUSTER REPORTS</B>
+
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>Accounts=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Accounts=&lt;OPT&gt;" href="#OPT_Accounts=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+When used with the UserUtilizationByAccount, or
+AccountUtilizationByUser, List of accounts to include in report.
+Default is all.
+<DT><DD>
+<P>
+<dt><B>Tree</B><a class="slurm_link" id="OPT_Tree" href="#OPT_Tree"></a></dt><dd>
+<DD>
+When used with the AccountUtilizationByUser report will span the
+accounts as they are in the hierarchy.
+<DT><DD>
+<P>
+<dt><B>Users=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Users=&lt;OPT&gt;" href="#OPT_Users=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+When used with any report other than Utilization, List of users to
+include in report.  Default is all.
+<DT><DD>
+<P>
+<dt><B>Wckeys=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Wckeys=&lt;OPT&gt;" href="#OPT_Wckeys=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+When used with the UserUtilizationByWckey or WCKeyUtilizationByUser,
+List of wckeys to include in report. Default is all.
+</DL>
+</DL>
+
+<DL COMPACT>
+<DT><DD>
+<P>
+</DL>
+<P>
+
+<B>OPTIONS SPECIFICALLY FOR JOB REPORTS</B>
+
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>Accounts=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Accounts=&lt;OPT&gt;_1" href="#OPT_Accounts=&lt;OPT&gt;_1"></a></dt><dd>
+<DD>
+List of accounts to use for the report. Default is all which will show only
+one line corresponding to the totals of all accounts in the hierarchy.
+This explanation does not apply when ran with the FlatView or AcctAsParent
+options.
+<DT><DD>
+<P>
+<dt><B>AcctAsParent</B><a class="slurm_link" id="OPT_AcctAsParent" href="#OPT_AcctAsParent"></a></dt><dd>
+<DD>
+When used with the SizesbyAccount(*) will take specified accounts
+as parents and the next layer of accounts under those specified
+will be displayed. Default is root if no specific Accounts are requested.
+When FlatView is used, this option is ignored.
+<DT><DD>
+<P>
+<dt><B>FlatView</B><a class="slurm_link" id="OPT_FlatView" href="#OPT_FlatView"></a></dt><dd>
+<DD>
+When used with the SizesbyAccount(*) will not group accounts in a
+hierarchical level, but print each account where jobs ran on a
+separate line without any hierarchy.
+<DT><DD>
+<P>
+<dt><B>GID=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_GID=&lt;OPT&gt;" href="#OPT_GID=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+List of group ids to include in report.  Default is all.
+<DT><DD>
+<P>
+<dt><B>Grouping=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Grouping=&lt;OPT&gt;" href="#OPT_Grouping=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+Comma separated list of size groupings.   (e.g. 50,100,150 would group
+job cpu count 1-49, 50-99, 100-149, &gt; 150).  grouping=individual will
+result in a single column for each job size found.
+<DT><DD>
+<P>
+<dt><B>Jobs=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Jobs=&lt;OPT&gt;" href="#OPT_Jobs=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+List of jobs/steps to include in report.  Default is all.
+<DT><DD>
+<P>
+<dt><B>Nodes=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Nodes=&lt;OPT&gt;" href="#OPT_Nodes=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+Only show jobs that ran on these nodes. Default is all.
+<DT><DD>
+<P>
+<dt><B>Partitions=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Partitions=&lt;OPT&gt;" href="#OPT_Partitions=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+List of partitions jobs ran on to include in report.  Default is all.
+<DT><DD>
+<P>
+<dt><B>PrintJobCount</B><a class="slurm_link" id="OPT_PrintJobCount" href="#OPT_PrintJobCount"></a></dt><dd>
+<DD>
+When used with the Sizes report will print number of jobs ran instead
+of time used.
+<DT><DD>
+<P>
+<dt><B>Users=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Users=&lt;OPT&gt;_1" href="#OPT_Users=&lt;OPT&gt;_1"></a></dt><dd>
+<DD>
+List of users jobs to include in report.  Default is all.
+<DT><DD>
+<P>
+<dt><B>Wckeys=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Wckeys=&lt;OPT&gt;_1" href="#OPT_Wckeys=&lt;OPT&gt;_1"></a></dt><dd>
+<DD>
+List of wckeys to use for the report.  Default is all.  The
+SizesbyWckey report all users summed together.  If you want only
+certain users specify them with the Users= option.
+</DL>
+</DL>
+
+<DL COMPACT>
+<DT><DD>
+<P>
+</DL>
+<P>
+
+<B>OPTIONS SPECIFICALLY FOR RESERVATION REPORTS</B>
+
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>Names=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Names=&lt;OPT&gt;" href="#OPT_Names=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+List of reservations to use for the report. Default is all.
+<DT><DD>
+<P>
+<dt><B>Nodes=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Nodes=&lt;OPT&gt;_1" href="#OPT_Nodes=&lt;OPT&gt;_1"></a></dt><dd>
+<DD>
+Only show reservations that used these nodes. Default is all.
+</DL>
+</DL>
+
+<DL COMPACT>
+<DT><DD>
+<P>
+</DL>
+<P>
+
+<B>OPTIONS SPECIFICALLY FOR USER REPORTS</B>
+
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>Accounts=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Accounts=&lt;OPT&gt;_2" href="#OPT_Accounts=&lt;OPT&gt;_2"></a></dt><dd>
+<DD>
+List of accounts to use for the report. Default is all.
+<DT><DD>
+<P>
+<dt><B>Group</B><a class="slurm_link" id="OPT_Group" href="#OPT_Group"></a></dt><dd>
+<DD>
+Group all accounts together for each user.  Default is a separate
+entry for each user and account reference.
+<DT><DD>
+<P>
+<dt><B>TopCount=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_TopCount=&lt;OPT&gt;" href="#OPT_TopCount=&lt;OPT&gt;"></a></dt><dd>
+<DD>
+Used in the TopUsage report.  Change the number of users displayed.
+Default is 10.
+<DT><DD>
+<P>
+<dt><B>Users=&lt;OPT&gt;</B><a class="slurm_link" id="OPT_Users=&lt;OPT&gt;_2" href="#OPT_Users=&lt;OPT&gt;_2"></a></dt><dd>
+<DD>
+List of users jobs to include in report.  Default is all.
+</DL>
+</DL>
+
+<DL COMPACT>
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<h2>FORMAT OPTIONS FOR EACH REPORT<a class="slurm_link" id="SECTION_FORMAT-OPTIONS-FOR-EACH-REPORT" href="#SECTION_FORMAT-OPTIONS-FOR-EACH-REPORT"></a></h2>
+<P>
+<P>
+
+<B>FORMAT OPTIONS FOR CLUSTER REPORTS</B>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>AccountUtilizationByUser</B><a class="slurm_link" id="OPT_AccountUtilizationByUser" href="#OPT_AccountUtilizationByUser"></a></dt><dd>Accounts, Cluster, Login, Proper, TresCount, Used
+<DT><DD>
+<P>
+<dt><B>UserUtilizationByAccount</B><a class="slurm_link" id="OPT_UserUtilizationByAccount" href="#OPT_UserUtilizationByAccount"></a></dt><dd>Accounts, Cluster, Login, Proper, TresCount, Used
+<DT><DD>
+<P>
+<dt><B>UserUtilizationByWckey</B><a class="slurm_link" id="OPT_UserUtilizationByWckey" href="#OPT_UserUtilizationByWckey"></a></dt><dd>Cluster, Login, Proper, TresCount, Used, Wckey
+<DT><DD>
+<P>
+<dt><B>Utilization</B><a class="slurm_link" id="OPT_Utilization" href="#OPT_Utilization"></a></dt><dd>Allocated, Cluster, Down, Idle, OverCommitted, PlannedDown, Reported, Planned,
+TresCount, TresName
+<DT><DD>
+<P>
+<dt><B>WCKeyUtilizationByUser</B><a class="slurm_link" id="OPT_WCKeyUtilizationByUser" href="#OPT_WCKeyUtilizationByUser"></a></dt><dd>Cluster, Login, Proper, TresCount, Used, Wckey
+<DT><DD>
+</DL>
+</DL>
+
+<P>
+<P>
+
+<B>FORMAT OPTIONS FOR JOB REPORTS</B>
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>SizesByAccount</B><a class="slurm_link" id="OPT_SizesByAccount" href="#OPT_SizesByAccount"></a></dt><dd>Account, Cluster
+<DT><DD>
+<P>
+<dt><B>SizesByAccountAndWckey</B><a class="slurm_link" id="OPT_SizesByAccountAndWckey" href="#OPT_SizesByAccountAndWckey"></a></dt><dd>Account, Cluster
+<DT><DD>
+<P>
+<dt><B>SizesByWckey</B><a class="slurm_link" id="OPT_SizesByWckey" href="#OPT_SizesByWckey"></a></dt><dd>Wckey, Cluster
+<DT><DD>
+</DL>
+</DL>
+
+<P>
+<P>
+
+<B>FORMAT OPTIONS FOR RESERVATION REPORTS</B>
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>Utilization</B><a class="slurm_link" id="OPT_Utilization_1" href="#OPT_Utilization_1"></a></dt><dd>Allocated, Associations, Cluster, End, Flags, Idle, Name, Nodes, ReservationId, Start, TotalTime, TresCount, TresName, TresTime
+<DT><DD>
+</DL>
+</DL>
+
+<P>
+<P>
+
+<B>FORMAT OPTIONS FOR USER REPORTS</B>
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>TopUsage</B><a class="slurm_link" id="OPT_TopUsage" href="#OPT_TopUsage"></a></dt><dd>Account, Cluster, Login, Proper, Used
+<DT><DD>
+</DL>
+</DL>
+
+<P>
+<P>
+
+All commands and options are case-insensitive.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>PERFORMANCE<a class="slurm_link" id="SECTION_PERFORMANCE" href="#SECTION_PERFORMANCE"></a></h2>
+<P>
+
+Executing <B>sreport</B> sends a remote procedure call to <B>slurmdbd</B>. If
+enough calls from <B>sreport</B> or other Slurm client commands that send remote
+procedure calls to the <B>slurmdbd</B> daemon come in at once, it can result in a
+degradation of performance of the <B>slurmdbd</B> daemon, possibly resulting in a
+denial of service.
+<P>
+
+Do not run <B>sreport</B> or other Slurm client commands that send remote
+procedure calls to <B>slurmdbd</B> from loops in shell scripts or other programs.
+Ensure that programs limit calls to <B>sreport</B> to the minimum necessary for
+the information you are trying to gather.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<h2>ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_ENVIRONMENT-VARIABLES" href="#SECTION_ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+
+Some <B>sreport</B> options may be set via environment variables. These
+environment variables, along with their corresponding options, are listed below.
+(Note: Command line options will always override these settings.)
+<DL COMPACT>
+<DT><DD>
+<P>
+<dt><B>SREPORT_CLUSTER</B><a class="slurm_link" id="OPT_SREPORT_CLUSTER" href="#OPT_SREPORT_CLUSTER"></a></dt><dd>Same as <B>-M</B>, <B>--cluster</B>
+<DT><DD>
+<P>
+<dt><B>SREPORT_FEDERATION</B><a class="slurm_link" id="OPT_SREPORT_FEDERATION" href="#OPT_SREPORT_FEDERATION"></a></dt><dd>Same as --federation
+<DT><DD>
+<P>
+<dt><B>SREPORT_LOCAL</B><a class="slurm_link" id="OPT_SREPORT_LOCAL" href="#OPT_SREPORT_LOCAL"></a></dt><dd>Same as --local
+<DT><DD>
+<P>
+<dt><B>SREPORT_TRES</B><a class="slurm_link" id="OPT_SREPORT_TRES" href="#OPT_SREPORT_TRES"></a></dt><dd>Same as <B>-t, --tres</B>
+<DT><DD>
+<P>
+<dt><B>SLURM_CONF</B><a class="slurm_link" id="OPT_SLURM_CONF" href="#OPT_SLURM_CONF"></a></dt><dd>The location of the Slurm configuration file.
+<P>
+
+</DL>
+<A NAME="lbAL">&nbsp;</A>
+<h2>EXAMPLES<a class="slurm_link" id="SECTION_EXAMPLES" href="#SECTION_EXAMPLES"></a></h2>
+<P>
+<DL COMPACT>
+<DT>Report number of jobs per account according to different job size bins:<DD>
+<DT><DD>
+<PRE>
+$ sreport job sizesbyaccount
+</PRE>
+
+<P>
+<DT>Report cluster utilization:<DD>
+<DT><DD>
+<PRE>
+$ sreport cluster utilization
+</PRE>
+
+<P>
+<DT>Report top usage:<DD>
+<DT><DD>
+<PRE>
+$ sreport user top
+</PRE>
+
+<P>
+<DT>Report number of jobs by user gore1 within the environ account:<DD>
+<DT><DD>
+<PRE>
+$ sreport job sizesbyaccount All_Clusters users=gore1 account=environ PrintJobCount
+</PRE>
+
+<P>
+<DT>Report cluster account utilization with the specified fields during the specified 24 hour day of February 23, 2009, by user gore1:<DD>
+<DT><DD>
+<PRE>
+$ sreport cluster AccountUtilizationByUser cluster=zeus user=gore1 start=2/23/09 end=2/24/09 format=Accounts,Cluster,TresCount,Login,Proper,Used
+</PRE>
+
+<P>
+<DT>Report cluster account utilization by user in the LC account on cluster zeus:<DD>
+<DT><DD>
+<PRE>
+$ sreport cluster AccountUtilizationByUser cluster=zeus accounts=lc start=2/23/09 end=2/24/09
+</PRE>
+
+<P>
+<DT>Report top usage in percent of the lc account during the specified week:<DD>
+<DT><DD>
+<PRE>
+$ sreport user topusage start=2/16/09 end=2/23/09 -t percent account=lc
+</PRE>
+
+<P>
+</DL>
+<A NAME="lbAM">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2009-2010 Lawrence Livermore National Security.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2010-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAN">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<B><A HREF="sacct.html">sacct</A></B>(1), <B><A HREF="slurmdbd.html">slurmdbd</A></B>(8)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">COMMANDS</A><DD>
+<DT><A HREF="#lbAG">REPORT TYPES</A><DD>
+<DT><A HREF="#lbAH">REPORT DESCRIPTION</A><DD>
+<DT><A HREF="#lbAI">FORMAT OPTIONS FOR EACH REPORT</A><DD>
+<DT><A HREF="#lbAJ">PERFORMANCE</A><DD>
+<DT><A HREF="#lbAK">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAL">EXAMPLES</A><DD>
+<DT><A HREF="#lbAM">COPYING</A><DD>
+<DT><A HREF="#lbAN">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 05:46:51 GMT, December 07, 2023
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

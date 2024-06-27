@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - SELinux</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/selinux.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+
+<h1>SELinux</h1>
+
+<p>Starting with version 21.08, Slurm includes support for setting an SELinux
+context for jobs as a technology preview. The implementation may change in
+future releases, and support for it is not enabled by default.</p>
+
+<h2 id="ARCHITECTURE">Architecture
+<a class="slurm_link" href="#ARCHITECTURE"></a>
+</h2>
+
+<p>When enabled, the Slurm job submission commands &mdash; salloc, sbatch, and
+srun &mdash; will automatically set a field with the current operating context.
+This field can be overwritten by the <span class="commandline">--context</span>
+command line option.</p>
+
+<p>It is important to note that this value can be directly manipulated by the
+end-user, and it is up to site-specific scripts to validate and control access
+to these contexts. At this time MUNGE, which Slurm users to security identify
+users and hosts on the cluster, does not provide an SELinux context field, and
+as such there is no secure mechanism to send the current context to the Slurm
+controller. Thus the context, as provided at job submission time, <b>must</b>
+be validated by a job_submit plugin running within the slurmctld.</p>
+
+<p>Without such a script, no context is set or managed for a user's job.</p>
+
+<h2 id="INSTALLATION">Installation
+<a class="slurm_link" href="#INSTALLATION"></a>
+</h2>
+
+<h3 id="pmix">Source:<a class="slurm_link" href="#pmix"></a></h3>
+
+<p>SELinux support is disabled by default and must be enabled at configure time.
+It requires the libselinux1 library and development headers to build.</p>
+
+<pre>configure --enable-selinux</pre>
+
+<h2 id="SETUP">Setup<a class="slurm_link" href="#SETUP"></a></h2>
+
+<p>Once a version of Slurm that supports SELinux is installed, you will need to
+enable and create a job_submit plugin that will perform verification of the
+SELinux context, before passing it along to the slurmctld. At this time, there
+is not a reliable and secure way to get/verify contexts internally so you MUST
+create this script and perform verification in the job_submit plugin.</p>
+
+<p>Example:</p>
+<pre>
+function slurm_job_submit(job_desc, part_list, submit_uid)
+  if job_desc.req_context then
+    local element = 0
+    for str in string.gmatch(job_desc.req_context, "([^:]+)") do
+      if element == 0 and str ~= "unconfined_u" then
+        slurm.log_user("Error: invalid SELinux context")
+        return slurm.ERROR
+      elseif element == 1 and str ~= "unconfined_r" then
+        slurm.log_user("Error: %s is not a valid SELinux role")
+        return slurm.ERROR
+      end
+      element = element + 1
+    end
+    job_desc.selinux_context = job_desc.req_context
+  else
+    -- Force a specific context if one wasn't requested
+    job_desc.selinux_context = unconfined_u:unconfined_r:slurm_t:s0
+  end
+  return slurm.SUCCESS
+end
+</pre>
+
+<p>Note that <b>job_desc.selinux_context</b> is set based on the contents of
+<b>job_desc.req_context</b> if they are considered valid.
+<b>job_desc.selinux_context</b> is what set the context that will be used.</p>
+
+<h2 id="INITIAL_TESTING">Initial Testing
+<a class="slurm_link" href="#INITIAL_TESTING"></a>
+</h2>
+
+<p>id is very useful for showing what context a user is currently in. As a test
+to make sure that we are switching contexts, you can run a quick test with srun.
+</p>
+
+<pre>
+mcmult@master:~$ srun id
+uid=1000(mcmult) gid=1000(mcmult) groups=1000(mcmult),27(sudo) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+mcmult@master:~$ srun --context=unconfined_u:unconfined_r:unconfined_t:s0 id
+uid=1000(mcmult) gid=1000(mcmult) groups=1000(mcmult),27(sudo) context=unconfined_u:unconfined_r:unconfined_t:s0
+</pre>
+
+<h2 id="ACCOUNTING">Accounting<a class="slurm_link" href="#ACCOUNTING"></a></h2>
+
+<p>There is currently no support for tracking the SELinux context in Slurm's
+accounting. This may change as support evolves in future releases.
+If you need to keep track of the SELinux Context, it is possible to store it in
+the admin comment field as part of your job_submit plugin as is show in the
+example below.</p>
+
+<p>Example:</p>
+<pre>
+function slurm_job_submit(job_desc, part_list, submit_uid)
+  if job_desc.req_context then
+    local element = 0
+    for str in string.gmatch(job_desc.req_context, "([^:]+)") do
+      if element == 0 and str ~= "unconfined_u" then
+        slurm.log_user("Error: invalid SELinux context")
+        return slurm.ERROR
+      elseif element == 1 and str ~= "unconfined_r" then
+        slurm.log_user("Error: %s is not a valid SELinux role")
+        return slurm.ERROR
+      end
+      element = element + 1
+    end
+    job_desc.selinux_context = job_desc.req_context
+  else
+    -- Force a specific context if one wasn't requested
+    job_desc.selinux_context = unconfined_u:unconfined_r:slurm_t:s0
+  end
+  <b>job_desc.admin_comment = "SELinuxContext=" + job_desc.selinux_context</b>
+  return slurm.SUCCESS
+end
+</pre>
+
+<p>Note the addition of setting "job_desc.admin_comment" before returning. This
+will set the admin comment to show what context we will try to set for the job.
+</p>
+
+<h2 id="NOTES">Notes<a class="slurm_link" href="#NOTES"></a></h2>
+
+<p>If you wish to use pam_slurm_adopt with SELinux, see the
+<a href=pam_slurm_adopt.html>pam_slurm_adopt</a> documentation for hints on how
+to get this working. Note that that when using this feature and
+pam_slurm_adopt at the same time that the ssh session may not land in the same
+context as the job.</p>
+
+<p style="text-align:center;">Last modified 9 August 2021</p>
+
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>
+

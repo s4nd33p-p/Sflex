@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - strigger</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/strigger.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>strigger</H1>
+Section: Slurm Commands (1)<BR>Updated: Slurm Commands<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+strigger - Used to set, get or clear Slurm trigger information.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+<B>strigger --set</B>   [<I>OPTIONS</I>...]
+<BR>
+
+<B>strigger --get</B>   [<I>OPTIONS</I>...]
+<BR>
+
+<B>strigger --clear</B> [<I>OPTIONS</I>...]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>strigger</B> is used to set, get or clear Slurm trigger information.
+Triggers include events such as a node failing, a job reaching its
+time limit or a job terminating.
+These events can cause actions such as the execution of an arbitrary
+script.
+Typical uses include notifying system administrators of node failures
+and gracefully terminating a job when its time limit is approaching.
+A hostlist expression for the nodelist or job ID is passed as an argument
+to the program.
+<P>
+Trigger events are not processed instantly, but a check is performed for
+trigger events on a periodic basis (currently every 15 seconds).
+Any trigger events which occur within that interval will be compared
+against the trigger programs set at the end of the time interval.
+The trigger program will be executed once for any event occurring in
+that interval.
+The record of those events (e.g. nodes which went DOWN in the previous
+15 seconds) will then be cleared.
+The trigger program must set a new trigger before the end of the next
+interval to ensure that no trigger events are missed OR the trigger must be
+created with an argument of &quot;--flags=PERM&quot;.
+If desired, multiple trigger programs can be set for the same event.
+<P>
+<B>IMPORTANT NOTE:</B> This command can only set triggers if run by the
+user <I>SlurmUser</I> unless <I>SlurmUser</I> is configured as user root.
+This is required for the <I>slurmctld</I> daemon to set the appropriate
+user and group IDs for the executed program.
+Also note that the trigger program is executed on the same node that the
+<I>slurmctld</I> daemon uses rather than some allocated compute node.
+To check the value of <I>SlurmUser</I>, run the command:
+<DL COMPACT>
+<DT><DD>
+<PRE>
+scontrol show config | grep SlurmUser
+</PRE>
+
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<h2>ARGUMENTS<a class="slurm_link" id="SECTION_ARGUMENTS" href="#SECTION_ARGUMENTS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>-C</B>, <B>--backup_slurmctld_assumed_control</B><a class="slurm_link" id="OPT_backup_slurmctld_assumed_control" href="#OPT_backup_slurmctld_assumed_control"></a></dt><dd>Trigger event when backup slurmctld assumes control.
+<DT><DD>
+<P>
+<dt><B>-B</B>, <B>--backup_slurmctld_failure</B><a class="slurm_link" id="OPT_backup_slurmctld_failure" href="#OPT_backup_slurmctld_failure"></a></dt><dd>Trigger an event when the backup slurmctld fails.
+<DT><DD>
+<P>
+<dt><B>-c</B>, <B>--backup_slurmctld_resumed_operation</B><a class="slurm_link" id="OPT_backup_slurmctld_resumed_operation" href="#OPT_backup_slurmctld_resumed_operation"></a></dt><dd>Trigger an event when the backup slurmctld resumes operation after failure.
+<DT><DD>
+<P>
+<dt><B>--burst_buffer</B><a class="slurm_link" id="OPT_burst_buffer" href="#OPT_burst_buffer"></a></dt><dd>Trigger event when burst buffer error occurs.
+<DT><DD>
+<P>
+<dt><B>--clear</B><a class="slurm_link" id="OPT_clear" href="#OPT_clear"></a></dt><dd>Clear or delete a previously defined event trigger.
+The <B>--id</B>, <B>--jobid</B> or <B>--user</B>
+option must be specified to identify the trigger(s) to
+be cleared.
+Only user root or the trigger's creator can delete a trigger.
+<DT><DD>
+<P>
+<dt><B>-M</B>, <B>--clusters</B>=&lt;<I>string</I>&gt;<a class="slurm_link" id="OPT_clusters" href="#OPT_clusters"></a></dt><dd>Clusters to issue commands to.
+Note that the SlurmDBD must be up for this option to work properly.
+<DT><DD>
+<P>
+<dt><B>-d</B>, <B>--down</B><a class="slurm_link" id="OPT_down" href="#OPT_down"></a></dt><dd>Trigger an event if the specified node goes into a DOWN state.
+<DT><DD>
+<P>
+<dt><B>-D</B>, <B>--drained</B><a class="slurm_link" id="OPT_drained" href="#OPT_drained"></a></dt><dd>Trigger an event if the specified node goes into a DRAINED state.
+<DT><DD>
+<P>
+<dt><B>-F</B>, <B>--fail</B><a class="slurm_link" id="OPT_fail" href="#OPT_fail"></a></dt><dd>Trigger an event if the specified node goes into a FAILING state.
+<DT><DD>
+<P>
+<dt><B>-f</B>, <B>--fini</B><a class="slurm_link" id="OPT_fini" href="#OPT_fini"></a></dt><dd>Trigger an event when the specified job completes execution.
+<DT><DD>
+<P>
+<dt><B>--flags</B>=&lt;<I>flag</I>&gt;<a class="slurm_link" id="OPT_flags" href="#OPT_flags"></a></dt><dd>Associate flags with the reservation. Multiple flags should be comma separated.
+Valid flags include:
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>PERM</B><a class="slurm_link" id="OPT_PERM" href="#OPT_PERM"></a></dt><dd>Make the trigger permanent. Do not purge it after the event occurs.
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>--front_end</B><a class="slurm_link" id="OPT_front_end" href="#OPT_front_end"></a></dt><dd>Trigger events based upon changes in state of front end nodes rather than
+compute nodes. Applies to Cray ALPS architectures only, where the
+slurmd daemon executes on front end nodes rather than the compute nodes.
+Use this option with either the <B>--up</B> or <B>--down</B> option.
+<DT><DD>
+<P>
+<dt><B>--get</B><a class="slurm_link" id="OPT_get" href="#OPT_get"></a></dt><dd>Show registered event triggers.
+Options can be used for filtering purposes.
+<DT><DD>
+<P>
+<dt><B>-i</B>, <B>--id</B>=&lt;<I>id</I>&gt;<a class="slurm_link" id="OPT_id" href="#OPT_id"></a></dt><dd>Trigger ID number.
+<DT><DD>
+<P>
+<dt><B>-I</B>, <B>--idle</B><a class="slurm_link" id="OPT_idle" href="#OPT_idle"></a></dt><dd>Trigger an event if the specified node remains in an IDLE state
+for at least the time period specified by the <B>--offset</B>
+option. This can be useful to hibernate a node that remains idle,
+thus reducing power consumption.
+<DT><DD>
+<P>
+<dt><B>-j</B>, <B>--jobid</B>=&lt;<I>id</I>&gt;<a class="slurm_link" id="OPT_jobid" href="#OPT_jobid"></a></dt><dd>Job ID of interest.
+<B>NOTE</B>: The <B>--jobid</B> option can not be used in conjunction
+with the <B>--node</B> option. When the <B>--jobid</B> option is
+used in conjunction with the <B>--up</B> or <B>--down</B> option,
+all nodes allocated to that job will considered the nodes used as a
+trigger event.
+<DT><DD>
+<P>
+<dt><B>-n</B>, <B>--node</B>[=<I>host</I>]<a class="slurm_link" id="OPT_node" href="#OPT_node"></a></dt><dd>Host name(s) of interest.
+By default, all nodes associated with the job (if <B>--jobid</B>
+is specified) or on the system are considered for event triggers.
+<B>NOTE</B>: The <B>--node</B> option can not be used in conjunction
+with the <B>--jobid</B> option. When the <B>--jobid</B> option is
+used in conjunction with the <B>--up</B>, <B>--down</B> or
+<B>--drained</B> option,
+all nodes allocated to that job will considered the nodes used as a
+trigger event. Since this option's argument is optional, for proper
+parsing the single letter option must be followed immediately with
+the value and not include a space between them. For example &quot;-ntux&quot;
+and not &quot;-n tux&quot;.
+<DT><DD>
+<P>
+<dt><B>-N</B>, <B>--noheader</B><a class="slurm_link" id="OPT_noheader" href="#OPT_noheader"></a></dt><dd>Do not print the header when displaying a list of triggers.
+<DT><DD>
+<P>
+<dt><B>-o</B>, <B>--offset</B>=&lt;<I>seconds</I>&gt;<a class="slurm_link" id="OPT_offset" href="#OPT_offset"></a></dt><dd>The specified action should follow the event by this time interval.
+Specify a negative value if action should preceded the event.
+The default value is zero if no <B>--offset</B> option is specified.
+The resolution of this time is about 20 seconds, so to execute
+a script not less than five minutes prior to a job reaching its
+time limit, specify <B>--offset=320</B> (5 minutes plus 20 seconds).
+<DT><DD>
+<P>
+<dt><B>-h</B>, <B>--primary_database_failure</B><a class="slurm_link" id="OPT_primary_database_failure" href="#OPT_primary_database_failure"></a></dt><dd>Trigger an event when the primary database fails. This event is triggered when
+the accounting plugin tries to open a connection with mysql and it fails and
+the slurmctld needs the database for some operations.
+<DT><DD>
+<P>
+<dt><B>-H</B>, <B>--primary_database_resumed_operation</B><a class="slurm_link" id="OPT_primary_database_resumed_operation" href="#OPT_primary_database_resumed_operation"></a></dt><dd>Trigger an event when the primary database resumes operation after failure.
+It happens when the connection to mysql from the accounting plugin is restored.
+<DT><DD>
+<P>
+<dt><B>-g</B>, <B>--primary_slurmdbd_failure</B><a class="slurm_link" id="OPT_primary_slurmdbd_failure" href="#OPT_primary_slurmdbd_failure"></a></dt><dd>Trigger an event when the primary slurmdbd fails. The trigger is launched by
+slurmctld in the occasions it tries to connect to slurmdbd, but receives no
+response on the socket.
+<DT><DD>
+<P>
+<dt><B>-G</B>, <B>--primary_slurmdbd_resumed_operation</B><a class="slurm_link" id="OPT_primary_slurmdbd_resumed_operation" href="#OPT_primary_slurmdbd_resumed_operation"></a></dt><dd>Trigger an event when the primary slurmdbd resumes operation after failure.
+This event is triggered when opening the connection from slurmctld to slurmdbd
+results in a response. It can happen also in different situations, periodically
+every 15 seconds when checking the connection status, when saving state,
+when agent queue is filling, and so on.
+<DT><DD>
+<P>
+<dt><B>-e</B>, <B>--primary_slurmctld_acct_buffer_full</B><a class="slurm_link" id="OPT_primary_slurmctld_acct_buffer_full" href="#OPT_primary_slurmctld_acct_buffer_full"></a></dt><dd>Trigger an event when primary slurmctld accounting buffer is full.
+<DT><DD>
+<P>
+<dt><B>-a</B>, <B>--primary_slurmctld_failure</B><a class="slurm_link" id="OPT_primary_slurmctld_failure" href="#OPT_primary_slurmctld_failure"></a></dt><dd>Trigger an event when the primary slurmctld fails.
+<DT><DD>
+<P>
+<dt><B>-b</B>, <B>--primary_slurmctld_resumed_control</B><a class="slurm_link" id="OPT_primary_slurmctld_resumed_control" href="#OPT_primary_slurmctld_resumed_control"></a></dt><dd>Trigger an event when primary slurmctld resumes control.
+<DT><DD>
+<P>
+<dt><B>-A</B>, <B>--primary_slurmctld_resumed_operation</B><a class="slurm_link" id="OPT_primary_slurmctld_resumed_operation" href="#OPT_primary_slurmctld_resumed_operation"></a></dt><dd>Trigger an event when the primary slurmctld resuming operation after failure.
+<DT><DD>
+<P>
+<dt><B>-p</B>, <B>--program</B>=&lt;<I>path</I>&gt;<a class="slurm_link" id="OPT_program" href="#OPT_program"></a></dt><dd>Execute the program at the specified fully qualified pathname
+when the event occurs.
+You may quote the path and include extra program arguments if desired.
+The program will be executed as the user who sets the trigger.
+If the program fails to terminate within 5 minutes, it will
+be killed along with any spawned processes.
+<DT><DD>
+<P>
+<dt><B>-Q</B>, <B>--quiet</B><a class="slurm_link" id="OPT_quiet" href="#OPT_quiet"></a></dt><dd>Do not report non-fatal errors.
+This can be useful to clear triggers which may have already been purged.
+<DT><DD>
+<P>
+<dt><B>-r</B>, <B>--reconfig</B><a class="slurm_link" id="OPT_reconfig" href="#OPT_reconfig"></a></dt><dd>Trigger an event when the system configuration changes.
+This is triggered when the slurmctld daemon reads its configuration file or
+when a node state changes.
+<DT><DD>
+<P>
+<dt><B>--set</B><a class="slurm_link" id="OPT_set" href="#OPT_set"></a></dt><dd>Register an event trigger based upon the supplied options.
+NOTE: An event is only triggered once. A new event trigger
+must be set established for future events of the same type
+to be processed.
+Triggers can only be set if the command is run by the user
+<I>SlurmUser</I> unless <I>SlurmUser</I> is configured as user root.
+<DT><DD>
+<P>
+<dt><B>-t</B>, <B>--time</B><a class="slurm_link" id="OPT_time" href="#OPT_time"></a></dt><dd>Trigger an event when the specified job's time limit is reached.
+This must be used in conjunction with the <B>--jobid</B> option.
+<DT><DD>
+<P>
+<dt><B>-u</B>, <B>--up</B><a class="slurm_link" id="OPT_up" href="#OPT_up"></a></dt><dd>Trigger an event if the specified node is returned to service
+from a DOWN state.
+<DT><DD>
+<P>
+<dt><B>--user</B>=&lt;<I>user_name_or_id</I>&gt;<a class="slurm_link" id="OPT_user" href="#OPT_user"></a></dt><dd>Clear or get triggers created by the specified user.
+For example, a trigger created by user <I>root</I> for a job created by user
+<I>adam</I> could be cleared with an option <I>--user=root</I>.
+Specify either a user name or user ID.
+<DT><DD>
+<P>
+<dt><B>-v</B>, <B>--verbose</B><a class="slurm_link" id="OPT_verbose" href="#OPT_verbose"></a></dt><dd>Print detailed event logging. This includes time-stamps on data structures,
+record counts, etc.
+<DT><DD>
+<P>
+<dt><B>-V</B> , <B>--version</B><a class="slurm_link" id="OPT_version" href="#OPT_version"></a></dt><dd>Print version information and exit.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>OUTPUT FIELD DESCRIPTIONS<a class="slurm_link" id="SECTION_OUTPUT-FIELD-DESCRIPTIONS" href="#SECTION_OUTPUT-FIELD-DESCRIPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>TRIG_ID</B><a class="slurm_link" id="OPT_TRIG_ID" href="#OPT_TRIG_ID"></a></dt><dd>Trigger ID number.
+<DT><DD>
+<P>
+<dt><B>RES_TYPE</B><a class="slurm_link" id="OPT_RES_TYPE" href="#OPT_RES_TYPE"></a></dt><dd>Resource type: <I>job</I> or <I>node</I>
+<DT><DD>
+<P>
+<dt><B>RES_ID</B><a class="slurm_link" id="OPT_RES_ID" href="#OPT_RES_ID"></a></dt><dd>Resource ID: job ID or host names or &quot;*&quot; for any host
+<DT><DD>
+<P>
+<dt><B>TYPE</B><a class="slurm_link" id="OPT_TYPE" href="#OPT_TYPE"></a></dt><dd>Trigger type: <I>time</I> or <I>fini</I> (for jobs only),
+<I>down</I> or <I>up</I> (for jobs or nodes), or
+<I>drained</I>, <I>idle</I> or <I>reconfig</I> (for nodes only)
+<DT><DD>
+<P>
+<dt><B>OFFSET</B><a class="slurm_link" id="OPT_OFFSET" href="#OPT_OFFSET"></a></dt><dd>Time offset in seconds. Negative numbers indicated the action should
+occur before the event (if possible)
+<DT><DD>
+<P>
+<dt><B>USER</B><a class="slurm_link" id="OPT_USER" href="#OPT_USER"></a></dt><dd>Name of the user requesting the action
+<DT><DD>
+<P>
+<dt><B>PROGRAM</B><a class="slurm_link" id="OPT_PROGRAM" href="#OPT_PROGRAM"></a></dt><dd>Pathname of the program to execute when the event occurs
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>PERFORMANCE<a class="slurm_link" id="SECTION_PERFORMANCE" href="#SECTION_PERFORMANCE"></a></h2>
+<P>
+
+Executing <B>strigger</B> sends a remote procedure call to <B>slurmctld</B>. If
+enough calls from <B>strigger</B> or other Slurm client commands that send remote
+procedure calls to the <B>slurmctld</B> daemon come in at once, it can result in
+a degradation of performance of the <B>slurmctld</B> daemon, possibly resulting
+in a denial of service.
+<P>
+
+Do not run <B>strigger</B> or other Slurm client commands that send remote
+procedure calls to <B>slurmctld</B> from loops in shell scripts or other
+programs. Ensure that programs limit calls to <B>strigger</B> to the minimum
+necessary for the information you are trying to gather.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<h2>ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_ENVIRONMENT-VARIABLES" href="#SECTION_ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+
+Some <B>strigger</B> options may be set via environment variables. These
+environment variables, along with their corresponding options, are listed below.
+(Note: Command line options will always override these settings.)
+<P>
+<DL COMPACT>
+<dt><B>SLURM_CONF</B><a class="slurm_link" id="OPT_SLURM_CONF" href="#OPT_SLURM_CONF"></a></dt><dd>The location of the Slurm configuration file.
+<DT><DD>
+<P>
+<dt><B>SLURM_DEBUG_FLAGS</B><a class="slurm_link" id="OPT_SLURM_DEBUG_FLAGS" href="#OPT_SLURM_DEBUG_FLAGS"></a></dt><dd>Specify debug flags for strigger to use. See DebugFlags in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for a full list of flags. The environment
+variable takes precedence over the setting in the slurm.conf.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<h2>EXAMPLES<a class="slurm_link" id="SECTION_EXAMPLES" href="#SECTION_EXAMPLES"></a></h2>
+<P>
+<DL COMPACT>
+<DT>Execute the program &quot;/usr/sbin/primary_slurmctld_failure&quot; whenever the primary slurmctld fails.<DD>
+<DT><DD>
+<PRE>
+$ cat /usr/sbin/primary_slurmctld_failure
+#!/bin/bash
+# Submit trigger for next primary slurmctld failure event
+strigger --set --primary_slurmctld_failure \
+         --program=/usr/sbin/primary_slurmctld_failure
+# Notify the administrator of the failure using e-mail
+/bin/mail <A HREF="mailto:slurm_admin@site.com">slurm_admin@site.com</A> -s Primary_SLURMCTLD_FAILURE
+
+$ strigger --set --primary_slurmctld_failure \
+           --program=/usr/sbin/primary_slurmctld_failure
+</PRE>
+
+<P>
+<DT>Execute the program &quot;/usr/sbin/slurm_admin_notify&quot; whenever any node in the cluster goes down. The subject line will include the node names which have entered the down state (passed as an argument to the script by Slurm).<DD>
+<DT><DD>
+<PRE>
+$ cat /usr/sbin/slurm_admin_notify
+#!/bin/bash
+# Submit trigger for next event
+strigger --set --node --down \
+         --program=/usr/sbin/slurm_admin_notify
+# Notify administrator using by e-mail
+/bin/mail <A HREF="mailto:slurm_admin@site.com">slurm_admin@site.com</A> -s NodesDown:$*
+
+$ strigger --set --node --down \
+           --program=/usr/sbin/slurm_admin_notify
+</PRE>
+
+<P>
+<DT>Execute the program &quot;/usr/sbin/slurm_suspend_node&quot; whenever any node in the cluster remains in the idle state for at least 600 seconds.<DD>
+<DT><DD>
+<PRE>
+$ strigger --set --node --idle --offset=600 \
+           --program=/usr/sbin/slurm_suspend_node
+</PRE>
+
+<P>
+<DT>Execute the program &quot;/home/joe/clean_up&quot; when job 1234 is within 10 minutes of reaching its time limit.<DD>
+<DT><DD>
+<PRE>
+$ strigger --set --jobid=1234 --time --offset=-600 \
+           --program=/home/joe/clean_up
+</PRE>
+
+<P>
+<DT>Execute the program &quot;/home/joe/node_died&quot; when any node allocated to job 1234 enters the DOWN state.<DD>
+<DT><DD>
+<PRE>
+$ strigger --set --jobid=1234 --down \
+           --program=/home/joe/node_died
+</PRE>
+
+<P>
+<DT>Show all triggers associated with job 1235.<DD>
+<DT><DD>
+<PRE>
+$ strigger --get --jobid=1235
+TRIG_ID RES_TYPE RES_ID TYPE OFFSET USER PROGRAM
+    123      job   1235 time   -600  joe /home/bob/clean_up
+    125      job   1235 down      0  joe /home/bob/node_died
+</PRE>
+
+<P>
+<DT>Delete event trigger 125.<DD>
+<DT><DD>
+<PRE>
+$ strigger --clear --id=125
+</PRE>
+
+<P>
+<DT>Execute /home/joe/job_fini upon completion of job 1237.<DD>
+<DT><DD>
+<PRE>
+$ strigger --set --jobid=1237 --fini --program=/home/joe/job_fini
+</PRE>
+
+<P>
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2007 The Regents of the University of California.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2008-2010 Lawrence Livermore National Security.
+<BR>
+
+Copyright (C) 2010-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<B><A HREF="scontrol.html">scontrol</A></B>(1), <B><A HREF="sinfo.html">sinfo</A></B>(1), <B><A HREF="squeue.html">squeue</A></B>(1)
+<P>
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">ARGUMENTS</A><DD>
+<DT><A HREF="#lbAF">OUTPUT FIELD DESCRIPTIONS</A><DD>
+<DT><A HREF="#lbAG">PERFORMANCE</A><DD>
+<DT><A HREF="#lbAH">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES</A><DD>
+<DT><A HREF="#lbAJ">COPYING</A><DD>
+<DT><A HREF="#lbAK">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:46 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

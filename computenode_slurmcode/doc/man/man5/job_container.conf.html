@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - job_container.conf</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/job_container.conf.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>job_container.conf</H1>
+Section: Slurm Configuration File (5)<BR>Updated: Slurm Configuration File<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+job_container.conf - Slurm configuration file for job_container/tmpfs plugin
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<P>
+<B>job_container.conf</B> is an ASCII file which defines parameters used by
+Slurm's job_container/tmpfs plugin. The plugin reads the
+job_container.conf file to find out the configuration settings. Based on them it
+constructs a private (or optionally shared) filesystem namespace for the job and
+mounts a list of directories (defaults to /tmp and /dev/shm) inside it. This
+gives the job a private view of these directories.  These paths are mounted
+inside the location specified by 'BasePath' in the <B>job_container.conf</B>
+file. When the job completes, the private namespace is unmounted and all
+files therein are automatically removed.
+To make use of this plugin, 'PrologFlags=Contain' must also be present in
+your <B>slurm.conf</B> file, as shown:
+<P>
+<PRE>
+JobContainerType=job_container/tmpfs
+PrologFlags=Contain
+</PRE>
+
+<P>
+The file will always be located in the same directory as the <B>slurm.conf</B>.
+<P>
+<P>
+
+If using the <B>job_container.conf</B> file to define a namespace available to
+nodes the first parameter on the line should be <B>NodeName</B>. If configuring a
+namespace without specifying nodes, the first parameter on the line
+should be <B>BasePath</B>.
+<P>
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+Changes to the configuration file take effect upon restart of Slurm daemons.
+<P>
+<P>
+
+The following job_container.conf parameters are defined to control the behavior
+of the job_container/tmpfs plugin.
+<P>
+<DL COMPACT>
+<dt><B>AutoBasePath</B><a class="slurm_link" id="OPT_AutoBasePath" href="#OPT_AutoBasePath"></a></dt><dd>This determines if plugin should create the BasePath directory or not. Set it
+to 'true' if directory is not pre-created before slurm startup. If set to true,
+the directory is created with permission 0755. Directory is not deleted during
+slurm shutdown. If set to 'false' or not specified, plugin would expect
+directory to exist. This option can be used on a global or per-line basis.
+This parameter is optional.
+<DT><DD>
+<P>
+<dt><B>BasePath</B><a class="slurm_link" id="OPT_BasePath" href="#OPT_BasePath"></a></dt><dd>Specify the <I>PATH</I> that the tmpfs plugin should use as a base to mount the
+private directories. This path must be readable and writable by the plugin. The
+plugin constructs a directory for each job inside this path, which is then used
+for mounting. The <B>BasePath</B> gets mounted as 'private' during slurmd start
+and remains mounted until shutdown. The first &quot;%h&quot; within the name is replaced
+with the hostname on which the <B>slurmd</B> is running. The first &quot;%n&quot; within
+the name is replaced with the Slurm node name on which the <B>slurmd</B> is
+running.
+<P>
+<B>NOTE</B>: The <B>BasePath</B> parameter cannot be set to any of
+the paths specified by <B>Dirs</B>. Using these directories will cause conflicts
+when trying to mount and unmount the private directories for the job.
+<DT><DD>
+<P>
+<dt><B>Dirs</B><a class="slurm_link" id="OPT_Dirs" href="#OPT_Dirs"></a></dt><dd>A list of mount points separated with commas to create private mounts for.
+This parameter is optional and if not specified it defaults to &quot;/tmp,/dev/shm&quot;.
+<P>
+<B>NOTE</B>: /dev/shm has special handling, and instead of a bind mount is always
+a fresh tmpfs filesystem.
+<DT><DD>
+<P>
+<dt><B>InitScript</B><a class="slurm_link" id="OPT_InitScript" href="#OPT_InitScript"></a></dt><dd>Specify fully qualified pathname of an optional initialization script. This
+script is run before the namespace construction of a job. It can be used to
+make the job join additional namespaces prior to the construction of /tmp
+namespace or it can be used for any site-specific setup. This parameter is
+optional.
+<DT><DD>
+<P>
+<dt><B>NodeName</B><a class="slurm_link" id="OPT_NodeName" href="#OPT_NodeName"></a></dt><dd>A NodeName specification can be used to permit one job_container.conf
+file to be used for all compute nodes in a cluster by specifying the node(s)
+that each line should apply to.
+The NodeName specification can use a Slurm hostlist specification as shown in
+the example below. This parameter is optional.
+<DT><DD>
+<P>
+<dt><B>Shared</B><a class="slurm_link" id="OPT_Shared" href="#OPT_Shared"></a></dt><dd>Specifiying Shared=true will propogate new mounts between the job specific
+filesystem namespace and the root filesystem namespace, enable using autofs on
+the node. This parmeter is optional.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<h2>NOTES<a class="slurm_link" id="SECTION_NOTES" href="#SECTION_NOTES"></a></h2>
+<P>
+
+If any parameters in job_container.conf are changed while slurm is running, then
+slurmd on the respective nodes will need to be
+restarted for changes to take effect (scontrol reconfigure is not sufficient).
+Additionally this can be disruptive to
+jobs already running on the node. So care must be taken to make sure no jobs
+are running if any changes to job_container.conf are deployed.
+<P>
+Restarting slurmd is safe and non-disruptive to running jobs, as long as
+job_container.conf is not changed between restarts in which case above point
+applies.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>EXAMPLE<a class="slurm_link" id="SECTION_EXAMPLE" href="#SECTION_EXAMPLE"></a></h2>
+<DL COMPACT>
+<dt><B>/etc/slurm/slurm.conf</B>:<a class="slurm_link" id="OPT_/etc/slurm/slurm.conf" href="#OPT_/etc/slurm/slurm.conf"></a></dt><dd>These are the entries required in <B>slurm.conf</B> to activate the
+job_container/tmpfs plugin.
+<DT><DD>
+<PRE>
+JobContainerType=job_container/tmpfs
+PrologFlags=Contain
+</PRE>
+
+<P>
+<dt><B>/etc/slurm/job_container.conf</B>:<a class="slurm_link" id="OPT_/etc/slurm/job_container.conf" href="#OPT_/etc/slurm/job_container.conf"></a></dt><dd>The first sample file will define 1 basepath for all nodes and it will be
+automatically created.
+<PRE>
+AutoBasePath=true
+BasePath=/var/nvme/storage
+</PRE>
+
+<P>
+The second sample file will define 2 basepaths.
+The first will only be on largemem[1-2] and it will be automatically created.
+The second will only be on gpu[1-10], will be expected to exist and will run
+an initscript before each job.
+<PRE>
+NodeName=largemem[1-2] AutoBasePath=true BasePath=/var/nvme/storage_a
+NodeName=gpu[1-10] BasePath=/var/nvme/storage_b InitScript=/etc/slurm/init.sh
+</PRE>
+
+<P>
+The third sample file will Define 1 basepath that will be on all nodes,
+automatically created, with /tmp and /var/tmp as private mounts.
+<PRE>
+AutoBasePath=true
+BasePath=/var/nvme/storage Dirs=/tmp,/var/tmp
+</PRE>
+
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2021 Regents of the University of California
+Produced at Lawrence Berkeley National Laboratory
+<BR>
+
+Copyright (C) 2021-2022 SchedMD LLC.
+<P>
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<P>
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">NOTES</A><DD>
+<DT><A HREF="#lbAE">EXAMPLE</A><DD>
+<DT><A HREF="#lbAF">COPYING</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:46 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

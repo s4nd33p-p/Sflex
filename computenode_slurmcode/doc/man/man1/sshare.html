@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - sshare</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/sshare.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>sshare</H1>
+Section: Slurm Commands (1)<BR>Updated: Slurm Commands<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+sshare - Tool for listing the shares of associations to a cluster.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+<B>sshare</B> [<I>OPTIONS</I>...]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>sshare</B> is used to view Slurm share information.  This command is
+only viable when running with the priority/multifactor plugin.
+The sshare information is derived from a database with the interface
+being provided by <B>slurmdbd</B> (Slurm Database daemon) which is
+read in from the slurmctld and used to process the shares available
+to a given association.  sshare provides Slurm share information of
+Account, User, Raw Shares, Normalized Shares, Raw Usage, Normalized
+Usage, Effective Usage, the Fair-share factor, the GrpTRESMins limit,
+Partitions and accumulated currently running TRES-minutes for each association.
+<P>
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>OPTIONS<a class="slurm_link" id="SECTION_OPTIONS" href="#SECTION_OPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>-A</B>, <B>--accounts</B>=&lt;<I>account</I>&gt;<a class="slurm_link" id="OPT_accounts" href="#OPT_accounts"></a></dt><dd>Display information for specific accounts (comma separated list).
+<DT><DD>
+<P>
+<dt><B>-a</B>, <B>--all</B><a class="slurm_link" id="OPT_all" href="#OPT_all"></a></dt><dd>Display information for all users.
+<DT><DD>
+<P>
+<dt><B>-M</B>, <B>--clusters</B>=&lt;<I>string</I>&gt;<a class="slurm_link" id="OPT_clusters" href="#OPT_clusters"></a></dt><dd>Clusters to issue commands to.
+Note that the SlurmDBD must be up for this option to work properly.
+<DT><DD>
+<P>
+<dt><B>-o</B>, <B>--format</B>=&lt;<I>output_format</I>&gt;<a class="slurm_link" id="OPT_format" href="#OPT_format"></a></dt><dd>Comma separated list of fields (use
+&quot;--helpformat&quot; for a list of available fields).
+<DT><DD>
+<P>
+<dt><B>--help</B><a class="slurm_link" id="OPT_help" href="#OPT_help"></a></dt><dd>Display a description of sshare options and commands.
+<DT><DD>
+<P>
+<dt><B>-l</B>, <B>--long</B><a class="slurm_link" id="OPT_long" href="#OPT_long"></a></dt><dd>Long listing - includes the normalized usage information.
+<DT><DD>
+<P>
+<dt><B>-n</B>, <B>--noheader</B><a class="slurm_link" id="OPT_noheader" href="#OPT_noheader"></a></dt><dd>No header will be added to the beginning of the output.
+<DT><DD>
+<P>
+<dt><B>-p</B>, <B>--parsable</B><a class="slurm_link" id="OPT_parsable" href="#OPT_parsable"></a></dt><dd>Output will be '|' delimited with a '|' at the end.
+<DT><DD>
+<P>
+<dt><B>-P</B>, <B>--parsable2</B><a class="slurm_link" id="OPT_parsable2" href="#OPT_parsable2"></a></dt><dd>Output will be '|' delimited without a '|' at the end.
+<DT><DD>
+<P>
+<dt><B>-m</B>, <B>--partition</B><a class="slurm_link" id="OPT_partition" href="#OPT_partition"></a></dt><dd>If there are association based partitions in the system
+print their names.
+<DT><DD>
+<P>
+<dt><B>--usage</B><a class="slurm_link" id="OPT_usage" href="#OPT_usage"></a></dt><dd>Display a description of sshare options and commands.
+<DT><DD>
+<P>
+<dt><B>-u</B>, <B>--users</B>=&lt;<I>user_list</I>&gt;<a class="slurm_link" id="OPT_users" href="#OPT_users"></a></dt><dd>Display information for specific users (comma separated list).
+<DT><DD>
+<P>
+<dt><B>-U</B>, <B>--Users</B><a class="slurm_link" id="OPT_Users" href="#OPT_Users"></a></dt><dd>If specified only the users information are printed, the parent
+and ancestors are not displayed.
+<DT><DD>
+<P>
+<dt><B>-v</B>, <B>--verbose</B><a class="slurm_link" id="OPT_verbose" href="#OPT_verbose"></a></dt><dd>Display more information about the specified options.
+<DT><DD>
+<P>
+<dt><B>-V</B>, <B>--version</B><a class="slurm_link" id="OPT_version" href="#OPT_version"></a></dt><dd>Display the version number of sshare.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>SSHARE OUTPUT FIELDS<a class="slurm_link" id="SECTION_SSHARE-OUTPUT-FIELDS" href="#SECTION_SSHARE-OUTPUT-FIELDS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>Account</B><a class="slurm_link" id="OPT_Account" href="#OPT_Account"></a></dt><dd>The Account.
+<DT><DD>
+<P>
+<dt><B>User</B><a class="slurm_link" id="OPT_User" href="#OPT_User"></a></dt><dd>The User.
+<DT><DD>
+<P>
+<dt><B>Raw Shares</B><a class="slurm_link" id="OPT_Raw-Shares" href="#OPT_Raw-Shares"></a></dt><dd>The raw shares assigned to the user or account.
+<DT><DD>
+<P>
+<dt><B>Norm Shares</B><a class="slurm_link" id="OPT_Norm-Shares" href="#OPT_Norm-Shares"></a></dt><dd>The shares assigned to the user or account normalized to the total
+number of assigned shares.
+<DT><DD>
+<P>
+<dt><B>Raw Usage</B><a class="slurm_link" id="OPT_Raw-Usage" href="#OPT_Raw-Usage"></a></dt><dd>The number of tres-seconds (cpu-seconds if TRESBillingWeights is not defined)
+of all the jobs charged to the account or user. This number will decay over
+time when PriorityDecayHalfLife is defined.
+<DT><DD>
+<P>
+<dt><B>Norm Usage</B> (only appears with <B>sshare -l</B> option)<a class="slurm_link" id="OPT_Norm-Usage" href="#OPT_Norm-Usage"></a></dt><dd>The Raw Usage normalized to the total number of tres-seconds of all
+jobs run on the cluster, subject to the PriorityDecayHalfLife decay
+when defined.
+<DT><DD>
+<P>
+<dt><B>Effectv Usage</B><a class="slurm_link" id="OPT_Effectv-Usage" href="#OPT_Effectv-Usage"></a></dt><dd>The Effective Usage augments the normalized usage to account for usage
+from sibling accounts.
+<DT><DD>
+<P>
+<dt><B>FairShare</B><a class="slurm_link" id="OPT_FairShare" href="#OPT_FairShare"></a></dt><dd>The Fair-Share factor, based on a user or account's assigned shares and
+the effective usage charged to them or their accounts.
+<DT><DD>
+<P>
+<dt><B>GrpTRESMins</B><a class="slurm_link" id="OPT_GrpTRESMins" href="#OPT_GrpTRESMins"></a></dt><dd>The TRES-minutes limit set on the account. The total number of cpu
+minutes that can possibly be used by past, present and future jobs
+running from this account and its children.
+<DT><DD>
+<P>
+<dt><B>GrpTRESRaw</B><a class="slurm_link" id="OPT_GrpTRESRaw" href="#OPT_GrpTRESRaw"></a></dt><dd>The raw TRES usage that has been used by jobs running from
+this account and its children.
+<DT><DD>
+<P>
+<dt><B>TRESRunMins</B><a class="slurm_link" id="OPT_TRESRunMins" href="#OPT_TRESRunMins"></a></dt><dd>The number of TRES-minutes allocated by jobs currently running against
+the account. Used to limit the combined total number of TRES minutes
+used by all jobs running with this account and its children.
+This takes into consideration time limit of running jobs and consumes it,
+if the limit is reached no new jobs are started until other jobs finish
+to allow time to free up.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>FAIR_TREE MODIFICATIONS<a class="slurm_link" id="SECTION_FAIR_TREE-MODIFICATIONS" href="#SECTION_FAIR_TREE-MODIFICATIONS"></a></h2>
+When PriorityFlags=FAIR_TREE is set (the default, unless NO_FAIR_TREE is set),
+calculations are done differently.
+As a result, the following fields are added or modified:
+<P>
+<DL COMPACT>
+<dt><B>Norm Shares</B><a class="slurm_link" id="OPT_Norm-Shares_1" href="#OPT_Norm-Shares_1"></a></dt><dd>The shares assigned to the user or account normalized to the total
+number of assigned shares within the level.
+<DT><DD>
+<P>
+<dt><B>Effectv Usage</B><a class="slurm_link" id="OPT_Effectv-Usage_1" href="#OPT_Effectv-Usage_1"></a></dt><dd>Effectv Usage is the association's usage normalized with its parent.
+<DT><DD>
+<P>
+<dt><B>Level FS</B> (only appears with <B>sshare -l</B> option)<a class="slurm_link" id="OPT_Level-FS" href="#OPT_Level-FS"></a></dt><dd>This is the association's fairshare value compared to its siblings, calculated
+as Norm Shares / Effectv Usage. If an association is over-served, the value is
+between 0 and 1. If an association is under-served, the value is greater than 1.
+Associations with no usage receive the highest possible value, infinity.
+<DT><DD>
+<P>
+</DL>
+<P>
+
+More information about Fair Tree can be found in doc/html/fair_tree.html or
+at <A HREF="https://slurm.schedmd.com/fair_tree.html">https://slurm.schedmd.com/fair_tree.html</A>
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<h2>PERFORMANCE<a class="slurm_link" id="SECTION_PERFORMANCE" href="#SECTION_PERFORMANCE"></a></h2>
+<P>
+
+Executing <B>sshare</B> sends a remote procedure call to <B>slurmctld</B>. If
+enough calls from <B>sshare</B> or other Slurm client commands that send remote
+procedure calls to the <B>slurmctld</B> daemon come in at once, it can result in
+a degradation of performance of the <B>slurmctld</B> daemon, possibly resulting
+in a denial of service.
+<P>
+
+Do not run <B>sshare</B> or other Slurm client commands that send remote
+procedure calls to <B>slurmctld</B> from loops in shell scripts or other
+programs. Ensure that programs limit calls to <B>sshare</B> to the minimum
+necessary for the information you are trying to gather.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<h2>ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_ENVIRONMENT-VARIABLES" href="#SECTION_ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+
+Some <B>sshare</B> options may be set via environment variables. These
+environment variables, along with their corresponding options, are listed below.
+(Note: Command line options will always override these settings.)
+<P>
+<DL COMPACT>
+<dt><B>SLURM_CONF</B><a class="slurm_link" id="OPT_SLURM_CONF" href="#OPT_SLURM_CONF"></a></dt><dd>The location of the Slurm configuration file.
+<DT><DD>
+<P>
+<dt><B>SLURM_DEBUG_FLAGS</B><a class="slurm_link" id="OPT_SLURM_DEBUG_FLAGS" href="#OPT_SLURM_DEBUG_FLAGS"></a></dt><dd>Specify debug flags for sshare to use. See DebugFlags in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for a full list of flags. The environment
+variable takes precedence over the setting in the slurm.conf.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>EXAMPLES<a class="slurm_link" id="SECTION_EXAMPLES" href="#SECTION_EXAMPLES"></a></h2>
+<P>
+<DL COMPACT>
+<DT>Display information about users in a particular account:<DD>
+<DT><DD>
+<PRE>
+$ sshare -A &lt;Account&gt;
+</PRE>
+
+<P>
+<DT>Display information about a specific user in a parsable format:<DD>
+<DT><DD>
+<PRE>
+$ sshare --parsable --users=&lt;User&gt;
+</PRE>
+
+<P>
+</DL>
+<A NAME="lbAK">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2008 Lawrence Livermore National Security.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2010-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5),
+<B><A HREF="slurmdbd.html">slurmdbd</A></B>(8)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">SSHARE OUTPUT FIELDS</A><DD>
+<DT><A HREF="#lbAG">FAIR_TREE MODIFICATIONS</A><DD>
+<DT><A HREF="#lbAH">PERFORMANCE</A><DD>
+<DT><A HREF="#lbAI">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAJ">EXAMPLES</A><DD>
+<DT><A HREF="#lbAK">COPYING</A><DD>
+<DT><A HREF="#lbAL">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:46 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

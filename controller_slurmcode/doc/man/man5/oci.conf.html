@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - oci.conf</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/oci.conf.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>oci.conf</H1>
+Section: Slurm Configuration File (5)<BR>Updated: Slurm Configuration File<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+oci.conf - Slurm configuration file for containers.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+Slurm supports calling OCI compliant runtimes. <B>oci.conf</B> is an ASCII
+file which defines parameters used by OCI runtime interface.
+<P>
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+Changes to the configuration file take effect upon restart of Slurm daemons.
+<P>
+<P>
+
+The following oci.conf parameters are defined to control the behavior
+of the <B>--container</B> argument of <B>salloc</B>, <B>srun</B>, and <B>sbatch</B>
+<P>
+<DL COMPACT>
+<dt><B>ContainerPath</B><a class="slurm_link" id="OPT_ContainerPath" href="#OPT_ContainerPath"></a></dt><dd>Override path pattern for placement of the generated OCI Container bundle
+directory. See the section <B>OCI Pattern</B> for details on pattern
+replacement.
+<P>
+Default is unique directory generated in <B>SlurmdSpoolDir</B>.
+<DT><DD>
+<P>
+<dt><B>CreateEnvFile=(null|newline|disabled)</B><a class="slurm_link" id="OPT_CreateEnvFile=(null|newline|disabled)" href="#OPT_CreateEnvFile=(null|newline|disabled)"></a></dt><dd>Create environment file for container. File will have one environment variable
+per line if value is &quot;newline&quot;. File will have one environment
+variable terminated by NULL character (aka '&nbsp;') if value is &quot;null&quot;. If value
+is &quot;disabled&quot;, then the environment file will not be created.
+<P>
+Value of &quot;true&quot; is treated as &quot;null&quot; for backwards compatibility.
+Value of &quot;false&quot; is treated as &quot;disabled&quot; for backwards compatibility.
+<P>
+Note: When CreateEnvFile=newline, any environment variables with a newline will
+be dropped before writing to the environment file.
+<P>
+Default is &quot;disabled&quot;.
+<DT><DD>
+<P>
+<dt><B>DebugFlags</B><a class="slurm_link" id="OPT_DebugFlags" href="#OPT_DebugFlags"></a></dt><dd>Override debug flags during container operations. See <B>debugflags</B> in
+<B>slurm.conf</B>.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>DisableCleanup</B><a class="slurm_link" id="OPT_DisableCleanup" href="#OPT_DisableCleanup"></a></dt><dd>Disable removal of the generated files handed to OCI runtime.
+<P>
+Default: false
+<DT><DD>
+<P>
+<dt><B>DisableHooks</B><a class="slurm_link" id="OPT_DisableHooks" href="#OPT_DisableHooks"></a></dt><dd>Comma separated list of hook types to disable.
+<P>
+Default: allow all hooks.
+<DT><DD>
+<P>
+<dt><B>EnvExclude</B><a class="slurm_link" id="OPT_EnvExclude" href="#OPT_EnvExclude"></a></dt><dd>Extended regular expression to filter environment before. This allows for
+excluding variables to avoid unwanted environment variables inside of
+containers.
+<P>
+Example: <B>EnvExclude</B>=&quot;^(SLURM_CONF|SLURM_CONF_SERVER)=&quot;
+<P>
+Default is not exclude any environment variables.
+<DT><DD>
+<P>
+<dt><B>MountSpoolDir</B><a class="slurm_link" id="OPT_MountSpoolDir" href="#OPT_MountSpoolDir"></a></dt><dd>Override pattern for path inside of container to mount <B>ContainerPath</B>. See
+the section <B>OCI Pattern</B> for details on pattern replacement.
+<P>
+Default: /var/run/slurm/
+<DT><DD>
+<P>
+<dt><B>RunTimeEnvExclude</B><a class="slurm_link" id="OPT_RunTimeEnvExclude" href="#OPT_RunTimeEnvExclude"></a></dt><dd>Extended regular expression to filter environment before calling any
+<B>RunTime*</B> commands. This allows for excluding variables to avoid unwanted
+inheritance inside of the OCI runtimes.
+<P>
+Example: <B>RunTimeEnvExclude</B>=&quot;^(SLURM_CONF|SLURM_CONF_SERVER)=&quot;
+<P>
+Default is not exclude any environment variables.
+<DT><DD>
+<P>
+<dt><B>FileDebug</B><a class="slurm_link" id="OPT_FileDebug" href="#OPT_FileDebug"></a></dt><dd>Override default file logging level during container operations. See
+<B>SlurmdDebug</B> in <B>slurm.conf</B>.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>IgnoreFileConfigJson=(true|false)</B><a class="slurm_link" id="OPT_IgnoreFileConfigJson=(true|false)" href="#OPT_IgnoreFileConfigJson=(true|false)"></a></dt><dd>Ignore the existence of config.json in OCI bundle path and disable loading
+config.json if it is present.
+<P>
+Default is false.
+<DT><DD>
+<P>
+<dt><B>RunTimeCreate</B><a class="slurm_link" id="OPT_RunTimeCreate" href="#OPT_RunTimeCreate"></a></dt><dd>Pattern for OCI runtime create operation.  See the section <B>OCI Pattern</B>
+for details on pattern replacement.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>RunTimeDelete</B><a class="slurm_link" id="OPT_RunTimeDelete" href="#OPT_RunTimeDelete"></a></dt><dd>Pattern for OCI runtime delete operation.  See the section <B>OCI Pattern</B>
+for details on pattern replacement.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>RunTimeKill</B><a class="slurm_link" id="OPT_RunTimeKill" href="#OPT_RunTimeKill"></a></dt><dd>Pattern for OCI runtime kill operation.  See the section <B>OCI Pattern</B>
+for details on pattern replacement.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>RunTimeQuery</B><a class="slurm_link" id="OPT_RunTimeQuery" href="#OPT_RunTimeQuery"></a></dt><dd>Pattern for OCI runtime query operation (also known as state).  See the section
+<B>OCI Pattern</B> for details on pattern replacement.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>RunTimeRun</B><a class="slurm_link" id="OPT_RunTimeRun" href="#OPT_RunTimeRun"></a></dt><dd>Pattern for OCI runtime run operation. This is not provided in the OCI runtime
+specification (&lt;=v1.0) but is provided by multiple OCI runtimes to simplify
+execution of containers. If provided, it will be used in the place of create
+and start operations. It avoids the need to poll state of the container
+resulting in less monitoring overhead. See the section <B>OCI Pattern</B> for
+details on pattern replacement.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>RunTimeStart</B><a class="slurm_link" id="OPT_RunTimeStart" href="#OPT_RunTimeStart"></a></dt><dd>Pattern for OCI runtime start operation.  See the section <B>OCI Pattern</B>
+for details on pattern replacement.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>SrunPath</B><a class="slurm_link" id="OPT_SrunPath" href="#OPT_SrunPath"></a></dt><dd>Absolute path to srun executable.
+<P>
+Default: (search PATH)
+<DT><DD>
+<P>
+<dt><B>SrunArgs</B><a class="slurm_link" id="OPT_SrunArgs" href="#OPT_SrunArgs"></a></dt><dd>Additional arguments to pass to srun. Add one <B>SrunArgs</B> entry per
+argument.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>StdIODebug</B><a class="slurm_link" id="OPT_StdIODebug" href="#OPT_StdIODebug"></a></dt><dd>Override default STDIO logging level during container operations. See
+<B>SlurmdDebug</B> in <B>slurm.conf</B>.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+<dt><B>SyslogDebug</B><a class="slurm_link" id="OPT_SyslogDebug" href="#OPT_SyslogDebug"></a></dt><dd>Override default syslog logging level during container operations. See
+<B>SlurmdSyslogDebug</B> in <B>slurm.conf</B>.
+<P>
+Default: (disabled)
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<h2>NOTES<a class="slurm_link" id="SECTION_NOTES" href="#SECTION_NOTES"></a></h2>
+<P>
+
+OCI container support is disabled if oci.conf does not exist. If disabled, any
+user passing <B>--container</B> will be doing so in a purely advisor manner.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>OCI Pattern<a class="slurm_link" id="SECTION_OCI-Pattern" href="#SECTION_OCI-Pattern"></a></h2>
+<P>
+All of the OCI patterns will replace the following characters:
+<P>
+
+<B>Replacements</B>:
+<P>
+<DL COMPACT>
+<dt><B>%%</B><a class="slurm_link" id="OPT_%%" href="#OPT_%%"></a></dt><dd>Replace as &quot;%&quot;.
+<DT><DD>
+<P>
+<dt><B>%@</B><a class="slurm_link" id="OPT_%@" href="#OPT_%@"></a></dt><dd>Replace as the command and arguments. Each argument will be
+enclosed with single quotes and escaped.
+<DT><DD>
+<P>
+<dt><B>%b</B><a class="slurm_link" id="OPT_%b" href="#OPT_%b"></a></dt><dd>Replace as OCI Bundle Path.
+<DT><DD>
+<P>
+<dt><B>%e</B><a class="slurm_link" id="OPT_%e" href="#OPT_%e"></a></dt><dd>Replace as path to file containing environment if
+<B>CreateEnvFile=true</B>.
+<DT><DD>
+<P>
+<dt><B>%j</B><a class="slurm_link" id="OPT_%j" href="#OPT_%j"></a></dt><dd>Replace as numeric job id.
+<DT><DD>
+<P>
+<dt><B>%m</B><a class="slurm_link" id="OPT_%m" href="#OPT_%m"></a></dt><dd>Replace as spool directory of container as patterned by <B>ContainerPath</B>. If
+<B>ContainerPath</B> is not configured or <B>ContainerPath</B> contains <B>%m</B>,
+then replace with <B>SlurmdSpoolDir</B> from <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5).
+<DT><DD>
+<P>
+<dt><B>%n</B><a class="slurm_link" id="OPT_%n" href="#OPT_%n"></a></dt><dd>Replace as nodename.
+<DT><DD>
+<P>
+<dt><B>%p</B><a class="slurm_link" id="OPT_%p" href="#OPT_%p"></a></dt><dd>Replace as PID of first processes forked off. Only for use in <B>RunTimeKill</B>
+or <B>RunTimeDelete</B>.
+<DT><DD>
+<P>
+<dt><B>%r</B><a class="slurm_link" id="OPT_%r" href="#OPT_%r"></a></dt><dd>Replace as original path to rootfs.
+<DT><DD>
+<P>
+<dt><B>%s</B><a class="slurm_link" id="OPT_%s" href="#OPT_%s"></a></dt><dd>Replace as numeric step id.
+<DT><DD>
+<P>
+<dt><B>%t</B><a class="slurm_link" id="OPT_%t" href="#OPT_%t"></a></dt><dd>Replace as numeric step task id.
+<DT><DD>
+<P>
+<dt><B>%u</B><a class="slurm_link" id="OPT_%u" href="#OPT_%u"></a></dt><dd>Replace as user name.
+<DT><DD>
+<P>
+<dt><B>%U</B><a class="slurm_link" id="OPT_%U" href="#OPT_%U"></a></dt><dd>Replace as numeric user id.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2021 SchedMD LLC.
+<P>
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">NOTES</A><DD>
+<DT><A HREF="#lbAE">OCI Pattern</A><DD>
+<DT><A HREF="#lbAF">COPYING</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 05:46:51 GMT, December 07, 2023
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

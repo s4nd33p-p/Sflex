@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - knl.conf</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/knl.conf.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>knl.conf</H1>
+Section: Slurm Configuration File (5)<BR>Updated: Slurm Configuration File<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+knl.conf - Slurm configuration file for Intel Knights Landing processor.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+This ASCII file which describes configuration information for Intel Knights
+Landing processors and its name may depend upon the NodeFeatures plugin
+configured in Slurm. For example, on Cray systems NodeFeatures should be configured
+to &quot;knl_cray&quot; and its configuration file will be read from &quot;knl_cray.conf&quot;.
+The file will always be located in the same directory as the <B>slurm.conf</B>.
+This file is optional.
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+Changes to the configuration file take effect upon restart of
+Slurm daemons, daemon receipt of the SIGHUP signal, or execution
+of the command &quot;scontrol reconfigure&quot; unless otherwise noted.
+<P>
+
+The overall configuration parameters available include:
+<P>
+<DL COMPACT>
+<dt><B>AllowMCDRAM</B><a class="slurm_link" id="OPT_AllowMCDRAM" href="#OPT_AllowMCDRAM"></a></dt><dd>Specify the MCDRAM modes which jobs are allowed to use.
+This may be a subset of MCDRAM modes supported by the node.
+If not specified, all MCDRAM modes supported by the node are available for use.
+The comma separated list of allowed MCDRAM modes may include any of the modes
+listed below.
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>cache</B><a class="slurm_link" id="OPT_cache" href="#OPT_cache"></a></dt><dd>All of MCDRAM to be used as cache.
+<DT><DD>
+<P>
+<dt><B>equal</B><a class="slurm_link" id="OPT_equal" href="#OPT_equal"></a></dt><dd>MCDRAM to be used partly as cache and partly combined with primary memory.
+<DT><DD>
+<P>
+<dt><B>flat</B><a class="slurm_link" id="OPT_flat" href="#OPT_flat"></a></dt><dd>MCDRAM to be combined with primary memory into a &quot;flat&quot; memory space.
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>AllowNUMA</B><a class="slurm_link" id="OPT_AllowNUMA" href="#OPT_AllowNUMA"></a></dt><dd>Specify the NUMA modes which jobs are allowed to use.
+This may be a subset of NUMA modes supported by the node.
+If not specified, all NUMA modes supported by the node are available for use.
+The comma separated list of allowed NUMA modes may include any of the modes
+listed below.
+Note that Slurm can only support homogeneous nodes
+(e.g. the same number of cores per NUMA node).
+KNL scn4 and quad modes are not homogeneous, but each NUMA mode will have
+either 16 or 18 cores.
+This will result in Slurm using the lower core count and finding a total of
+256 threads rather than 272 threads and setting the node to a DOWN state.
+Therefore it is recommended that snc4 and quad mode not be allowed at this time.
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>a2a</B><a class="slurm_link" id="OPT_a2a" href="#OPT_a2a"></a></dt><dd>All to all
+<DT><DD>
+<P>
+<dt><B>snc2</B><a class="slurm_link" id="OPT_snc2" href="#OPT_snc2"></a></dt><dd>Sub-NUMA cluster 2
+<DT><DD>
+<P>
+<dt><B>snc4</B><a class="slurm_link" id="OPT_snc4" href="#OPT_snc4"></a></dt><dd>Sub-NUMA cluster 4
+<DT><DD>
+<P>
+<dt><B>hemi</B><a class="slurm_link" id="OPT_hemi" href="#OPT_hemi"></a></dt><dd>Hemisphere
+<DT><DD>
+<P>
+<dt><B>quad</B><a class="slurm_link" id="OPT_quad" href="#OPT_quad"></a></dt><dd>Quadrant
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>AllowUserBoot</B><a class="slurm_link" id="OPT_AllowUserBoot" href="#OPT_AllowUserBoot"></a></dt><dd>A comma-delimited list of users allowed to modify a node's MCDRAM or NUMA state.
+If not specified then any user can change a node's state and reboot it.
+<DT><DD>
+<P>
+<dt><B>BootTime</B><a class="slurm_link" id="OPT_BootTime" href="#OPT_BootTime"></a></dt><dd>Estimated time to reboot a node in seconds.
+Used as a basis for optimizing scheduling decisions.
+The default value is 300 seconds (5 minutes) for the &quot;knl_generic&quot; plugin
+and 2700 seconds (45 minutes) for the &quot;knl_cray&quot; plugin.
+<DT><DD>
+<P>
+<dt><B>CapmcPath</B><a class="slurm_link" id="OPT_CapmcPath" href="#OPT_CapmcPath"></a></dt><dd>Fully qualified path to the <B>capmc</B> program.
+The default value is &quot;/opt/cray/capmc/default/bin/capmc&quot;.
+This parameter is used only by the &quot;knl_cray&quot; plugin.
+<DT><DD>
+<P>
+<dt><B>CapmcPollFreq</B><a class="slurm_link" id="OPT_CapmcPollFreq" href="#OPT_CapmcPollFreq"></a></dt><dd>Time interval between when the <B>capmc</B> program should poll for node state
+changes, in seconds.
+The default value is 45 seconds.
+This parameter is used only by the &quot;knl_cray&quot; plugin.
+<DT><DD>
+<P>
+<dt><B>CapmcRetries</B><a class="slurm_link" id="OPT_CapmcRetries" href="#OPT_CapmcRetries"></a></dt><dd>Number of times to retry failed operations of the <B>capmc</B> program.
+Default value is 4.
+<DT><DD>
+<P>
+<dt><B>CapmcTimeout</B><a class="slurm_link" id="OPT_CapmcTimeout" href="#OPT_CapmcTimeout"></a></dt><dd>Time limit for the <B>capmc</B> program to return status information milliseconds.
+The default value is 60000 milliseconds and the minimum value is 1000 milliseconds.
+This parameter is used by the &quot;knl_cray&quot; plugin, plus the capmc_suspend and
+capmc_resume programs used for suspending and resuming nodes.
+<DT><DD>
+<P>
+<dt><B>CnselectPath</B><a class="slurm_link" id="OPT_CnselectPath" href="#OPT_CnselectPath"></a></dt><dd>Fully qualified path to the <B>cnselect</B> program.
+The default value is &quot;/opt/cray/sdb/default/bin/cnselect&quot;.
+This parameter is used only by the &quot;knl_cray&quot; plugin.
+<DT><DD>
+<P>
+<dt><B>DefaultMCDRAM</B><a class="slurm_link" id="OPT_DefaultMCDRAM" href="#OPT_DefaultMCDRAM"></a></dt><dd>Specify the default MCDRAM modes for job's which do not specify a value.
+This is only used when a node is booted and the job which has been allocated
+the node does not specify a desired MCDRAM mode.
+The value can include one of the possible values identified with the
+<B>AllowMCDRAM</B> configuration parameter above.
+The default value is &quot;cache&quot;.
+<DT><DD>
+<P>
+<dt><B>DefaultNUMA</B><a class="slurm_link" id="OPT_DefaultNUMA" href="#OPT_DefaultNUMA"></a></dt><dd>Specify the default NUMA modes for job's which do not specify a value.
+This is only used when a node is booted and the job which has been allocated
+the node does not specify a desired NUMA mode.
+The value can include one of the possible values identified with the
+<B>AllowNUMA</B> configuration parameter above.
+The default value is &quot;a2a&quot;.
+<DT><DD>
+<P>
+<dt><B>Force</B><a class="slurm_link" id="OPT_Force" href="#OPT_Force"></a></dt><dd>If set to a non-zero value then load the node_features/generic plugin even
+on non-KNL nodes.
+Used primarily for testing purposes.
+<DT><DD>
+<P>
+<dt><B>LogFile</B><a class="slurm_link" id="OPT_LogFile" href="#OPT_LogFile"></a></dt><dd>Fully qualified path to a log file.
+The default value is SlurmctldLogFile from the slurm.conf configuration file.
+This is option is used only by the campc_suspend and campc_resume programs
+(which power down and reboot nodes in the appropriate configuration).
+<DT><DD>
+<P>
+<dt><B>McPath</B><a class="slurm_link" id="OPT_McPath" href="#OPT_McPath"></a></dt><dd>Fully qualified path to memory controller device file directory.
+Children of this directory with names of the form &quot;mc#/csrow#/ue_count&quot;
+(i.e. the count of unrecoverable memory errors) will be monitored for non-zero
+values.
+If such errors are detected, the node will be set to a DOWN state and the
+slurmd daemon will shutdown.
+The default value is &quot;/sys/devices/system/edac/mc&quot;.
+See also <B>UmeCheckInterval</B>.
+<DT><DD>
+<P>
+<dt><B>NumaCpuBind</B><a class="slurm_link" id="OPT_NumaCpuBind" href="#OPT_NumaCpuBind"></a></dt><dd>Contains pairs of NUMA modes and the CpuBind mode to set a node to for that mode.
+Any compute node found with or set to the specified NUMA mode will have that
+node's CpuBind field set to the configured value.
+The NUMA node will be followed by an equal sign the desired CpuBind mode for
+that NUMA mode. Multiple NUMA mode and CpuBind modes should be in a semicolon
+separated list.
+By default changes to a node's NUMA mode will not effect that node's CpuBind
+mode.
+See the example below.
+<DT><DD>
+<P>
+<dt><B>SyscfgPath</B><a class="slurm_link" id="OPT_SyscfgPath" href="#OPT_SyscfgPath"></a></dt><dd>Fully qualified path to Intel's <B>syscfg</B> program, which identifies current
+KNL configuration by viewing BIOS settings.
+If not defined, the current BIOS setting will not be available.
+The default value is &quot;/usr/bin/syscfg&quot;.
+This parameter is used only by the &quot;knl_generic&quot; plugin.
+<DT><DD>
+<P>
+<dt><B>SyscfgTimeout</B><a class="slurm_link" id="OPT_SyscfgTimeout" href="#OPT_SyscfgTimeout"></a></dt><dd>Timeout for <B>syscfg</B> program in milliseconds.
+Default value is 1000 milliseconds.
+For Dell KNL systems, experience has shown that a higher value of 10000
+milliseconds is more appropriate.
+<DT><DD>
+<P>
+<dt><B>SystemType</B><a class="slurm_link" id="OPT_SystemType" href="#OPT_SystemType"></a></dt><dd>Used to distinguish the flavor of knl we are dealing with.
+Possible options are &quot;Dell&quot; and &quot;Intel&quot;.
+The default value is &quot;Intel&quot;.
+This parameter is used only by the &quot;knl_generic&quot; plugin.
+<DT><DD>
+<P>
+<dt><B>UmeCheckInterval</B><a class="slurm_link" id="OPT_UmeCheckInterval" href="#OPT_UmeCheckInterval"></a></dt><dd>Interval, in microseconds, between checks for Uncorrectable Memory Errors (UME).
+If such errors are detected, the node will be set to a DOWN state and the
+slurmd daemon will shutdown.
+The default value is 0 (disabled).
+See also <B>McPath</B>.
+<DT><DD>
+<P>
+<dt><B>ValidateMode</B><a class="slurm_link" id="OPT_ValidateMode" href="#OPT_ValidateMode"></a></dt><dd>If set to 1 then validate, but do not modify the node's configured MCDRAM and
+NUMA modes from the slurm.conf file. If the actual modes do not match configured
+values the node will be set to a DOWN state. Every KNL nodes MCDRAM and NUMA
+states must both be listed in the slurm.conf file.
+This parameter is used only by the &quot;knl_cray&quot; plugin.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<h2>EXAMPLE<a class="slurm_link" id="SECTION_EXAMPLE" href="#SECTION_EXAMPLE"></a></h2>
+<PRE>
+###################################################################
+# knl_cray.conf
+# Slurm configuration file for Intel Knights Landing on Cray system
+###################################################################
+CapmcPath=/opt/cray/capmc/default/bin/capmc
+CapmcTimeout=6000
+DefaultMCDRAM=flat
+DefaultNUMA=a2a
+NumaCpuBind=a2a=core;snc2=thread;snc4=thread
+LogFile=/var/tmp/slurm_node_feature.log
+SyscfgPath=/usr/sbin/syscfg
+</PRE>
+
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2015-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">EXAMPLE</A><DD>
+<DT><A HREF="#lbAE">COPYING</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 05:46:51 GMT, December 07, 2023
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

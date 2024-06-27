@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - cgroup.conf</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/cgroup.conf.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>cgroup.conf</H1>
+Section: Slurm Configuration File (5)<BR>Updated: Slurm Configuration File<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+cgroup.conf - Slurm configuration file for the cgroup support
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<P>
+<B>cgroup.conf</B> is an ASCII file which defines parameters used by
+Slurm's Linux cgroup related plugins.
+The file will always be located in the same directory as the <B>slurm.conf</B>.
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+Changes to the configuration file take effect upon restart of
+Slurm daemons, daemon receipt of the SIGHUP signal, or execution
+of the command &quot;scontrol reconfigure&quot; unless otherwise noted.
+<P>
+<P>
+
+For general Slurm cgroups information, see the Cgroups Guide at
+&lt;<A HREF="https://slurm.schedmd.com/cgroups.html">https://slurm.schedmd.com/cgroups.html</A>&gt;.
+<P>
+<P>
+
+The following cgroup.conf parameters are defined to control the general behavior
+of Slurm cgroup plugins.
+<P>
+<DL COMPACT>
+<dt><B>CgroupAutomount</B>=&lt;yes|no&gt;<a class="slurm_link" id="OPT_CgroupAutomount" href="#OPT_CgroupAutomount"></a></dt><dd>In cgroup/v1 this parameter detects if /sys/fs/cgroup/&lt;controller_name&gt; is
+available, and if not it tries to mount the filesystem.
+In cgroup/v2 this parameter is ignored.
+<DT><DD>
+<P>
+<dt><B>CgroupMountpoint</B>=<I>PATH</I><a class="slurm_link" id="OPT_CgroupMountpoint" href="#OPT_CgroupMountpoint"></a></dt><dd>Only intended for development and testing. Specifies the <I>PATH</I> under which
+cgroup controllers should be mounted. The default <I>PATH</I> is /sys/fs/cgroup.
+<DT><DD>
+<P>
+<dt><B>CgroupPlugin</B>=<I>&lt;cgroup/v1|cgroup/v2|autodetect&gt;</I><a class="slurm_link" id="OPT_CgroupPlugin" href="#OPT_CgroupPlugin"></a></dt><dd>Specify the plugin to be used when interacting with the cgroup subsystem.
+Supported values at the moment are &quot;cgroup/v1&quot; which supports the legacy
+interface of cgroup v1, &quot;cgroup/v2&quot; for unified architecture, or &quot;autodetect&quot;
+which tries to determine which cgroup version does your system provide.
+This is useful if nodes have support for different cgroup versions.
+The default value is &quot;autodetect&quot;.
+<DT><DD>
+<P>
+<dt><B>IgnoreSystemd</B>=<I>&lt;yes|no&gt;</I><a class="slurm_link" id="OPT_IgnoreSystemd" href="#OPT_IgnoreSystemd"></a></dt><dd>Only for cgroup/v2 and for development and testing. It will avoid any call to
+dbus and contact with systemd, and instead will prepare all the cgroup hierarchy
+manually. This option is dangerous in systems with systemd since the cgroup
+can be modified by systemd and cause issues to jobs.
+<DT><DD>
+<P>
+<dt><B>IgnoreSystemdOnFailure</B>=<I>&lt;yes|no&gt;</I><a class="slurm_link" id="OPT_IgnoreSystemdOnFailure" href="#OPT_IgnoreSystemdOnFailure"></a></dt><dd>Only for cgroup/v2 and for development and testing. It has similar functionality
+to <B>IgnoreSystemd</B> but only in the case that a dbus call does not succeed.
+<DT><DD>
+<P>
+<dt><B>EnableControllers</B>=<I>&lt;yes|no&gt;</I><a class="slurm_link" id="OPT_EnableControllers" href="#OPT_EnableControllers"></a></dt><dd>Only for cgroup/v2 and generally for development and testing. It gets the
+available controllers from the root (<B>CgroupMountPoint</B>, by default
+/sys/fs/cgroup/) and makes them available in all levels of the cgroup tree until
+it reaches Slurm's cgroup leaf.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<h2>TASK/CGROUP PLUGIN<a class="slurm_link" id="SECTION_TASK/CGROUP-PLUGIN" href="#SECTION_TASK/CGROUP-PLUGIN"></a></h2>
+<P>
+<P>
+
+The following cgroup.conf parameters are defined to control the behavior
+of this particular plugin:
+<P>
+<DL COMPACT>
+<dt><B>AllowedRAMSpace</B>=&lt;number&gt;<a class="slurm_link" id="OPT_AllowedRAMSpace" href="#OPT_AllowedRAMSpace"></a></dt><dd>Constrain the job/step cgroup RAM to this percentage of the allocated memory.
+The percentage supplied may be expressed as floating point number, e.g. 101.5.
+Sets the cgroup soft memory limit at the allocated memory size and then sets the
+job/step hard memory limit at the (AllowedRAMSpace/100) * allocated memory. If
+the job/step exceeds the hard limit, then it might trigger Out Of Memory (OOM)
+events (including oom-kill) which will be logged to kernel log ring buffer
+(dmesg in Linux). Setting AllowedRAMSpace above 100 may cause system Out of
+Memory (OOM) events as it allows job/step to allocate more memory than
+configured to the nodes.  Reducing configured node available memory to avoid
+system OOM events is suggested.  Setting AllowedRAMSpace below 100 will result
+in jobs receiving less memory than allocated and soft memory limit will set to
+the same value as the hard limit.
+Also see <B>ConstrainRAMSpace</B>.
+The default value is 100.
+<DT><DD>
+<P>
+<dt><B>AllowedSwapSpace</B>=&lt;number&gt;<a class="slurm_link" id="OPT_AllowedSwapSpace" href="#OPT_AllowedSwapSpace"></a></dt><dd>Constrain the job cgroup swap space to this percentage of the allocated
+memory.  The default value is 0, which means that RAM+Swap will be limited
+to <B>AllowedRAMSpace</B>. The supplied percentage may be expressed as a
+floating point number, e.g. 50.5.  If the limit is exceeded, the job steps
+will be killed and a warning message will be written to standard error.
+Also see <B>ConstrainSwapSpace</B>.
+NOTE: Setting AllowedSwapSpace to 0 does not restrict the Linux kernel from
+using swap space. To control how the kernel uses swap space, see
+<B>MemorySwappiness</B>.
+<DT><DD>
+<P>
+<dt><B>ConstrainCores</B>=&lt;yes|no&gt;<a class="slurm_link" id="OPT_ConstrainCores" href="#OPT_ConstrainCores"></a></dt><dd>If configured to &quot;yes&quot; then constrain allowed cores to the subset of
+allocated resources. This functionality makes use of the cpuset subsystem.
+Due to a bug fixed in version 1.11.5 of HWLOC, the task/affinity plugin may be
+required in addition to task/cgroup for this to function properly.
+The default value is &quot;no&quot;.
+<DT><DD>
+<P>
+<dt><B>ConstrainDevices</B>=&lt;yes|no&gt;<a class="slurm_link" id="OPT_ConstrainDevices" href="#OPT_ConstrainDevices"></a></dt><dd>If configured to &quot;yes&quot; then constrain the job's allowed devices based on GRES
+allocated resources. It uses the devices subsystem for that.
+The default value is &quot;no&quot;.
+<DT><DD>
+<P>
+<dt><B>ConstrainRAMSpace</B>=&lt;yes|no&gt;<a class="slurm_link" id="OPT_ConstrainRAMSpace" href="#OPT_ConstrainRAMSpace"></a></dt><dd>If configured to &quot;yes&quot; then constrain the job's RAM usage by setting
+the memory soft limit to the allocated memory and the hard limit to
+the allocated memory * <B>AllowedRAMSpace</B>.  The default value is &quot;no&quot;, in
+which case the job's RAM limit will be set to its swap space limit if
+<B>ConstrainSwapSpace</B> is set to &quot;yes&quot;. CR_*_Memory must be set in slurm.conf
+for this parameter to take any effect.
+Also see <B>AllowedSwapSpace</B>, <B>AllowedRAMSpace</B> and
+<B>ConstrainSwapSpace</B>.
+<P>
+<B>NOTE</B>: When using <B>ConstrainRAMSpace</B>, if the combined memory used
+by all processes in a step is greater than the limit, then the kernel will
+trigger an OOM event, killing one or more of the processes in the step. The
+step state will be marked as OOM, but the step itself will keep running and
+other processes in the step may continue to run as well.
+This differs from the behavior of <B>OverMemoryKill</B>, where the whole step
+will be killed/cancelled.
+<P>
+<B>NOTE</B>: When enabled, ConstrainRAMSpace can lead to a noticeable decline in
+per-node job throughout. Sites with high-throughput requirements should
+carefully weigh the tradeoff between per-node throughput, versus potential
+problems that can arise from unconstrained memory usage on the node. See
+&lt;<A HREF="https://slurm.schedmd.com/high_throughput.html">https://slurm.schedmd.com/high_throughput.html</A>&gt; for further discussion.
+<DT><DD>
+<P>
+<dt><B>ConstrainSwapSpace</B>=&lt;yes|no&gt;<a class="slurm_link" id="OPT_ConstrainSwapSpace" href="#OPT_ConstrainSwapSpace"></a></dt><dd>If configured to &quot;yes&quot; then constrain the job's swap space usage.
+The default value is &quot;no&quot;. Note that when set to &quot;yes&quot; and
+ConstrainRAMSpace is set to &quot;no&quot;, <B>AllowedRAMSpace</B> is automatically set
+to 100% in order to limit the RAM+Swap amount to 100% of job's requirement
+plus the percent of allowed swap space. This amount is thus set to both
+RAM and RAM+Swap limits. This means that in that particular case,
+ConstrainRAMSpace is automatically enabled with the same limit as the one
+used to constrain swap space. CR_*_Memory must be set in slurm.conf
+for this parameter to take any effect.
+Also see <B>AllowedSwapSpace</B>.
+<DT><DD>
+<P>
+<dt><B>MaxRAMPercent</B>=<I>PERCENT</I><a class="slurm_link" id="OPT_MaxRAMPercent" href="#OPT_MaxRAMPercent"></a></dt><dd>Set an upper bound in percent of total RAM (configured RealMemory of the node)
+on the RAM constraint for a job. This will be the memory constraint applied to
+jobs that are not explicitly allocated memory by Slurm (i.e. Slurm's select
+plugin is not configured to manage memory allocations). The <I>PERCENT</I> may
+be an arbitrary floating point number. The default value is 100.
+<DT><DD>
+<P>
+<dt><B>MaxSwapPercent</B>=<I>PERCENT</I><a class="slurm_link" id="OPT_MaxSwapPercent" href="#OPT_MaxSwapPercent"></a></dt><dd>Set an upper bound (in percent of total RAM, configured RealMemory of the node)
+on the amount of RAM+Swap that may be used for a job. This will be the swap
+limit applied to jobs on systems where memory is not being explicitly allocated
+to job. The <I>PERCENT</I> may be an arbitrary floating point number between 0
+and 100. The default value is 100.
+<DT><DD>
+<P>
+<dt><B>MemorySwappiness</B>=&lt;number&gt;<a class="slurm_link" id="OPT_MemorySwappiness" href="#OPT_MemorySwappiness"></a></dt><dd>Only for cgroup/v1.
+Configure the kernel's priority for swapping out anonymous pages (such as
+program data) verses file cache pages for the job cgroup. Valid values are
+between 0 and 100, inclusive. A value of 0 prevents the kernel from swapping
+out program data. A value of 100 gives equal priority to swapping out file
+cache or anonymous pages. If not set, then the kernel's default swappiness
+value will be used. <B>ConstrainSwapSpace</B>
+must be set to <B>yes</B> in order for this parameter to be applied.
+<DT><DD>
+<P>
+<dt><B>MinRAMSpace</B>=&lt;number&gt;<a class="slurm_link" id="OPT_MinRAMSpace" href="#OPT_MinRAMSpace"></a></dt><dd>Set a lower bound (in MB) on the memory limits defined by
+<B>AllowedRAMSpace</B> and <B>AllowedSwapSpace</B>. This prevents
+accidentally creating a memory cgroup with such a low limit that slurmstepd
+is immediately killed due to lack of RAM. The default limit is 30M.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<h2>DISTRIBUTION-SPECIFIC NOTES<a class="slurm_link" id="SECTION_DISTRIBUTION-SPECIFIC-NOTES" href="#SECTION_DISTRIBUTION-SPECIFIC-NOTES"></a></h2>
+<P>
+<P>
+
+Debian and derivatives (e.g. Ubuntu) usually exclude the memory and memsw (swap)
+cgroups by default. To include them, add the following parameters to the kernel
+command line: <B>cgroup_enable=memory swapaccount=1</B>
+<P>
+
+This can usually be placed in /etc/default/grub inside the
+<B>GRUB_CMDLINE_LINUX</B> variable. A command such as update-grub must be run
+after updating the file.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<h2>EXAMPLE<a class="slurm_link" id="SECTION_EXAMPLE" href="#SECTION_EXAMPLE"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>/etc/slurm/cgroup.conf</B>:<a class="slurm_link" id="OPT_/etc/slurm/cgroup.conf" href="#OPT_/etc/slurm/cgroup.conf"></a></dt><dd>This example cgroup.conf file shows a configuration that enables the more
+commonly used cgroup enforcement mechanisms.
+<DT><DD>
+<PRE>
+###
+# Slurm cgroup support configuration file.
+###
+CgroupAutomount=yes
+CgroupMountpoint=/sys/fs/cgroup
+ConstrainCores=yes
+ConstrainDevices=yes
+ConstrainRAMSpace=yes
+ConstrainSwapSpace=yes
+</PRE>
+
+<P>
+<dt><B>/etc/slurm/slurm.conf</B>:<a class="slurm_link" id="OPT_/etc/slurm/slurm.conf" href="#OPT_/etc/slurm/slurm.conf"></a></dt><dd>These are the entries required in <B>slurm.conf</B> to activate the cgroup
+enforcement mechanisms. Make sure that the node definitions in your
+<B>slurm.conf</B> closely match the configuration as shown by &quot;<B>slurmd -C</B>&quot;.
+Either MemSpecLimit should be set or RealMemory should be defined with less
+than the actual amount of memory for a node to ensure that all system/non-job
+processes will have sufficient memory at all times. Sites should also configure
+<B>pam_slurm_adopt</B> to ensure users can not escape the cgroups via <B>ssh</B>.
+<DT><DD>
+<PRE>
+###
+# Slurm configuration entries for cgroups
+###
+ProctrackType=proctrack/cgroup
+TaskPlugin=task/cgroup,task/affinity
+JobAcctGatherType=jobacct_gather/cgroup #optional for gathering metrics
+PrologFlags=Contain                     #X11 flag is also suggested
+</PRE>
+
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2010-2012 Lawrence Livermore National Security.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2010-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAH">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">TASK/CGROUP PLUGIN</A><DD>
+<DT><A HREF="#lbAE">DISTRIBUTION-SPECIFIC NOTES</A><DD>
+<DT><A HREF="#lbAF">EXAMPLE</A><DD>
+<DT><A HREF="#lbAG">COPYING</A><DD>
+<DT><A HREF="#lbAH">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 05:46:51 GMT, December 07, 2023
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

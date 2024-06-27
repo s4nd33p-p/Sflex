@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - scrontab</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/scrontab.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>scrontab</H1>
+Section: Slurm Commands (1)<BR>Updated: Slurm Commands<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+scrontab - manage Slurm crontab files
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+scrontab [-u user] file
+<BR>
+
+scrontab [-u user] [ -e | -l | -r ]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<P>
+
+<B>scrontab</B> is used to set, edit, and remove a user's Slurm-managed crontab.
+This file can define a number of recurring batch jobs to run on a scheduled
+interval.
+<P>
+
+Lines must be either comments starting with '#', whitespace, valid crontab
+entries or custom variable settings.
+<P>
+
+Lines starting with <B>#SCRON</B> allow options to be defined for the single
+following crontab entry. Options are always reset in between each crontab
+entry. Options include most of those available to the <B>sbatch</B> command;
+details are available in the <B><A HREF="sbatch.html">sbatch</A></B>(1) man page.
+<P>
+
+Note that jobs are not guaranteed to execute at the preferred time. Jobs will
+run no more frequently than requested, but are managed by setting the
+BeginTime field to the next valid iteration, and are then subject to queuing
+delays. The exact behavior will depend on the local site configuration.
+Because of this method of implementation, the next job in the series won't be
+submitted until after the previous job has completed.  For example, if you
+have a monitoring job that is scheduled to run every minute on a busy
+system, if the job scheduled to start at 08:20:00 isn't able to start until
+08:20:30 and it runs for 35 seconds then the job at 08:21:00 will be skipped
+and the next job will be scheduled for 08:22:00.
+<P>
+
+<B>scrontab</B> uses the same syntax for date and time specifiers as <B>cron</B>.
+Each line has five fields that have the following meanings:
+<DL COMPACT><DT><DD>
+field           allowed values
+<BR>
+
+-----           --------------
+<BR>
+
+minute          0-59
+<BR>
+
+hour            0-23
+<BR>
+
+day of month    1-31
+<BR>
+
+month           1-12 (or name)
+<BR>
+
+day of week     0-7 (0 and 7 are Sunday, or use name)
+</DL>
+
+<P>
+<P>
+
+A field can contain an asterisk (*) which means that it's valid for each of
+the allowed values for the given time period. Ranges are allowed where a range
+is two numbers with a hyphen between them.  The second number must be greater
+than the first. Lists are allowed, with commas separating the numbers or
+ranges being separated. Step values can be specified by entering a slash
+(/), followed by the step value, causing the job to run at the specified
+interval appropriate for that field.
+<P>
+<P>
+
+Custom variables can be defined as within a regular shell script.  The `$'
+character introduces variable expansion. Simple parameter expansion is the only
+currently accepted expansion variant (i.e. ${parameter} or ${parameter:-word}
+are not supported). The variable expansion will only occur within <B>scrontab</B>
+job commands. It is not possible to expand variables in other type of lines
+(other variable definitions, comments or crontab entries). The expansion will
+happen before submitting the job, but the variable definitions will remain in
+the <B>scrontab</B> script. Unlike crontab, the user environment variables are
+ignored.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>OPTIONS<a class="slurm_link" id="SECTION_OPTIONS" href="#SECTION_OPTIONS"></a></h2>
+The first form of this command is used to install a new crontab from some named
+file or standard input if the pseudo-filename ``-'' is given.
+<P>
+<DL COMPACT>
+<dt><B>-e</B><a class="slurm_link" id="OPT_-e" href="#OPT_-e"></a></dt><dd>Edit the crontab. If a crontab does not exist already, a default example
+(without any defined entries) will be provided in the editor.
+<DT><DD>
+<P>
+<dt><B>-l</B><a class="slurm_link" id="OPT_-l" href="#OPT_-l"></a></dt><dd>List the crontab. (Prints directly to stdout.)
+<DT><DD>
+<P>
+<dt><B>-r</B><a class="slurm_link" id="OPT_-r" href="#OPT_-r"></a></dt><dd>Remove the crontab. Any currently running crontab-defined jobs will continue
+to run but will no longer recur. All other crontab-defined jobs will be
+cancelled.
+<DT><DD>
+<P>
+<dt><B>-u</B> &lt;<I>user</I>&gt;<a class="slurm_link" id="OPT_-u" href="#OPT_-u"></a></dt><dd>Edit or view a different user's crontab. Listing is permitted for Operators and
+Admins. Editing/removal is only permitted for root and the <I>SlurmUser</I>
+account.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>SCRONTAB OPTIONS<a class="slurm_link" id="SECTION_SCRONTAB-OPTIONS" href="#SECTION_SCRONTAB-OPTIONS"></a></h2>
+<B>scrontab</B> allows you to use shortcuts to specify some common time
+intervals for the specified script to run.  These include the following:
+<P>
+<DL COMPACT>
+<dt><B>@yearly</B> | <B>@annually</B><a class="slurm_link" id="OPT_@yearly" href="#OPT_@yearly"></a></dt><dd>Job will become eligible at <I>00:00 Jan 01</I> each year.
+<DT><DD>
+<P>
+<dt><B>@monthly</B><a class="slurm_link" id="OPT_@monthly" href="#OPT_@monthly"></a></dt><dd>Job will become eligible at <I>00:00</I> on the first day of each month.
+<DT><DD>
+<P>
+<dt><B>@weekly</B><a class="slurm_link" id="OPT_@weekly" href="#OPT_@weekly"></a></dt><dd>Job will become eligible at <I>00:00 Sunday</I> of each week.
+<DT><DD>
+<P>
+<dt><B>@daily</B> | <B>@midnight</B><a class="slurm_link" id="OPT_@daily" href="#OPT_@daily"></a></dt><dd>Job will become eligible at <I>00:00</I> each day.
+<DT><DD>
+<P>
+<dt><B>@hourly</B><a class="slurm_link" id="OPT_@hourly" href="#OPT_@hourly"></a></dt><dd>Job will become eligible at the first minute of each hour.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_ENVIRONMENT-VARIABLES" href="#SECTION_ENVIRONMENT-VARIABLES"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>VISUAL</B><a class="slurm_link" id="OPT_VISUAL" href="#OPT_VISUAL"></a></dt><dd>Used as the interactive editor if set.
+<DT><DD>
+<P>
+<dt><B>EDITOR</B><a class="slurm_link" id="OPT_EDITOR" href="#OPT_EDITOR"></a></dt><dd>Used as the interactive editor if set and <B>VISUAL</B> is not defined.
+<DT><DD>
+<P>
+<dt><B>SLURM_CONF</B><a class="slurm_link" id="OPT_SLURM_CONF" href="#OPT_SLURM_CONF"></a></dt><dd>The location of the Slurm configuration file.
+<DT><DD>
+<P>
+<dt><B>SLURM_DEBUG_FLAGS</B><a class="slurm_link" id="OPT_SLURM_DEBUG_FLAGS" href="#OPT_SLURM_DEBUG_FLAGS"></a></dt><dd>Specify debug flags for scrontab to use. See DebugFlags in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for a full list of flags. The environment
+variable takes precedence over the setting in the slurm.conf.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<h2>NOTES<a class="slurm_link" id="SECTION_NOTES" href="#SECTION_NOTES"></a></h2>
+<P>
+
+<B>scrontab</B> is only available if the <B>ScronParameters=enable</B> option has
+been enabled in the <B>slurm.conf</B>.
+<P>
+
+<B>scrontab</B> will create a temporary file in the directory set by <B>TMPDIR</B>
+environment variable. If the variable is not set /tmp is used.
+<P>
+
+Jobs created with <B>scrontab</B> are assigned a single job id. When cancelled
+all future runs of the job will also be cancelled. The job definition will be
+commented out in the users <B>scrontab</B> file.
+<P>
+
+Using &quot;<B>scontrol requeue</B> &lt;<I>job_id</I>&gt;&quot; will skip the next run of the
+cron job and reschedule it for the next available time based on the cron
+expression.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<h2>EXAMPLES<a class="slurm_link" id="SECTION_EXAMPLES" href="#SECTION_EXAMPLES"></a></h2>
+To create a job that would run at the beginning of each hour, using the 'high'
+partition, 'sub1' account and have a walltime of 1 minute, you would add the
+following to <B>scrontab</B>:
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+DIR=/home/user1
+#SCRON -p high
+#SCRON -A sub1
+#SCRON -t 1:00
+@hourly $DIR/date.printer.job
+</PRE>
+
+</DL>
+
+<P>
+<P>
+
+To have a job run every Wednesday, every other hour during the work day, each
+of the first five minutes of the hour and again at the thirty minute mark,
+you would add the following to <B>scrontab</B>.
+<P>
+<DL COMPACT><DT><DD>
+<PRE>
+1-5,30 8-17/2 * * wed $DIR/example.job
+</PRE>
+
+</DL>
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>LIMITATIONS<a class="slurm_link" id="SECTION_LIMITATIONS" href="#SECTION_LIMITATIONS"></a></h2>
+The Slurm controller's timezone is what will be used to evaluate each crontab's
+repetition intervals. User-specific timezones are not supported.
+<P>
+<A NAME="lbAK">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2020-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAL">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<P>
+
+<B><A HREF="sbatch.html">sbatch</A></B>(1), <B><A HREF="squeue.html">squeue</A></B>(1), <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">SCRONTAB OPTIONS</A><DD>
+<DT><A HREF="#lbAG">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAH">NOTES</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES</A><DD>
+<DT><A HREF="#lbAJ">LIMITATIONS</A><DD>
+<DT><A HREF="#lbAK">COPYING</A><DD>
+<DT><A HREF="#lbAL">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:45 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>

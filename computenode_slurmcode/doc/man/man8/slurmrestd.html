@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+
+	<title>Slurm Workload Manager - slurmrestd</title>
+	<link rel="canonical" href="https://slurm.schedmd.com/slurmrestd.html" />
+
+	<link rel="shortcut icon" href="favicon.ico" />
+
+	<link rel="stylesheet" type="text/css" href="fonts.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<link rel="stylesheet" type="text/css" href="slurm.css" />
+
+	<script src="jquery.min.js"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() {
+		jQuery('.menu-trigger').bind('click touchstart', function() {
+			jQuery(this).find('.menu-trigger__lines').toggleClass('menu-trigger__lines--closed');
+			jQuery(this).parents('.site-header').find('.site-nav').toggleClass('site-nav--active');
+
+			return false;
+		});
+	});
+
+	(function() {
+	  var cx = '011890816164765777536:jvrtxrd3f0w';
+	  var gcse = document.createElement('script');
+	  gcse.type = 'text/javascript';
+	  gcse.async = true;
+	  gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</head>
+
+<body>
+
+<div class="container container--main">
+
+	<header class="site-header" role="banner">
+
+		<div class="site-masthead">
+			<h1 class="site-masthead__title site-masthead__title--slurm">
+				<a href="/" rel="home">
+					<span class="slurm-logo">Slurm Workload Manager</span>
+				</a>
+			</h1>
+			<div class="site-masthead__title">
+				<a href="https://www.schedmd.com/" rel="home">
+					<span class="site-logo">SchedMD</span>
+				</a>
+			</div>
+
+			<button class="site-masthead__trigger menu-trigger" type="button" role="button" aria-label="Toggle Navigation"><span class="menu-trigger__lines"></span></button>
+		</div>
+
+
+		<nav class="site-nav">
+			<h2 class="site-nav__title">Navigation</h2>
+
+			<div class="slurm-title">
+				<div class="slurm-logo"><a href="/">Slurm Workload Manager</a></div>
+				<div class="slurm-title__version">Version 23.02</div>
+			</div>
+
+			<ul class="site-nav__menu site-menu menu" role="navigation">
+				<li class="site-menu__item">
+				        <div>About</div>
+					<ul>
+						<li><a href="overview.html">Overview</a></li>
+						<li><a href="news.html">Release Notes</a></li>
+						<li><a href="team.html">Slurm Team</a></li>
+						<li><a href="meetings.html">Meetings</a></li>
+						<li><a href="testimonials.html">Testimonials</a></li>
+						<li><a href="disclaimer.html">Legal Notices</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Using</div>
+					<ul>
+						<li><a href="tutorials.html">Tutorials</a></li>
+						<li><a href="documentation.html">Documentation</a></li>
+						<li><a href="faq.html">FAQ</a></li>
+						<li><a href="publications.html">Publications</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Installing</div>
+					<ul>
+						<li><a href="download.html">Download</a></li>
+						<li><a href="quickstart_admin.html">Installation Guide</a></li>
+					</ul>
+				</li>
+				<li class="site-menu__item">
+					<div>Getting Help</div>
+					<ul>
+						<li><a href="https://www.schedmd.com/services.php">Support</a></li>
+						<li><a href="mail.html">Mailing Lists</a></li>
+						<li><a href="https://www.schedmd.com/services.php">Training</a></li>
+						<li><a href="troubleshoot.html">Troubleshooting</a></li>
+					</ul>
+				</li>
+			</ul>
+
+		</nav>
+
+	</header>
+
+	<div class="content" role="main">
+		<section class="slurm-search">
+			<div class="container" id="cse">
+				<gcse:search></gcse:search>
+			</div>
+		</section>
+
+		<div class="section">
+			<div class="container">
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<H1>slurmrestd</H1>
+Section: Slurm REST Daemon (8)<BR>Updated: Slurm REST Daemon<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<h2>NAME<a class="slurm_link" id="SECTION_NAME" href="#SECTION_NAME"></a></h2>
+slurmrestd - Interface to Slurm via REST API.
+<A NAME="lbAC">&nbsp;</A>
+<h2>SYNOPSIS<a class="slurm_link" id="SECTION_SYNOPSIS" href="#SECTION_SYNOPSIS"></a></h2>
+<B>slurmrestd</B> [<I>OPTIONS</I>...] &lt;<I>[host]:port</I>|<I>unix:/path/to/socket</I>&gt;...
+<A NAME="lbAD">&nbsp;</A>
+<h2>DESCRIPTION<a class="slurm_link" id="SECTION_DESCRIPTION" href="#SECTION_DESCRIPTION"></a></h2>
+<B>slurmrestd</B> is REST API interface for Slurm. It can be used in two modes:
+<P>
+<P>
+
+<B>Inetd Mode</B>: slurmrestd will read and write to STDIO. If STDIN is a socket
+file descriptor, then slurmrestd will detect this and use relevant
+functionality. If a controlling TTY is detected, interactive mode will
+automatically activate to provide additional logging information. This mode is
+designed to work with piped input, inetd, xinetd or systemd socket activation.
+<P>
+<P>
+
+<B>Listen Mode</B>: slurmrestd will open a listening socket on each requested
+<I>host</I>:<I>port</I> pair or UNIX socket.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<h2>OPTIONS<a class="slurm_link" id="SECTION_OPTIONS" href="#SECTION_OPTIONS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>[host]:port</B><a class="slurm_link" id="OPT_[host]:port" href="#OPT_[host]:port"></a></dt><dd>Hostname and port to listen against. <I>host</I> may be an IPv4/IPv6 IP or a
+resolvable hostname. Hostnames are only looked up at startup and do not change
+for the life of the process. <I>host</I> is optional; if not provided, slurmrestd
+will listen on all network interfaces.
+<DT><DD>
+<P>
+<dt><B>unix:/path/to/socket</B><a class="slurm_link" id="OPT_unix:/path/to/socket" href="#OPT_unix:/path/to/socket"></a></dt><dd>Listen on local UNIX socket. Must have permission to create socket in
+filesystem.
+<DT><DD>
+<P>
+<dt><B>-a &lt;authentication plugins&gt;</B><a class="slurm_link" id="OPT_-a-&lt;authentication-plugins&gt;" href="#OPT_-a-&lt;authentication-plugins&gt;"></a></dt><dd>Comma-delimited list of authentication plugins to load.
+Default behavior is to load all REST authentication plugins found at load time.
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>list</B><a class="slurm_link" id="OPT_list" href="#OPT_list"></a></dt><dd>Display a list of the possible plugins to load.
+<DT><DD>
+<P>
+<dt><B>rest_auth/local</B><a class="slurm_link" id="OPT_rest_auth/local" href="#OPT_rest_auth/local"></a></dt><dd>Allows authentication via UNIX sockets when <B>auth/munge</B> is active.
+<BR>
+
+<B>NOTE</B>: slurmrestd and client processes must run under the same UID or the
+client requests will be rejected.
+<DT><DD>
+<P>
+<dt><B>rest_auth/jwt</B><a class="slurm_link" id="OPT_rest_auth/jwt" href="#OPT_rest_auth/jwt"></a></dt><dd>Allows authentication via TCP and UNIX sockets when <B>AuthAltTypes=auth/jwt</B>
+is active. User must specify the following HTTP cookies with each request:
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>X-SLURM-USER-NAME</B>:&lt;user name&gt;<a class="slurm_link" id="OPT_X-SLURM-USER-NAME" href="#OPT_X-SLURM-USER-NAME"></a></dt><dd><DT><DD>
+<dt><B>X-SLURM-USER-TOKEN</B>:&lt;JSON Web Token&gt;<a class="slurm_link" id="OPT_X-SLURM-USER-TOKEN" href="#OPT_X-SLURM-USER-TOKEN"></a></dt><dd></DL>
+</DL>
+
+<DT><DD>
+<B>NOTE</B>: Tokens are usually generated via calling &quot;<B>scontrol token</B>&quot;.
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>-f &lt;file&gt;</B><a class="slurm_link" id="OPT_-f-&lt;file&gt;" href="#OPT_-f-&lt;file&gt;"></a></dt><dd>Read Slurm configuration from the specified file. See <B>NOTES</B> below.
+<DT><DD>
+<P>
+<dt><B>-g &lt;group id&gt;</B><a class="slurm_link" id="OPT_-g-&lt;group-id&gt;" href="#OPT_-g-&lt;group-id&gt;"></a></dt><dd>Change group id (and drop supplemental groups) before processing client
+request. This should be a unique group with no write access or special
+permissions. Do not set this to the group belonging to to SlurmUser or
+root or the daemon won't start with the default settings.
+<DT><DD>
+<P>
+<dt><B>-h</B><a class="slurm_link" id="OPT_-h" href="#OPT_-h"></a></dt><dd>Help; print a brief summary of command options.
+<DT><DD>
+<P>
+<dt><B>--max-connections &lt;count&gt;</B><a class="slurm_link" id="OPT_max-connections-&lt;count&gt;" href="#OPT_max-connections-&lt;count&gt;"></a></dt><dd>Set the maximum number of connections to process at any one time. This is
+independent of the number of connections that can connect to slurmrestd at any
+one time. The kernel allows any number of connections to be pending for
+processing at any one time when SYN cookies are active.
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>Caution</B>:<a class="slurm_link" id="OPT_Caution" href="#OPT_Caution"></a></dt><dd>Each connection could cause one RPC to the controller daemons, leading to
+potential overloading of the controller. Each connection can also hold memory
+for the duration of the life of the connection. Having too many connections
+processing at once could use considerably more memory. Process limits
+(<B><A HREF="ulimit.html">ulimit</A></B>(3)) may require adjustment when this value is increased.
+<DT>Default: 124<DD>
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+<dt><B>-s &lt;OpenAPI plugins to load&gt;</B><a class="slurm_link" id="OPT_-s-&lt;OpenAPI-plugins-to-load&gt;" href="#OPT_-s-&lt;OpenAPI-plugins-to-load&gt;"></a></dt><dd>Comma-delimited list of OpenAPI plugins.
+Set to &quot;list&quot; to dump a list of the possible plugins to load.
+Defaults: all builtin supported OpenAPI plugins.
+<DT><DD>
+<P>
+<dt><B>-t &lt;THREAD COUNT&gt;</B><a class="slurm_link" id="OPT_-t-&lt;THREAD-COUNT&gt;" href="#OPT_-t-&lt;THREAD-COUNT&gt;"></a></dt><dd>Specify number of threads to use to process client connections.
+Ignored in inetd mode. Default: 20
+<DT><DD>
+<P>
+<dt><B>-u &lt;user id&gt;</B><a class="slurm_link" id="OPT_-u-&lt;user-id&gt;" href="#OPT_-u-&lt;user-id&gt;"></a></dt><dd>Change user id before processing client request. This should be a unique group
+with no write access or special permissions. Do not set this user to SlurmUser
+or root or the daemon won't start with the default settings.
+<DT><DD>
+<P>
+<dt><B>-v</B><a class="slurm_link" id="OPT_-v" href="#OPT_-v"></a></dt><dd>Verbose operation. Multiple <B>-v</B>'s increase verbosity.
+Higher verbosity levels will have significant performance impact.
+<DT><DD>
+<P>
+<dt><B>-V</B><a class="slurm_link" id="OPT_-V" href="#OPT_-V"></a></dt><dd>Print version information and exit.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<h2>ENVIRONMENT VARIABLES<a class="slurm_link" id="SECTION_ENVIRONMENT-VARIABLES" href="#SECTION_ENVIRONMENT-VARIABLES"></a></h2>
+The following environment variables can be used to override settings
+compiled into slurmctld.
+<P>
+<DL COMPACT>
+<dt><B>SLURM_CONF</B><a class="slurm_link" id="OPT_SLURM_CONF" href="#OPT_SLURM_CONF"></a></dt><dd>The location of the Slurm configuration file.
+<DT><DD>
+<P>
+<dt><B>SLURM_DEBUG_FLAGS</B><a class="slurm_link" id="OPT_SLURM_DEBUG_FLAGS" href="#OPT_SLURM_DEBUG_FLAGS"></a></dt><dd>Specify debug flags for slurmrestd to use. See DebugFlags in the
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5) man page for a full list of flags. The environment
+variable takes precedence over the setting in the slurm.conf.
+<DT><DD>
+<P>
+<dt><B>SLURM_JWT</B><a class="slurm_link" id="OPT_SLURM_JWT" href="#OPT_SLURM_JWT"></a></dt><dd>This variable must be set to use JWT token authentication.
+<DT><DD>
+<P>
+<dt><B>SLURMRESTD_AUTH_TYPES</B><a class="slurm_link" id="OPT_SLURMRESTD_AUTH_TYPES" href="#OPT_SLURMRESTD_AUTH_TYPES"></a></dt><dd>Set allowed authentication types. See <B>-a</B>
+<DT><DD>
+<P>
+<dt><B>SLURMRESTD_DEBUG</B><a class="slurm_link" id="OPT_SLURMRESTD_DEBUG" href="#OPT_SLURMRESTD_DEBUG"></a></dt><dd>Set debug level explicitly. Valid values are 1-10. See <B>-v</B>
+<DT><DD>
+<P>
+<dt><B>SLURMRESTD_LISTEN</B><a class="slurm_link" id="OPT_SLURMRESTD_LISTEN" href="#OPT_SLURMRESTD_LISTEN"></a></dt><dd>Comma-delimited list of host:port pairs or unix sockets to listen on.
+<DT><DD>
+<P>
+<dt><B>SLURMRESTD_MAX_CONNECTIONS</B><a class="slurm_link" id="OPT_SLURMRESTD_MAX_CONNECTIONS" href="#OPT_SLURMRESTD_MAX_CONNECTIONS"></a></dt><dd>Set the maximum number of connections to process at any one time. See
+<B>--max-connections</B>
+<DT><DD>
+<P>
+<dt><B>SLURMRESTD_OPENAPI_PLUGINS</B><a class="slurm_link" id="OPT_SLURMRESTD_OPENAPI_PLUGINS" href="#OPT_SLURMRESTD_OPENAPI_PLUGINS"></a></dt><dd>Comma-delimited list of OpenAPI plugins to load. See <B>-s</B>
+<DT><DD>
+<P>
+<dt><B>SLURMRESTD_SECURITY</B><a class="slurm_link" id="OPT_SLURMRESTD_SECURITY" href="#OPT_SLURMRESTD_SECURITY"></a></dt><dd>Control slurmrestd security functionality using the following comma-delimited
+values:
+<DT><DD>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<dt><B>become_user</B><a class="slurm_link" id="OPT_become_user" href="#OPT_become_user"></a></dt><dd>Allows <B>slurmrestd</B> to be run as root in order to become the requesting
+user for all requests. When combined with <B>rest_auth/local, when a user
+connects via a named UNIX socket, slurmrestd</B> will setuid()/setgid() into
+that user/group and then complete all requests as the given user. This mode is
+only intended for inet mode as the user change is permanent for the life of the
+process. This mode is incompatible with <B>rest_auth/jwt</B> and it is suggested
+to start <B>slurmrestd</B> with &quot;-a <B>rest_auth/local</B>&quot; arguments.
+<DT><DD>
+<P>
+<dt><B>disable_unshare_files</B><a class="slurm_link" id="OPT_disable_unshare_files" href="#OPT_disable_unshare_files"></a></dt><dd>Disables unsharing file descriptors with parent process.
+<DT><DD>
+<P>
+<dt><B>disable_unshare_sysv</B><a class="slurm_link" id="OPT_disable_unshare_sysv" href="#OPT_disable_unshare_sysv"></a></dt><dd>Disables unsharing the SYSV namespace.
+<DT><DD>
+<P>
+<dt><B>disable_user_check</B><a class="slurm_link" id="OPT_disable_user_check" href="#OPT_disable_user_check"></a></dt><dd>Disables check that slurmrestd is not running as root or SlurmUser, or with the
+root or SlurmUser's primary group.
+</DL>
+</DL>
+
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<h2>SIGNALS<a class="slurm_link" id="SECTION_SIGNALS" href="#SECTION_SIGNALS"></a></h2>
+<P>
+<DL COMPACT>
+<dt><B>SIGINT</B><a class="slurm_link" id="OPT_SIGINT" href="#OPT_SIGINT"></a></dt><dd><B>slurmrestd</B> will shutdown cleanly.
+<DT><DD>
+<P>
+<dt><B>SIGPIPE</B><a class="slurm_link" id="OPT_SIGPIPE" href="#OPT_SIGPIPE"></a></dt><dd>This signal is explicitly ignored.
+<DT><DD>
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<h2>NOTES<a class="slurm_link" id="SECTION_NOTES" href="#SECTION_NOTES"></a></h2>
+<B>SPANK</B> and <B>clifilter</B> plugins are not supported in <B>slurmrestd</B>
+due to their lack of thread safety. Active <B>SPANK</B> plugins and
+<B>JobSubmitPlugins</B> in <B>slurmctld</B> are independent of slurmrestd and can
+be used to enforce site policy on job submissions.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<h2>COPYING<a class="slurm_link" id="SECTION_COPYING" href="#SECTION_COPYING"></a></h2>
+Copyright (C) 2019-2022 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="https://slurm.schedmd.com/">https://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<h2>SEE ALSO<a class="slurm_link" id="SECTION_SEE-ALSO" href="#SECTION_SEE-ALSO"></a></h2>
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5), <B><A HREF="slurmctld.html">slurmctld</A></B>(8), <B><A HREF="slurmdbd.html">slurmdbd</A></B>(8)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAG">SIGNALS</A><DD>
+<DT><A HREF="#lbAH">NOTES</A><DD>
+<DT><A HREF="#lbAI">COPYING</A><DD>
+<DT><A HREF="#lbAJ">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 06:52:47 GMT, March 12, 2024
+			</div> <!-- END .container -->
+		</div> <!-- END .section -->
+	</div> <!-- END .content -->
+</div> <!-- END .main -->
+
+<footer class="site-footer" role="contentinfo">
+	<nav class="footer-nav section">
+		<div class="container">
+			<p><a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></p>
+		</div>
+	</nav>
+</footer>
+
+<script type='text/javascript'>
+	var custpagename = window.location.href;
+	var urlarray = custpagename.split('#');
+	custpagename = urlarray[1];
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			 ga('create', 'UA-47927131-1', 'schedmd.com');
+		ga('send', {'hitType': 'pageview', 'page': custpagename, 'title': custpagename});
+</script>
+
+</body>
+</html>
