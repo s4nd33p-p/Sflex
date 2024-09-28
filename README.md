@@ -32,6 +32,6 @@ Following repo has the SLURM build script to build from source by installing req
    git clone https://github.com/NISP-GmbH/SLURM
 ```
 
-For reference config files used for sflex specific to SLURM have been added at **slex_sourcecode/config_files**.
+For reference config files used for sflex specific to SLURM have been added at **slex/config_files**.
 
 
