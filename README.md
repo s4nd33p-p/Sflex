@@ -29,6 +29,9 @@ The remaining steps are common for both controller and compute node build which 
 
 Following repo has the SLURM build script to build from source by installing required dependencies. Kindly follow the steps accodrdingly.
 ```sh
-https://github.com/NISP-GmbH/SLURM
+   git clone https://github.com/NISP-GmbH/SLURM
+```
+
+For reference config files used for sflex specific to SLURM have been added at **slex_sourcecode/config_files**.
 
 
