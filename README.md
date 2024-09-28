@@ -10,3 +10,8 @@
 
 - **Utilization aware scheduling:** Picks least loaded compute node by looking at real-time utilization stats of GPUs.
 - **MPS based Overprovisioning:** Uses Nvidia's Multi-Process Service feature to multiplex GPU at process granularity. Does overprovisiong for better utilization of GPU resources.
+
+## Prerequisites ##
+- The compute nodes with GPUs should have working CUDA (11 or higher). Compute nodes use NVML library of CUDA to relay realtime GPU stats to controller.
+- Required SLURM plugins: *gres/mps, select/cons_tres*. These plugins are part of source code. Successfull SLURM build should load these plugins.
+  
