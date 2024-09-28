@@ -19,11 +19,11 @@
 The code changes to SLURM were made at both controller and compute node binaries. For modularity SLURM code of controller and compute node are kept in separate repositories. For ease both changes can be merged into single SLURM package(which is not done in this repo).
 1. Clone the **controller_slurmcode** repo at the controller node where **slurmctld** will be launched.  
     ```sh
-   git clone https://github.com/s4nd33p-p/sflex_sourcecode/tree/main/controller_slurmcode
+   git clone https://github.com/s4nd33p-p/sflex/tree/main/controller_slurmcode
 
 2. Clone the **computenode_slurmcode** repo at the compute node where **slurmd** daemon will be launched.
     ```sh
-   git clone https://github.com/s4nd33p-p/sflex_sourcecode/tree/main/computenode_slurmcode
+   git clone https://github.com/s4nd33p-p/sflex/tree/main/computenode_slurmcode
 
 The remaining steps are common for both controller and compute node build which is a standard SLURM build from source.
 
